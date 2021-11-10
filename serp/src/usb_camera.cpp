@@ -3,13 +3,13 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "usb_camera_node");
-    ros::NodeHandle n_private("~");
-//    ros::Publisher pub = n_private.advertise<>("/tasks", 1); //TODO: Add message type
+    ros::NodeHandle n_public;
+    ros::Publisher pub = n_public.advertise<serp::Task>("/tasks", 1);
 
     cv::VideoCapture cap("/dev/video0");
     if(!cap.isOpened()) {
         ROS_ERROR("Can't open usb camera!");
-        std::exit(-1);
+       return -1;
     }
     cv::Mat frame;
     while(ros::ok())
