@@ -22,7 +22,7 @@ void camera_parameters()
 
     // Path of the folder containing checkerboard images
     char *project_path = getenv("SERP_PROJECT_PATH");
-    char checkerboard_file_name[25] = "include/Images/*.jpg";
+    char checkerboard_file_name[25] = "include/imgset2/*.jpg";
     char checkerboard_file_path[200];
     sprintf(checkerboard_file_path, "%s%s", project_path, checkerboard_file_name);
 
