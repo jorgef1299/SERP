@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(serp)
 
+set(ENV{SERP_PROJECT_PATH} $)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK REQUIRED gtk+-3.0)
+
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
@@ -122,7 +127,11 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${GTK_INCLUDE_DIRS}
 )
+
+LINK_DIRECTORIES(${GTK_LIBRARY_DIRS})
+add_definitions(${GTK_CFLAGS_OTHER})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -139,6 +148,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(usb_camera_node src/usb_camera.cpp)
 add_executable(rpi_camera_node src/rpi_camera.cpp)
+add_executable(graphical_interface src/graphical_interface.c)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -161,6 +171,11 @@ target_link_libraries(rpi_camera_node
   ${OpenCV_LIBRARIES}
 )
 
+target_link_libraries(graphical_interface
+  ${catkin_LIBRARIES}
+  ${GTK_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
@@ -177,9 +192,6 @@ target_link_libraries(rpi_camera_node
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-# install(TARGETS ${PROJECT_NAME}_node
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
