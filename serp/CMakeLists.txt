@@ -139,7 +139,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(rpi_cam_cal_node src/rpi_cam_cal.cpp)
+add_executable(rpi_cam_node src/rpi_cam.cpp)
 #add_executable(rpi_camera_node src/rpi_camera.cpp)
 
 ## Rename C++ executable without prefix
@@ -153,7 +153,7 @@ add_executable(rpi_cam_cal_node src/rpi_cam_cal.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(rpi_cam_cal_node
+target_link_libraries(rpi_cam_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
