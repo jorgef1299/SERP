@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(serp)
 
-set(ENV{SERP_PROJECT_PATH} $)
+set(OpenCV_DIR /usr/share/OpenCV)
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -61,11 +62,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  VelocitySetPoint.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -148,7 +148,8 @@ add_definitions(${GTK_CFLAGS_OTHER})
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(usb_camera_node src/usb_camera.cpp)
 add_executable(rpi_camera_node src/rpi_camera.cpp)
-add_executable(graphical_interface src/graphical_interface.c)
+add_executable(graphical_interface src/graphical_interface.cpp)
+add_executable(motors_node src/arduino_bridge_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -174,6 +175,10 @@ target_link_libraries(rpi_camera_node
 target_link_libraries(graphical_interface
   ${catkin_LIBRARIES}
   ${GTK_LIBRARIES}
+)
+
+target_link_libraries(motors_node
+  ${catkin_LIBRARIES}
 )
 
 #############

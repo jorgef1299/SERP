@@ -11,7 +11,6 @@
     border-radius: 5px;
     border: 1px solid black;
     background-color: white;
-
 }
 
 .button_green {
@@ -19,7 +18,23 @@
     color: white;
 }
 
-.button_red {
-    background-color: red;
+.button_green:active {
+    background-color: rgb(0, 255, 0);
     color: white;
+}
+
+.button_red {
+    background-color: rgb(210, 0, 0);
+    color: white;
+}
+
+.button_red:active {
+    background-color: rgb(255, 0, 0);;
+    color: white;
+}
+
+.log_messages
+{
+    font-family: Monospaced;
+    font-size: 14px;
 }
