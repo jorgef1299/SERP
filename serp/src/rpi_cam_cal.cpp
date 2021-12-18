@@ -1,7 +1,7 @@
-#include "../include/rpi_cam_cal.h"
+#include "rpi_cam_cal.h"
 
 // Defining the dimensions of checkerboard
-int CHECKERBOARD[2]{9,7};
+int CHECKERBOARD[2]{9,6};
 
 int main()
 {
@@ -22,10 +22,14 @@ int main()
 
   // Extracting path of individual image stored in a given directory
   std::vector<cv::String> images;
-  // Path of the folder containing checkerboard images
-  std::string path = "../checkboard/*.jpg";
 
-  cv::glob(path, images);
+  // Path of the folder containing checkerboard images
+  char *project_path = getenv("SERP_PROJECT_PATH");
+  char checkerboard_file_name[25] = "include/Images/*.jpg";
+  char checkerboard_file_path[200];
+  sprintf(checkerboard_file_path, "%s%s", project_path, checkerboard_file_name);
+
+  cv::glob(checkerboard_file_path, images);
 
   cv::Mat frame, gray;
   // vector to store the pixel coordinates of detected checker board corners
@@ -61,8 +65,8 @@ int main()
       imgpoints.push_back(corner_pts);
     }
 
-//    cv::imshow("Image",frame);
-//    cv::waitKey(0);
+    cv::imshow("Image",frame);
+    cv::waitKey(1);
   }
 
   cv::destroyAllWindows();
@@ -75,6 +79,7 @@ int main()
    * and corresponding pixel coordinates of the
    * detected corners (imgpoints)
   */
+
   cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cameraMatrix, distCoeffs, R, T);
 
   ROS_WARN_STREAM(cameraMatrix);

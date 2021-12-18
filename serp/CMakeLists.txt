@@ -13,8 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   OpenCV
   message_generation
-
-  rospy
   image_transport
   cv_bridge
 )
