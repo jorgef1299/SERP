@@ -68,8 +68,6 @@ void camera_parameters()
 
     cv::destroyAllWindows();
 
-    cv::Mat cameraMatrix,distCoeffs,R,T;
-
     /*
      * Performing camera calibration by
      * passing the value of known 3D points (objpoints)
@@ -77,12 +75,12 @@ void camera_parameters()
      * detected corners (imgpoints)
     */
 
-    cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cameraMatrix, distCoeffs, R, T);
+    cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
 
-    ROS_WARN_STREAM(cameraMatrix);
-    ROS_WARN_STREAM(distCoeffs);
-    ROS_WARN_STREAM(R);
-    ROS_WARN_STREAM(T);
+//    ROS_WARN_STREAM(cam_info.cameraMatrix);
+//    ROS_WARN_STREAM(cam_info.distCoeffs);
+//    ROS_WARN_STREAM(cam_info.R);
+//    ROS_WARN_STREAM(cam_info.T);
 }
 
 

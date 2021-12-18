@@ -14,3 +14,9 @@
 
 // Defining the dimensions of checkerboard
 int CHECKERBOARD[2]{9,6};
+
+typedef struct {
+    cv::Mat cameraMatrix, distCoeffs, R, T;
+} camera_info;
+
+camera_info cam_info;
