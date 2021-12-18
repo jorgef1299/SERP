@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="rpi_cam_cal" type="rpi_cam_cal_node" pkg="serp"/>
+
+</launch>
