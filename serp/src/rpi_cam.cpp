@@ -40,7 +40,7 @@ void camera_parameters()
       frame = cv::imread(images[i]);
       cv::cvtColor(frame,gray,cv::COLOR_BGR2GRAY);
 
-      //Testes
+      // Testes
 //      cv::Mat thresh = gray.clone();
 ////      cv::normalize(thresh,  thresh, 0, 255, cv::NORM_MINMAX);
 //      cv::adaptiveThreshold(thresh, thresh, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY,7,0);
