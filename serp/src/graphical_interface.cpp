@@ -58,8 +58,41 @@ void disable_interface_button(GtkWidget *button, bool is_green=true) {
     }
 }
 
+void* cb_timer10s(gpointer data) {
+    int8_t last_battery_level = 0;
+    while(ros::ok()) {
+        usleep(12000000); // 12s
+        // Call service to get battery level
+        std_srvs::Trigger srv;
+        if(client_battery_level.call(srv) && srv.response.success) {
+            robot.battery_level = (int8_t)std::stoi(srv.response.message);
+            if(robot.battery_level < 0 || robot.battery_level > 100) {
+                ROS_ERROR("Erro: Nível de bateria inválido!");
+                ros::shutdown();
+                std::exit(-1);
+            }
+            if(robot.battery_level != last_battery_level) {
+                // Update battery level in the interface
+                std::string color;
+                if(robot.battery_level < 20) {
+                    color = "red";
+                }
+                else color = "black";
+                std::string str_label = "<span color=\"" + color + "\">" + srv.response.message + "%</span>";
+                gtk_label_set_markup(label_battery, str_label.c_str());
+            }
+        }
+        else {
+            gtk_label_set_markup(label_battery, "---");
+        }
+    }
+    g_thread_exit(NULL);
+}
+
 void initializeGtkInterface() {
     robot.state = Stopped;
+    robot.battery_level = -1;
+    gtk_label_set_label(label_battery, "---");
 }
 
 int main(int argc, char *argv[])
@@ -97,6 +130,7 @@ int main(int argc, char *argv[])
     button_manual_stop = GTK_WIDGET(gtk_builder_get_object(builder, "button_manual_stop"));
     range_motor_left = GTK_RANGE(gtk_builder_get_object(builder, "range_motor_left"));
     range_motor_right = GTK_RANGE(gtk_builder_get_object(builder, "range_motor_right"));
+    label_battery = GTK_LABEL(gtk_builder_get_object(builder, "battery_level"));
 
     // Create text buffer iterator
     log_text_iter = new GtkTextIter();
@@ -119,8 +153,12 @@ int main(int argc, char *argv[])
 
     // Create ROS Service Clients
     client_velocity_setpoint = n_public.serviceClient<serp::VelocitySetPoint>("velocity_setpoint");
+    client_battery_level = n_public.serviceClient<std_srvs::Trigger>("srv_battery_level");
 
     pub_twist = n_public.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
+
+    GThread *thread_timer;
+    thread_timer = g_thread_new("Timer", cb_timer10s, NULL);
 
     g_object_unref(css);
     g_object_unref(G_OBJECT(builder));
@@ -128,6 +166,11 @@ int main(int argc, char *argv[])
     gtk_main();
 
     return 0;
+}
+
+void gtk_main_quit() {
+    ros::shutdown();
+    std::exit(0);
 }
 
 extern "C"

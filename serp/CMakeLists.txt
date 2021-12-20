@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   OpenCV
   message_generation
+  std_srvs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -149,7 +150,7 @@ add_definitions(${GTK_CFLAGS_OTHER})
 add_executable(usb_camera_node src/usb_camera.cpp)
 add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
-add_executable(motors_node src/arduino_bridge_node.cpp)
+add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -177,7 +178,7 @@ target_link_libraries(graphical_interface
   ${GTK_LIBRARIES}
 )
 
-target_link_libraries(motors_node
+target_link_libraries(arduino_bridge_node
   ${catkin_LIBRARIES}
 )
 
