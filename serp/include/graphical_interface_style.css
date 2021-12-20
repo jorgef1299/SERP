@@ -18,7 +18,7 @@
     color: white;
 }
 
-.button_green:active {
+.button_green_active {
     background-color: rgb(0, 255, 0);
     color: white;
 }
@@ -28,7 +28,7 @@
     color: white;
 }
 
-.button_red:active {
+.button_red_active {
     background-color: rgb(255, 0, 0);;
     color: white;
 }
