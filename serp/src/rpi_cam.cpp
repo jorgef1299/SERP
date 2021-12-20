@@ -40,18 +40,9 @@ void camera_parameters()
       frame = cv::imread(images[i]);
       cv::cvtColor(frame,gray,cv::COLOR_BGR2GRAY);
 
-      // Testes
-//      cv::Mat thresh = gray.clone();
-////      cv::normalize(thresh,  thresh, 0, 255, cv::NORM_MINMAX);
-//      cv::adaptiveThreshold(thresh, thresh, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY,7,0);
-//      cv::morphologyEx(thresh, thresh, cv::MORPH_OPEN, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,3)));
-//      cv::morphologyEx(thresh, thresh, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,3)));
-//      cv::imshow("thresh",thresh);
-
       // Finding checker board cornersopen
       // If desired number of corners are found in the image then success = true
-//      success = cv::findChessboardCorners(gray, cv::Size(CHECKERBOARD[0], CHECKERBOARD[1]), corner_pts, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
-      success = cv::findChessboardCorners(gray, cv::Size(CHECKERBOARD[0], CHECKERBOARD[1]), corner_pts, CV_CALIB_CB_ADAPTIVE_THRESH + CV_CALIB_CB_NORMALIZE_IMAGE);
+      success = cv::findChessboardCorners(gray, cv::Size(CHECKERBOARD[0], CHECKERBOARD[1]), corner_pts, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
 
       /*
        * If desired number of corner are detected,
@@ -59,8 +50,6 @@ void camera_parameters()
       */
       if(success)
       {
-        ROS_WARN_STREAM("success");
-
         cv::TermCriteria criteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 30, 0.001);
 
         // refining pixel coordinates for given 2d points.
@@ -87,9 +76,10 @@ void camera_parameters()
     */
 
 //    cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
+    cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC|cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
 
-//    ROS_WARN_STREAM(cam_info.cameraMatrix);
-//    ROS_WARN_STREAM(cam_info.distCoeffs);
+    ROS_WARN_STREAM(cam_info.cameraMatrix);
+    ROS_WARN_STREAM(cam_info.distCoeffs);
 //    ROS_WARN_STREAM(cam_info.R);
 //    ROS_WARN_STREAM(cam_info.T);
 }

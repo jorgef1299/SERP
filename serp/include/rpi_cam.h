@@ -13,7 +13,7 @@
 // GLOBAL VARIABLES
 
 // Defining the dimensions of checkerboard
-int CHECKERBOARD[2]{9,6};
+int CHECKERBOARD[2]{5,8}; // Number of corners (vertical, horizontal)
 
 typedef struct {
     cv::Mat cameraMatrix, distCoeffs, R, T;
