@@ -62,8 +62,8 @@ void camera_parameters()
         imgpoints.push_back(corner_pts);
       }
 
-      cv::imshow("Image",frame);
-      cv::waitKey(1);
+//      cv::imshow("Image",frame);
+//      cv::waitKey(1);
     }
 
     ROS_WARN_STREAM("3D->"<<objpoints.size()<<" 2D->"<<imgpoints.size());
@@ -78,16 +78,50 @@ void camera_parameters()
 //    cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
     cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC|cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
 
-    ROS_WARN_STREAM(cam_info.cameraMatrix);
-    ROS_WARN_STREAM(cam_info.distCoeffs);
+//    ROS_WARN_STREAM(cam_info.cameraMatrix);
+//    ROS_WARN_STREAM(cam_info.distCoeffs);
 //    ROS_WARN_STREAM(cam_info.R);
 //    ROS_WARN_STREAM(cam_info.T);
+
+
+    // COPY TO correctImage fuction --------------------------------------------------------------------
+    cv::Mat img_30 = cv::imread(images[29]);
+//    cv::imshow("Image 30", img_30);
+//    cv::waitKey(0);
+
+//    cv::imshow("Image 30 - Corners Found", frame);
+//    cv::waitKey(0);
+
+    cv::Mat undist_img;
+//    cv::undistort(img_30, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+//    cv::fisheye::undistortImage(img_30, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+
+    cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
+    cv::Mat map1, map2;
+    cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, cam_info.cameraMatrix, cv::Size(img_30.cols, img_30.rows), CV_16SC2, map1, map2);
+    cv::remap(img_30, undist_img, map1, map2, cv::INTER_LINEAR, CV_HAL_BORDER_CONSTANT);
+
+    cv::imshow("Undistorted Image", undist_img);
+    cv::waitKey(0);
+}
+
+
+cv::Mat correctImage(cv::Mat img)
+{
 }
 
 
 int main()
 {
     camera_parameters();
+
+//    cv::Mat img = cv::imread("../include/imgset/ck30.jpg", cv::IMREAD_COLOR);
+//    cv::imshow("Image 30", img);
+//    cv::waitKey(0);
+
+//    cv::Mat corrected_img = correctImage(img);
+//    cv::imshow("Corrected Image", img);
+//    cv::waitKey(0);
 
     return 0;
 }
