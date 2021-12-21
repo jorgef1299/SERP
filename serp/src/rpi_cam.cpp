@@ -1,6 +1,6 @@
 #include "rpi_cam.h"
 
-void camera_parameters()
+void camera_parameters(int type)
 {
     // Creating vector to store vectors of 3D points for each checkerboard image
     std::vector<std::vector<cv::Point3f> > objpoints;
@@ -75,53 +75,66 @@ void camera_parameters()
      * and corresponding pixel coordinates of the detected corners (imgpoints)
     */
 
-//    cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
-    cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC|cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
+    if(type==0) cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
+    else if(type==1) cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC | cv::fisheye::CALIB_CHECK_COND |cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
 
 //    ROS_WARN_STREAM(cam_info.cameraMatrix);
 //    ROS_WARN_STREAM(cam_info.distCoeffs);
 //    ROS_WARN_STREAM(cam_info.R);
 //    ROS_WARN_STREAM(cam_info.T);
-
-
-    // COPY TO correctImage fuction --------------------------------------------------------------------
-    cv::Mat img_30 = cv::imread(images[29]);
-//    cv::imshow("Image 30", img_30);
-//    cv::waitKey(0);
-
-//    cv::imshow("Image 30 - Corners Found", frame);
-//    cv::waitKey(0);
-
-    cv::Mat undist_img;
-//    cv::undistort(img_30, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
-//    cv::fisheye::undistortImage(img_30, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
-
-    cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
-    cv::Mat map1, map2;
-    cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, cam_info.cameraMatrix, cv::Size(img_30.cols, img_30.rows), CV_16SC2, map1, map2);
-    cv::remap(img_30, undist_img, map1, map2, cv::INTER_LINEAR, CV_HAL_BORDER_CONSTANT);
-
-    cv::imshow("Undistorted Image", undist_img);
-    cv::waitKey(0);
 }
 
 
-cv::Mat correctImage(cv::Mat img)
+void correctImage()
 {
+    // Extracting path of individual image stored in a given directory
+    std::vector<cv::String> images;
+
+    // Path of the folder containing checkerboard images
+    // export SERP_PROJECT_PATH=~/catkin_ws/src/SERP/serp/
+    char *project_path = getenv("SERP_PROJECT_PATH");
+    char img_file_name[25] = "include/tests/*.jpg";
+    char img_file_path[200];
+    sprintf(img_file_path, "%s%s", project_path, img_file_name);
+
+    cv::glob(img_file_path, images);
+
+
+    // Undistort
+
+    cv::Mat img = cv::imread(images[0]);
+    cv::imshow("Original Image", img);
+//    cv::waitKey(0);
+
+
+    cv::Mat undist_img;
+
+    // Direct Undistort
+//    cv::undistort(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+//    cv::fisheye::undistortImage(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+
+    // initUndistortRectifyMap With Balance=0.0
+    cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
+    cv::Mat map1, map2;
+    cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, cam_info.cameraMatrix, cv::Size(img.cols, img.rows), CV_16SC2, map1, map2);
+    cv::remap(img, undist_img, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+    cv::imshow("Corrected Image", undist_img);
+    cv::waitKey(0);
 }
 
 
 int main()
 {
-    camera_parameters();
+    // Type -> 0 (Normal Calibration) , 1 (Fisheye Calibration)
+    camera_parameters(1);
+
 
 //    cv::Mat img = cv::imread("../include/imgset/ck30.jpg", cv::IMREAD_COLOR);
 //    cv::imshow("Image 30", img);
 //    cv::waitKey(0);
 
-//    cv::Mat corrected_img = correctImage(img);
-//    cv::imshow("Corrected Image", img);
-//    cv::waitKey(0);
+    correctImage();
+
 
     return 0;
 }
