@@ -153,6 +153,7 @@ add_definitions(${GTK_CFLAGS_OTHER})
 add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
+add_executable(video_tests_node src/video_tests.cpp)
 
 
 ## Rename C++ executable without prefix
@@ -177,6 +178,11 @@ target_link_libraries(graphical_interface
 
 target_link_libraries(arduino_bridge_node
   ${catkin_LIBRARIES}
+)
+
+target_link_libraries(video_tests_node
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
 )
 
 #############
