@@ -69,6 +69,7 @@ void* cb_timer10s(gpointer data) {
             if(robot.battery_level < 0 || robot.battery_level > 100) {
                 ROS_ERROR("Erro: Nível de bateria inválido!");
                 ros::shutdown();
+                g_object_unref(G_OBJECT(builder));
                 std::exit(-1);
             }
             if(robot.battery_level != last_battery_level) {
@@ -89,26 +90,62 @@ void* cb_timer10s(gpointer data) {
     g_thread_exit(NULL);
 }
 
+void* cb_ros_spin(gpointer data) {
+    ros::spin();
+}
+
+void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
+    // Convert ROS message to OpenCV Mat
+
+    cv_bridge::CvImagePtr cv_ptr;
+    cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    cv::cvtColor(cv_ptr->image, cv_ptr->image, cv::COLOR_BGR2RGB);
+    ROS_INFO("Received img %d %d", cv_ptr->image.cols, cv_ptr->image.rows);
+
+    GdkPixbuf *pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB,FALSE, 8,
+                                                     640, 480, cv_ptr->image.step, NULL, NULL);
+
+    gtk_image_set_from_pixbuf(reinterpret_cast<GtkImage *>(camera_image), pixbuf_rgb);
+    g_object_unref(pixbuf_rgb);
+}
+
 void initializeGtkInterface() {
     robot.state = Stopped;
     robot.battery_level = -1;
     gtk_label_set_label(label_battery, "---");
+    display_camera = false;
+}
+
+void gtk_main_quit() {
+    ros::shutdown();
+    g_object_unref(G_OBJECT(builder));
+    std::exit(0);
+}
+
+void gtk_camera_quit() {
+    // Ask server to stop sending camera data
+    sub_camera_image.shutdown();
+    std_srvs::SetBool srv;
+    srv.request.data = false;
+    if(!(client_camera.call(srv) && srv.response.success)) {
+        insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível contactar o servidor da câmara.", true);
+    }
+    display_camera = false;
 }
 
 int main(int argc, char *argv[])
 {
-    GtkBuilder *builder;
     GtkWidget *window;
     GtkLabel *label_motor_esquerda;
     GtkLabel *label_motor_direita;
     GtkCssProvider *css = gtk_css_provider_new();
 
     // Get path of the base project using a environment variable
+    char css_file_path[200];
+    char glade_file_path[200];
     char *project_path = getenv("SERP_PROJECT_PATH");
     char css_file_name[38] = "include/graphical_interface_style.css";
     char glade_file_name[34] = "include/graphical_interface.glade";
-    char css_file_path[200];
-    char glade_file_path[200];
     sprintf(css_file_path, "%s%s", project_path, css_file_name);
     sprintf(glade_file_path, "%s%s", project_path, glade_file_name);
 
@@ -154,23 +191,25 @@ int main(int argc, char *argv[])
     // Create ROS Service Clients
     client_velocity_setpoint = n_public.serviceClient<serp::VelocitySetPoint>("velocity_setpoint");
     client_battery_level = n_public.serviceClient<std_srvs::Trigger>("srv_battery_level");
+    client_camera = n_public.serviceClient<std_srvs::SetBool>("set_camera");
+
+    // Create ROS Subscribers
+    it = new image_transport::ImageTransport(n_public);
 
     pub_twist = n_public.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
     GThread *thread_timer;
+    GThread *thread_ros_sub;
     thread_timer = g_thread_new("Timer", cb_timer10s, NULL);
+    thread_ros_sub = g_thread_new("Ros Spin", cb_ros_spin, NULL);
+
 
     g_object_unref(css);
-    g_object_unref(G_OBJECT(builder));
     gtk_widget_show(window);
     gtk_main();
 
+    g_object_unref(G_OBJECT(builder));
     return 0;
-}
-
-void gtk_main_quit() {
-    ros::shutdown();
-    std::exit(0);
 }
 
 extern "C"
@@ -269,5 +308,36 @@ extern "C"
         else {
             robot.motor_right_requested_velocity = (int8_t) value;
         }
+    }
+
+    void on_button_ver_camara_clicked(GtkButton *button) {
+        if(!display_camera) {
+            // Ask server to send camera data
+            std_srvs::SetBool srv;
+            srv.request.data = true;
+            if(!(client_camera.call(srv) && srv.response.success)) {
+                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível contactar o servidor da câmara.", true);
+            }
+            else {
+                GtkWidget *window_camera;
+                GtkWidget *fixed;
+                // Subscribe camera image
+                sub_camera_image = it->subscribe("camera", 1, cb_camera_img);
+                display_camera = true;
+                // Create new window
+                window_camera = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+                gtk_window_set_title(GTK_WINDOW(window_camera), "Câmara");
+                // Add image widget
+                camera_image = gtk_image_new();
+                gtk_container_add(GTK_CONTAINER(window_camera), camera_image);
+                // Show camera window
+                g_signal_connect(window_camera, "destroy", G_CALLBACK(gtk_camera_quit), NULL);
+                gtk_widget_show_all(window_camera);
+            }
+        }
+    }
+
+    void on_button_ver_ultima_folha_clicked(GtkButton *button) {
+
     }
 }
