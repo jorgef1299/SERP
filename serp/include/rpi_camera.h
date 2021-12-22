@@ -6,4 +6,3 @@
 
 // Global variables
 bool must_publish_camera_data;
-

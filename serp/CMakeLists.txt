@@ -155,6 +155,7 @@ add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
 
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -164,12 +165,6 @@ add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(usb_camera_node
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
 
 target_link_libraries(rpi_camera_node
   ${catkin_LIBRARIES}
