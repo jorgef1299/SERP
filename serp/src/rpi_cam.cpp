@@ -148,10 +148,10 @@ void correctImage(int type)
         Hf = img.size().height;
         Wf = img.size().width;
         R = Hf/2; //The fisheye image is a square containing a circle so the radius is half of the width or height size
-        Cfx = Wf/2; //The fisheye image is a square so the center in x is located at half the distance of the width
-        Cfy = Hf/2; //The fisheye image is a square so the center in y is located at half the distance of the height
-//        Cfx = cam_info.cameraMatrix.at<double>(0,2);
-//        Cfy = cam_info.cameraMatrix.at<double>(1,2);
+//        Cfx = Wf/2; //The fisheye image is a square so the center in x is located at half the distance of the width
+//        Cfy = Hf/2; //The fisheye image is a square so the center in y is located at half the distance of the height
+        Cfx = cam_info.cameraMatrix.at<double>(0,2);
+        Cfy = cam_info.cameraMatrix.at<double>(1,2);
 
         He = (int)R;
         We = (int)2*PI*R;
@@ -169,22 +169,4 @@ void correctImage(int type)
         cv::imshow("Panoramic Image", panoramicImage);
         cv::waitKey(0);
     }
-}
-
-
-int main()
-{
-    // Type -> 0 (Normal Calibration) , 1 (Fisheye Calibration)
-    camera_parameters(1);
-
-
-//    cv::Mat img = cv::imread("../include/imgset/ck30.jpg", cv::IMREAD_COLOR);
-//    cv::imshow("Image 30", img);
-//    cv::waitKey(0);
-
-    // Type -> 0 (Undistort Image) , 1 (Transform to Panoramic Image)
-    correctImage(1);
-
-
-    return 0;
 }

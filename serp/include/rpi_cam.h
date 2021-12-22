@@ -22,3 +22,13 @@ typedef struct {
 camera_info cam_info;
 
 const double PI = 3.141592653589793;
+
+
+// Type -> 0 (Normal Calibration) , 1 (Fisheye Calibration)
+void camera_parameters(int type);
+
+//Find the corresponding fisheye output point corresponding to an input cartesian point
+cv::Point2f findFisheye(int Xe, int Ye, double R, double Cfx, double Cfy, double He, double We);
+
+// Type -> 0 (Undistort Image) , 1 (Transform to Panoramic Image)
+void correctImage(int type);
