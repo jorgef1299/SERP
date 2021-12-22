@@ -1,4 +1,4 @@
-#include "rpi_cam.h"
+#include "calibration.h"
 
 void camera_parameters(int type)
 {
@@ -21,7 +21,6 @@ void camera_parameters(int type)
     std::vector<cv::String> images;
 
     // Path of the folder containing checkerboard images
-    // export SERP_PROJECT_PATH=~/catkin_ws/src/SERP/serp/
     char *project_path = getenv("SERP_PROJECT_PATH");
     char checkerboard_file_name[25] = "include/imgset/*.jpg";
     char checkerboard_file_path[200];

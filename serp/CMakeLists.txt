@@ -150,7 +150,6 @@ add_definitions(${GTK_CFLAGS_OTHER})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(usb_camera_node src/usb_camera.cpp)
 add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)

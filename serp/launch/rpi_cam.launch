@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <node name="rpi_cam" type="rpi_cam_node" pkg="serp"/>
+    <node name="rpi_camera" type="rpi_camera_node" pkg="serp" output="screen"/>
+    <node name="graphical_interface" type="graphical_interface" pkg="serp" output="screen"/>
 
 </launch>
