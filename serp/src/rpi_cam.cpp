@@ -85,7 +85,24 @@ void camera_parameters(int type)
 }
 
 
-void correctImage()
+//Find the corresponding fisheye output point corresponding to an input cartesian point
+cv::Point2f findFisheye(int Xe, int Ye, double R, double Cfx, double Cfy, double He, double We)
+{
+    cv::Point2f fisheyePoint;
+    double theta, r, Xf, Yf; //Polar coordinates
+
+    r = Ye/He*R;
+    theta = Xe/We*2.0*PI;
+    Xf = Cfx+r*sin(theta);
+    Yf = Cfy+r*cos(theta);
+    fisheyePoint.x = Xf;
+    fisheyePoint.y = Yf;
+
+    return fisheyePoint;
+}
+
+
+void correctImage(int type)
 {
     // Extracting path of individual image stored in a given directory
     std::vector<cv::String> images;
@@ -100,26 +117,58 @@ void correctImage()
     cv::glob(img_file_path, images);
 
 
-    // Undistort
-
-    cv::Mat img = cv::imread(images[0]);
+    cv::Mat img = cv::imread(images[3]);
     cv::imshow("Original Image", img);
 //    cv::waitKey(0);
 
+    if(type==0)
+    {
+        // Undistort
+        cv::Mat undist_img;
 
-    cv::Mat undist_img;
+        // Direct Undistort
+    //    cv::undistort(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+    //    cv::fisheye::undistortImage(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
 
-    // Direct Undistort
-//    cv::undistort(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
-//    cv::fisheye::undistortImage(img, undist_img, cam_info.cameraMatrix, cam_info.distCoeffs);
+        // initUndistortRectifyMap With Balance=0.0
+        cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
+        cv::Mat map1, map2;
+        cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, cam_info.cameraMatrix, cv::Size(img.cols, img.rows), CV_16SC2, map1, map2);
+        cv::remap(img, undist_img, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        cv::imshow("Corrected Image", undist_img);
+        cv::waitKey(0);
+    }
+    else if(type==1)
+    {
+        cv::Mat panoramicImage;
 
-    // initUndistortRectifyMap With Balance=0.0
-    cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
-    cv::Mat map1, map2;
-    cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, cam_info.cameraMatrix, cv::Size(img.cols, img.rows), CV_16SC2, map1, map2);
-    cv::remap(img, undist_img, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-    cv::imshow("Corrected Image", undist_img);
-    cv::waitKey(0);
+        int Hf, Wf, He, We;
+        double R, Cfx, Cfy;
+
+        Hf = img.size().height;
+        Wf = img.size().width;
+        R = Hf/2; //The fisheye image is a square containing a circle so the radius is half of the width or height size
+        Cfx = Wf/2; //The fisheye image is a square so the center in x is located at half the distance of the width
+        Cfy = Hf/2; //The fisheye image is a square so the center in y is located at half the distance of the height
+//        Cfx = cam_info.cameraMatrix.at<double>(0,2);
+//        Cfy = cam_info.cameraMatrix.at<double>(1,2);
+
+        He = (int)R;
+        We = (int)2*PI*R;
+
+        panoramicImage.create(He, We, img.type());
+
+        for (int Xe = 0; Xe <panoramicImage.size().width; Xe++)
+        {
+            for (int Ye = 0; Ye <panoramicImage.size().height; Ye++)
+            {
+                panoramicImage.at<cv::Vec3b>(cv::Point(Xe, Ye)) =    img.at<cv::Vec3b>(findFisheye(Xe, Ye, R, Cfx, Cfy, He, We));
+            }
+        }
+
+        cv::imshow("Panoramic Image", panoramicImage);
+        cv::waitKey(0);
+    }
 }
 
 
@@ -133,7 +182,8 @@ int main()
 //    cv::imshow("Image 30", img);
 //    cv::waitKey(0);
 
-    correctImage();
+    // Type -> 0 (Undistort Image) , 1 (Transform to Panoramic Image)
+    correctImage(1);
 
 
     return 0;

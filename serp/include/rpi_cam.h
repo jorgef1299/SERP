@@ -20,3 +20,5 @@ typedef struct {
 } camera_info;
 
 camera_info cam_info;
+
+const double PI = 3.141592653589793;
