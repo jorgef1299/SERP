@@ -69,7 +69,6 @@ void* cb_timer10s(gpointer data) {
             if(robot.battery_level < 0 || robot.battery_level > 100) {
                 ROS_ERROR("Erro: Nível de bateria inválido!");
                 ros::shutdown();
-                g_object_unref(G_OBJECT(builder));
                 std::exit(-1);
             }
             if(robot.battery_level != last_battery_level) {
@@ -118,7 +117,6 @@ void initializeGtkInterface() {
 
 void gtk_main_quit() {
     ros::shutdown();
-    g_object_unref(G_OBJECT(builder));
     std::exit(0);
 }
 
@@ -135,6 +133,7 @@ void gtk_camera_quit() {
 
 int main(int argc, char *argv[])
 {
+    GtkBuilder *builder;
     GtkWidget *window;
     GtkLabel *label_motor_esquerda;
     GtkLabel *label_motor_direita;
@@ -205,10 +204,10 @@ int main(int argc, char *argv[])
 
 
     g_object_unref(css);
+    g_object_unref(G_OBJECT(builder));
     gtk_widget_show(window);
     gtk_main();
 
-    g_object_unref(G_OBJECT(builder));
     return 0;
 }
 

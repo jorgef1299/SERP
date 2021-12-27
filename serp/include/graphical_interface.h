@@ -18,7 +18,6 @@
 #include <unistd.h>
 
 // Global Variables
-GtkBuilder *builder;
 GtkStyleContext *context;
 GtkTextView *log_mensagens;
 GtkTextBuffer *log_buffer;
