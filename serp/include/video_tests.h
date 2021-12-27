@@ -8,9 +8,17 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <stdio.h>
+#include <opencv2/aruco.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/videoio.hpp>
+
 
 
 // GLOBAL VARIABLES
+
+
+// ---------- CAMERA CALIBRATION + UNDISTORTION ---------- (add to separate library)
 
 // Defining the dimensions of checkerboard
 int CHECKERBOARD[2]{5,8}; // Number of corners (vertical, horizontal)
@@ -22,3 +30,29 @@ typedef struct {
 camera_info cam_info;
 
 const double PI = 3.141592653589793;
+
+
+
+// ---------- ARUCO IDENTIFICATION ---------- (add to separate library)
+
+//X and Y coordinates of left corners of orientation arucos
+struct coordinates {
+    int x;
+    int y;
+} o_sup_left, o_inf_left, o_inf_right;
+
+//X and Y coordinates of 4 corners of block arucos
+struct block {
+    coordinates b_sup_left;
+    coordinates b_sup_right;
+    coordinates b_inf_left;
+    coordinates b_inf_right;
+} block_i;
+
+//global variables
+int current_ids_size=0;
+int size_aruco;
+bool orientation_check = false;
+
+//dictionary 4X4
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
