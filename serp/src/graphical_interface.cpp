@@ -95,14 +95,12 @@ void* cb_ros_spin(gpointer data) {
 
 void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
     // Convert ROS message to OpenCV Mat
-
     cv_bridge::CvImagePtr cv_ptr;
     cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     cv::cvtColor(cv_ptr->image, cv_ptr->image, cv::COLOR_BGR2RGB);
-    ROS_INFO("Received img %d %d", cv_ptr->image.cols, cv_ptr->image.rows);
 
     GdkPixbuf *pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB,FALSE, 8,
-                                                     640, 480, cv_ptr->image.step, NULL, NULL);
+                                                     cv_ptr->image.cols, cv_ptr->image.rows, cv_ptr->image.step, NULL, NULL);
 
     gtk_image_set_from_pixbuf(reinterpret_cast<GtkImage *>(camera_image), pixbuf_rgb);
     g_object_unref(pixbuf_rgb);
