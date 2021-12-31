@@ -125,6 +125,27 @@ cv::Mat correctImage(cv::Mat frame, int type)
     }
     else if(type==1)
     {
+        // initUndistortRectifyMap With Balance>0.0
+
+        cv::Size dim1 = cv::Size(frame.cols, frame.rows); // Dimension of the original image
+        cv::Size dim2 = dim1; // Dimension of the box you want to keep after un-distorting the image
+        cv::Size dim3 = dim1; // Dimension of the final box where OpenCV will put the undistorted image
+
+        // When balance = 0,OpenCV will keep the best part of the image for you
+        // Whereas balance = 1 tells OpenCV to keep every single pixel of the original image
+        double balance = 0.8;
+
+        cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
+
+        cv::Mat new_K;
+        cv::fisheye::estimateNewCameraMatrixForUndistortRectify(cam_info.cameraMatrix, cam_info.distCoeffs, dim2, E, new_K, balance);
+
+        cv::Mat map1, map2;
+        cv::fisheye::initUndistortRectifyMap(cam_info.cameraMatrix, cam_info.distCoeffs, E, new_K, dim3, CV_16SC2, map1, map2);
+        cv::remap(frame, undist_img, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+    }
+    else if(type==2)
+    {
         cv::Mat panoramicImage;
 
         int Hf, Wf, He, We;
@@ -412,7 +433,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
       // If the input is the web camera, pass 0 instead of the video file name
-      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/random_video.h264");
+      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/2x2cm.h264");
 
       // Check if camera opened successfully
       if(!cap.isOpened())
@@ -435,9 +456,9 @@ int main(int argc, char** argv)
         cv::waitKey(1);
 
         // Correct Frame Distortion
-        cv::Mat undist_frame = correctImage(frame, 0);
-        cv::imshow("Fixed Frame", undist_frame);
-        cv::waitKey(1);
+        cv::Mat undist_frame = correctImage(frame, 1);
+//        cv::imshow("Fixed Frame", undist_frame);
+//        cv::waitKey(1);
 
         // ArUco Identification
         aruco_mainfunction(undist_frame, dictionary);
