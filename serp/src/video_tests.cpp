@@ -433,7 +433,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
       // If the input is the web camera, pass 0 instead of the video file name
-      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/2x2cm.h264");
+      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/video.h264");
 
       // Check if camera opened successfully
       if(!cap.isOpened())
