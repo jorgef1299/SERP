@@ -133,7 +133,7 @@ cv::Mat correctImage(cv::Mat frame, int type)
 
         // When balance = 0,OpenCV will keep the best part of the image for you
         // Whereas balance = 1 tells OpenCV to keep every single pixel of the original image
-        double balance = 0.8;
+        double balance = 1.0;
 
         cv::Mat E = cv::Mat::eye(3, 3, cv::DataType<double>::type);
 
@@ -428,8 +428,8 @@ int main(int argc, char** argv)
     ros::NodeHandle n_public;
 
 
-    // Get Camera Calibration Parameters
-    camera_parameters(1);
+//    // Get Camera Calibration Parameters
+//    camera_parameters(1);
 
     // Create a VideoCapture object and open the input file
       // If the input is the web camera, pass 0 instead of the video file name
@@ -452,16 +452,16 @@ int main(int argc, char** argv)
         if (frame.empty()) break;
 
         // Display the resulting frame
-        cv::imshow("Original Frame", frame);
-        cv::waitKey(1);
+//        cv::imshow("Original Frame", frame);
+//        cv::waitKey(1);
 
-        // Correct Frame Distortion
-        cv::Mat undist_frame = correctImage(frame, 1);
+//        // Correct Frame Distortion
+//        cv::Mat undist_frame = correctImage(frame, 1);
 //        cv::imshow("Fixed Frame", undist_frame);
 //        cv::waitKey(1);
 
         // ArUco Identification
-        aruco_mainfunction(undist_frame, dictionary);
+        aruco_mainfunction(frame, dictionary);
 
         ros::spinOnce();
     }
