@@ -3,6 +3,8 @@
 #include <serp/RobotInfo.h>
 #include <serp/Velocity.h>
 
+//max rpm=95rpm
+
 
 //MOTOR RIGHT->A->1
 //MOTOR LEFT->B->2
@@ -11,7 +13,7 @@
 #define gear_ratio      120
 #define wheel_diameter  0.069
 #define pi 3.1415926
-#define LOOPTIME        1
+#define LOOPTIME 1
 #define AIN1 4 //right 
 #define BIN1 8 //left
 #define AIN2 7 //right
@@ -30,19 +32,18 @@ ArduPID left_motor;
 
 
 // Global variables
-unsigned long myTime;
-uint8_t vel_motor_left;
-uint8_t vel_motor_right;
 ros::NodeHandle  nh;
 
+double setpoint_r = 0;
+double setpoint_l = 0;
 
 
 // Calback que é chamada sempre que chegam novos dados de velocidade para os motores
 // Atualiza o valor da velocidade guardado nas variáveis globais
 void cb_velocity(const serp::Velocity& msg) {
   nh.loginfo("Recebi novos dados de velocidade..."); // DEBUG -> APAGAR
-  vel_motor_left = msg.vel_motor_left;
-  vel_motor_right = msg.vel_motor_right;
+  setpoint_l = msg.vel_motor_left;
+  setpoint_r = msg.vel_motor_right;
 }
 
 // Tipo de mensagem a usar para publicar o estado atual do robô (bateria + velocidade + delta Pose) 
@@ -53,15 +54,13 @@ ros::Publisher publisher("hardware_info", &msg_hardware_state);
 ros::Subscriber<serp::Velocity> subscriber("motors_vel", &cb_velocity);
 
 
-double setpoint_r = 50;
-double setpoint_l = 50;
 double rpm_act1;
 double output_r;
 double rpm_act2;
 double output_l;
 
-double p = 5;
-double i = 5;
+double p = 25;
+double i = 0;
 double d = 0;
 
 double v1Filt = 0;
@@ -75,7 +74,7 @@ long countAnt2 = 0;
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(57600);
 
   pinMode(PWMA,OUTPUT);
   pinMode(AIN1,OUTPUT);
@@ -100,14 +99,11 @@ void setup() {
   nh.initNode();
   nh.advertise(publisher);
   nh.subscribe(subscriber);
-  myTime = millis();
 
 //  //setup PID
   right_motor.begin(&rpm_act1, &output_r, &setpoint_r, p, i, d);
   left_motor.begin(&rpm_act2, &output_l, &setpoint_l, p, i, d);
 
-  //right_motor.setOutputLimits(0,255);
-  //left_motor.setOutputLimits(0,255);
 
 
 }
@@ -120,19 +116,16 @@ void loop() {
   battery_perc_ori=5.2;//val/1023.0*5.0;
   battery_perc=map(battery_perc_ori, 4.5 ,5.1 , 0, 100);
   //Serial.println(battery_perc);
-
-//  digitalWrite(AIN1,HIGH); //Motor A Rotate Clockwise
-//  digitalWrite(AIN2,LOW);
-//  digitalWrite(BIN1,HIGH); //Motor B Rotate Clockwise
-//  digitalWrite(BIN2,LOW);
-//  digitalWrite(STBY,HIGH); 
-
+  double lbatt_state;
 
  //analogWrite(PWMA,150); //Speed control of Motor A
  //analogWrite(PWMB,150); //Speed control of Motor B
   //control loop
+  setpoint_r=60;
+  setpoint_l=0;
+
   unsigned long time = millis();
-  if(time-lastMilli>= LOOPTIME)   {      // enter tmed loop
+  if(time-lastMilli>= LOOPTIME)   {      
     //get speeds
     getMotorData(time-lastMilli);
  
@@ -141,47 +134,44 @@ void loop() {
     //compute PID
     right_motor.compute();
     left_motor.compute();
-
-    //PID debug
-//    right_motor.debug(&Serial, " ", PRINT_INPUT    | // Can include or comment out any of these terms to print
-//                                              PRINT_OUTPUT   | // in the Serial plotter
-//                                              PRINT_SETPOINT |
-//                                              PRINT_BIAS     |
-//                                              PRINT_P        |
-//                                              PRINT_I        |
-//                                              PRINT_D);
+    
     //set motor speed                                          
     motorspeed(output_r,1);
     motorspeed(output_l,2);
 
     // Publish info about actual robot state
-    msg_hardware_state.battery_level = 100;
+    lbatt_state=msg_hardware_state.battery_level;
+    msg_hardware_state.battery_level = battery_perc;
     msg_hardware_state.vel_linear = 3;
     msg_hardware_state.vel_angular = 0.1;
     msg_hardware_state.delta_pos_x = 2;
     msg_hardware_state.delta_pos_y = 1;
     msg_hardware_state.delta_orientation_z = 0.7;
+
+    if(lbatt_state!=msg_hardware_state.battery_level)
     publisher.publish(&msg_hardware_state);
                                          
     lastMilli = time;    
   }
-Serial.print(setpoint_r);
-Serial.print(" ");
-Serial.print(v1Filt);
-Serial.print(" ");
-Serial.println(output_r);
+//Serial.print(setpoint_r);
+//Serial.print(" ");
+//Serial.print(v1Filt);
+//Serial.print(" ");
+//Serial.println(output_r);
+//Serial.println("ola");
+
 // Serial.print("------");
 // Serial.println(output_l);
 
  
-
+nh.spinOnce();
  
 
 }
 
 void getMotorData(unsigned long time)  {
  rpm_act1 = double((count1-countAnt1)*60*1000)/double(time*encoder_pulse*gear_ratio); //right
- rpm_act2 = -double((count2-countAnt2)*60*1000)/double(time*encoder_pulse*gear_ratio); //left
+ rpm_act2 = double((count2-countAnt2)*60*1000)/double(time*encoder_pulse*gear_ratio); //left
  countAnt1 = count1;
  countAnt2 = count2;
 }
@@ -215,20 +205,20 @@ void motorspeed(double output, int id) {
    }
    else  //left motor
     {
-      if (output>=0) //forward
+      if (output<=0) //forward
       {
         //Serial.println("motor right");
         //Serial.println(output_l);
         digitalWrite(BIN1,HIGH); 
         digitalWrite(BIN2,LOW);
-        analogWrite(PWMB,output_l);   
+        analogWrite(PWMB,abs(output_l));   
            
       }
-      if (output<0) //backward
+      if (output>0) //backward
       {
         digitalWrite(BIN1,LOW); 
         digitalWrite(BIN2,HIGH);
-        analogWrite(PWMB,map(abs(output_l), 0 ,100 , 150, 255));
+        analogWrite(PWMB,abs(output_l));
       }
    }
 }

@@ -1,4 +1,6 @@
 #include "arduino_bridge_node.h"
+#include <serp/RobotInfo.h>
+#include <serp/Velocity.h>
 
 bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPointResponse &res)
 {
@@ -29,16 +31,39 @@ bool sendBatteryLevel(std_srvs::TriggerRequest &req, std_srvs::TriggerResponse &
     return true;
 }
 
+void getInfo(const serp::RobotInfo &msg)
+{
+    robot.battery_level=msg.battery_level;
+    ROS_INFO("Received battery level from arduino: %d%%", robot.battery_level);
+}
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "arduino_bridge_node");
     ros::NodeHandle n_public;
-
+    serp::Velocity vel_cmd;
     ros::ServiceServer service_velocity = n_public.advertiseService("velocity_setpoint", VelocitySetPoint);
     ros::ServiceServer service_battery = n_public.advertiseService("srv_battery_level", sendBatteryLevel);
+    int8_t pvel_l;
+    int8_t pvel_r;
 
-    robot.battery_level = 64;
+    //robot.battery_level = 64;
 
-    ros::spin();
+    ros::Publisher send_velocities = n_public.advertise<serp::Velocity>("motors_vel", 2);
+    ros::Subscriber receive_info = n_public.subscribe("hardware_info", 2, getInfo);
+
+    //ros::Rate rate(100); //100hz update frequency
+    while (ros::ok())
+    {
+        pvel_l=vel_cmd.vel_motor_left;
+        pvel_r=vel_cmd.vel_motor_right;
+        vel_cmd.vel_motor_left=robot.motor_left_velocity;
+        vel_cmd.vel_motor_right=robot.motor_right_velocity;
+        if(pvel_l!=vel_cmd.vel_motor_left || pvel_r!=vel_cmd.vel_motor_right)
+          {
+            send_velocities.publish(vel_cmd);
+          }
+        ros::spinOnce();
+    }
+    //ros::spin();
     return 0;
 }
