@@ -5,5 +5,4 @@
 #include <std_srvs/SetBool.h>
 
 // Global variables
-bool must_publish_camera_data;
 

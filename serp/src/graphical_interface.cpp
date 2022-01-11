@@ -102,7 +102,7 @@ void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
     GdkPixbuf *pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB,FALSE, 8,
                                                      cv_ptr->image.cols, cv_ptr->image.rows, cv_ptr->image.step, NULL, NULL);
 
-    gtk_image_set_from_pixbuf(reinterpret_cast<GtkImage *>(camera_image), pixbuf_rgb);
+    gtk_image_set_from_pixbuf(camera_image_frame, pixbuf_rgb);
     g_object_unref(pixbuf_rgb);
 }
 
@@ -116,17 +116,6 @@ void initializeGtkInterface() {
 void gtk_main_quit() {
     ros::shutdown();
     std::exit(0);
-}
-
-void gtk_camera_quit() {
-    // Ask server to stop sending camera data
-    sub_camera_image.shutdown();
-    std_srvs::SetBool srv;
-    srv.request.data = false;
-    if(!(client_camera.call(srv) && srv.response.success)) {
-        insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível contactar o servidor da câmara.", true);
-    }
-    display_camera = false;
 }
 
 int main(int argc, char *argv[])
@@ -165,6 +154,7 @@ int main(int argc, char *argv[])
     range_motor_left = GTK_RANGE(gtk_builder_get_object(builder, "range_motor_left"));
     range_motor_right = GTK_RANGE(gtk_builder_get_object(builder, "range_motor_right"));
     label_battery = GTK_LABEL(gtk_builder_get_object(builder, "battery_level"));
+    camera_image_frame = GTK_IMAGE(gtk_builder_get_object(builder, "camera_frame"));
 
     // Create text buffer iterator
     log_text_iter = new GtkTextIter();
@@ -188,10 +178,11 @@ int main(int argc, char *argv[])
     // Create ROS Service Clients
     client_velocity_setpoint = n_public.serviceClient<serp::VelocitySetPoint>("velocity_setpoint");
     client_battery_level = n_public.serviceClient<std_srvs::Trigger>("srv_battery_level");
-    client_camera = n_public.serviceClient<std_srvs::SetBool>("set_camera");
 
     // Create ROS Subscribers
     it = new image_transport::ImageTransport(n_public);
+    // Subscribe camera image
+    image_transport::Subscriber sub_camera_image = it->subscribe("camera", 1, cb_camera_img);
 
     pub_twist = n_public.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
@@ -304,33 +295,6 @@ extern "C"
         }
         else {
             robot.motor_right_requested_velocity = (int8_t) value;
-        }
-    }
-
-    void on_button_ver_camara_clicked(GtkButton *button) {
-        if(!display_camera) {
-            // Ask server to send camera data
-            std_srvs::SetBool srv;
-            srv.request.data = true;
-            if(!(client_camera.call(srv) && srv.response.success)) {
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível contactar o servidor da câmara.", true);
-            }
-            else {
-                GtkWidget *window_camera;
-                GtkWidget *fixed;
-                // Subscribe camera image
-                sub_camera_image = it->subscribe("camera", 1, cb_camera_img);
-                display_camera = true;
-                // Create new window
-                window_camera = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-                gtk_window_set_title(GTK_WINDOW(window_camera), "Câmara");
-                // Add image widget
-                camera_image = gtk_image_new();
-                gtk_container_add(GTK_CONTAINER(window_camera), camera_image);
-                // Show camera window
-                g_signal_connect(window_camera, "destroy", G_CALLBACK(gtk_camera_quit), NULL);
-                gtk_widget_show_all(window_camera);
-            }
         }
     }
 

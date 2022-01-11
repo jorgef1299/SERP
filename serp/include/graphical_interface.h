@@ -27,15 +27,13 @@ GtkWidget *button_manual_stop;
 GtkRange *range_motor_left;
 GtkRange *range_motor_right;
 GtkLabel  *label_battery;
-GtkWidget *camera_image;
+GtkImage *camera_image_frame;
 
 ros::ServiceClient client_velocity_setpoint;
 ros::ServiceClient client_battery_level;
-ros::ServiceClient client_camera;
 ros::Publisher pub_twist;
 
 image_transport::ImageTransport *it;
-image_transport::Subscriber sub_camera_image;
 
 enum RobotState {
     Stopped,
