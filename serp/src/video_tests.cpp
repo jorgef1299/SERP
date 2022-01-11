@@ -207,13 +207,6 @@ void orientation(int id ,int x_corner, int y_corner)
 }
 
 
-//threshold for checking orientation
-bool inRange(unsigned low, unsigned high, unsigned x)
-{
-    return (low <= x && x <= high);
-}
-
-
 //get measures of blocks given the size of aruco that is being read
 int get_topmargin(int size_aruco) {
     return size_aruco * (0.3 / 0.8);
@@ -301,9 +294,9 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
 }
 
 
-void draw_block(bool check, cv::InputOutputArray image_camera, cv::InputOutputArray image_skeleton, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_skeleton, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
 {
-    if ((check == true) && (id != 28) && (id != 29) && (id != 30))
+    if ((id != 28) && (id != 29) && (id != 30))
     {
         size_aruco = corners[pos][1].x - corners[pos][0].x;
         block_i.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
@@ -342,53 +335,55 @@ void draw_block(bool check, cv::InputOutputArray image_camera, cv::InputOutputAr
 }
 
 
-void drawing_functions(cv::InputOutputArray image_camera, cv::InputOutputArray image_skeleton, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids) {
-    if (ids.size() > 0)
+void detect_orientation_blocks(cv::Mat frame, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+{
+    // Reset flag
+    orientation_check=false;
+
+    if(ids.size() > 0)
     {
-        current_ids_size = ids.size();
-        cv::aruco::drawDetectedMarkers(image_camera, corners, ids);
+        int corners_detected=0;
 
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-
             orientation(ids[i], corners[i][0].x, corners[i][0].y);
 
-            inRange(o_inf_left.x - 15, o_inf_left.x + 15, o_sup_left.x) && inRange(o_inf_right.y - 15, o_inf_right.y + 15, o_inf_left.y) && (o_sup_left.y < o_inf_left.y) ? orientation_check = true : orientation_check = false;
+            if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30) corners_detected++;
 
-            draw_block(orientation_check, image_camera, image_skeleton, ids[i], i, corners);
-
-            //cout << orientation_check;
-
-            //if sheet is in the right orientation start analysis and drawing skeleton
+            if(corners_detected == 3) orientation_check=true;
         }
     }
 }
 
 
-void verify_o_arucos_in_sheet(std::vector<int> ids)
+void perspective_correction(cv::Mat frame)
 {
-    if (ids.size() < current_ids_size)
+
+}
+
+
+void draw_blocks(cv::Mat frame, cv::InputOutputArray image_skeleton, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+{
+    if (ids.size() > 0 && orientation_check)
     {
-        if (!count(ids.begin(), ids.end(), 28))
+//        ROS_WARN_STREAM("Orientation ArUcos Detected");
+
+        // Crop paper to desired position
+        perspective_correction(frame);
+
+        //run through every detected aruco
+        for (int i = 0; i < corners.size(); i++)
         {
-            o_sup_left.x = 0;
-            o_sup_left.y = 0;
-        }
-        if (!count(ids.begin(), ids.end(), 29))
-        {
-            o_inf_left.x = 0;
-            o_inf_left.y = 0;
-        }
-        if (!count(ids.begin(), ids.end(), 30))
-        {
-            o_inf_right.x = 0;
-            o_inf_right.y = 0;
+            //if sheet is in the right orientation start analysis and drawing skeleton
+            draw_block(frame, image_skeleton, ids[i], i, corners);
         }
     }
 }
 
-void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict) {
+
+void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
+{
     cv::Mat frameCopy;
     cv::Mat skeleton(500, 900, CV_8UC3, cv::Scalar(255, 255, 255)); //blank image to draw skeleton
 
@@ -399,15 +394,11 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict) {
 
     cv::aruco::detectMarkers(frame, dict, corners, ids);
 
-    //erase coordinates of orientation arucos if they are not detected in the sheet
-    verify_o_arucos_in_sheet(ids);
+    cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
-    //drawing functions
-    drawing_functions(frameCopy, skeleton, corners, ids);
+    detect_orientation_blocks(frameCopy, corners, ids);
 
-
-    //cout << o_sup_left.x << " | " << o_sup_left.y << " || " << o_inf_left.x << " | " << o_inf_left.y << " || " << o_inf_right.x << " | " << o_inf_right.y ;
-    //cout << "\n";
+    draw_blocks(frameCopy, skeleton, corners, ids);
 
 
     imshow("out", frameCopy);
