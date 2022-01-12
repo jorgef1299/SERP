@@ -454,21 +454,22 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
         cv::line(frame, fake_point, id_28, (255, 0, 0), 2);
         cv::line(frame, fake_point, id_30, (255, 0, 0), 2);
 
+        pts_src.push_back(fake_point);
 
-//        // Points in new frame
-//        pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_28
-//        pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_29
-//        pts_dst.push_back(cv::Point2f(width-1, 0)); // Matches id_30
-//        pts_dst.push_back(cv::Point2f(width-1, height-1)); // Assumption
+        // Points in new frame
+        pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
+        pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_29
+        pts_dst.push_back(cv::Point2f(width-1, height-1)); // Matches id_30
+        pts_dst.push_back(cv::Point2f(width-1, 0)); // Assumption
 
-//        // Calculate Homography
-//        cv::Mat h = cv::findHomography(pts_src, pts_dst);
+        // Calculate Homography
+        cv::Mat h = cv::findHomography(pts_src, pts_dst);
 
-//        // Warp source image to destination based on homography
-//        cv::warpPerspective(frame, new_frame, h, cv::Size(height, width));
+        // Warp source image to destination based on homography
+        cv::warpPerspective(frame, new_frame, h, cv::Size(width, height));
 
-//        cv::imshow("Paper", new_frame);
-//        cv::waitKey(0);
+        cv::imshow("Paper", new_frame);
+        cv::waitKey(1);
     }
 }
 
