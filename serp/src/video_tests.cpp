@@ -372,7 +372,7 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
 {
     std::vector<cv::Point2f> pts_src, pts_dst;
 
-    cv::Point2f id_28, id_29, id_30;
+    cv::Point2f id_28, id_29, id_30, fake_point;
 
     cv::Mat new_frame;
 
@@ -409,6 +409,10 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             }
         }
 
+        // Conect real points
+        cv::line(frame, id_28, id_29, (255, 0, 0), 2);
+        cv::line(frame, id_29, id_30, (255, 0, 0), 2);
+
         // Save by order
         pts_src.push_back(id_28);
         pts_src.push_back(id_29);
@@ -425,14 +429,10 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.x-id_28.x);
             width = abs(id_30.y-id_29.y);
 
-            if(id_28.x < id_29.x)
-            {
-                ROS_WARN_STREAM("28 is at the bottom left");
-            }
-            else
-            {
-                ROS_WARN_STREAM("28 is at the top right");
-            }
+            fake_point = cv::Point2f(id_28.x, id_30.y);
+
+            if(id_28.x < id_29.x) ROS_WARN_STREAM("28 is at the bottom left");
+            else ROS_WARN_STREAM("28 is at the top right");
         }
         else
         {
@@ -441,17 +441,34 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.y-id_28.y);
             width = abs(id_30.x-id_29.x);
 
-            if(id_28.y < id_29.y)
-            {
-                ROS_WARN_STREAM("28 is at the top left");
-            }
-            else
-            {
-                ROS_WARN_STREAM("28 is at the bottom right");
-            }
+            fake_point = cv::Point2f(id_30.x, id_28.y);
+
+            if(id_28.y < id_29.y) ROS_WARN_STREAM("28 is at the top left");
+            else ROS_WARN_STREAM("28 is at the bottom right");
         }
 
         ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
+
+        // Conect fake point
+        cv::circle(frame, fake_point, 5, cv::Scalar(0,255,255), cv::FILLED, 8, 0);
+        cv::line(frame, fake_point, id_28, (255, 0, 0), 2);
+        cv::line(frame, fake_point, id_30, (255, 0, 0), 2);
+
+
+//        // Points in new frame
+//        pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_28
+//        pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_29
+//        pts_dst.push_back(cv::Point2f(width-1, 0)); // Matches id_30
+//        pts_dst.push_back(cv::Point2f(width-1, height-1)); // Assumption
+
+//        // Calculate Homography
+//        cv::Mat h = cv::findHomography(pts_src, pts_dst);
+
+//        // Warp source image to destination based on homography
+//        cv::warpPerspective(frame, new_frame, h, cv::Size(height, width));
+
+//        cv::imshow("Paper", new_frame);
+//        cv::waitKey(0);
     }
 }
 
