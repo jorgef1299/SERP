@@ -335,10 +335,13 @@ void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_sk
 }
 
 
-void detect_orientation_blocks(cv::Mat frame, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
 {
     // Reset flag
     orientation_check=false;
+
+    std::vector<std::vector<cv::Point2f>> orientation_corners;
+    orientation_block markers;
 
     if(ids.size() > 0)
     {
@@ -349,17 +352,107 @@ void detect_orientation_blocks(cv::Mat frame, std::vector<std::vector<cv::Point2
         {
             orientation(ids[i], corners[i][0].x, corners[i][0].y);
 
-            if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30) corners_detected++;
+            if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30)
+            {
+                corners_detected++;
+
+                markers.corners.push_back(corners[i]);
+                markers.ids.push_back(ids[i]);
+            }
 
             if(corners_detected == 3) orientation_check=true;
         }
     }
+
+    return markers;
 }
 
 
-void perspective_correction(cv::Mat frame)
+void perspective_correction(cv::Mat frame, orientation_block markers)
 {
+    std::vector<cv::Point2f> pts_src, pts_dst;
 
+    cv::Point2f id_28, id_29, id_30;
+
+    cv::Mat new_frame;
+
+
+    if(markers.ids.size()==3 && orientation_check)
+    {
+//        ROS_WARN_STREAM("Detected orientation blocks:");
+
+        for(int i=0; i<markers.ids.size(); i++)
+        {
+//            ROS_WARN_STREAM("id="<<markers.ids[i]);
+//            ROS_WARN_STREAM("x="<<markers.corners[i][0].x<<" y="<<markers.corners[0][0].y);
+//            ROS_WARN_STREAM("x="<<markers.corners[i][1].x<<" y="<<markers.corners[0][1].y);
+//            ROS_WARN_STREAM("x="<<markers.corners[i][2].x<<" y="<<markers.corners[0][2].y);
+//            ROS_WARN_STREAM("x="<<markers.corners[i][3].x<<" y="<<markers.corners[0][3].y);
+//            ROS_WARN_STREAM("");
+
+
+            // Save corners take keep the most info from the paper (the farthest ones)
+            if(markers.ids[i]==28)
+            {
+                id_28 = cv::Point2f(markers.corners[i][0].x,markers.corners[i][0].y);
+                cv::circle(frame, id_28, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+            }
+            else if(markers.ids[i]==29)
+            {
+                id_29 = cv::Point2f(markers.corners[i][3].x,markers.corners[i][3].y);
+                cv::circle(frame, id_29, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+            }
+            else if(markers.ids[i]==30)
+            {
+                id_30 = cv::Point2f(markers.corners[i][2].x,markers.corners[i][2].y);
+                cv::circle(frame, id_30, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+            }
+        }
+
+        // Save by order
+        pts_src.push_back(id_28);
+        pts_src.push_back(id_29);
+        pts_src.push_back(id_30);
+
+
+        // Check orientation and calculate new frame dimensions
+        int height, width;
+
+        if(abs(id_28.y-id_29.y) < abs(id_28.x-id_29.x))
+        {
+            ROS_WARN_STREAM("Paper is vertically oriented");
+
+            height = abs(id_29.x-id_28.x);
+            width = abs(id_30.y-id_29.y);
+
+            if(id_28.x < id_29.x)
+            {
+                ROS_WARN_STREAM("28 is at the bottom left");
+            }
+            else
+            {
+                ROS_WARN_STREAM("28 is at the top right");
+            }
+        }
+        else
+        {
+            ROS_WARN_STREAM("Paper is horizontally oriented");
+
+            height = abs(id_29.y-id_28.y);
+            width = abs(id_30.x-id_29.x);
+
+            if(id_28.y < id_29.y)
+            {
+                ROS_WARN_STREAM("28 is at the top left");
+            }
+            else
+            {
+                ROS_WARN_STREAM("28 is at the bottom right");
+            }
+        }
+
+        ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
+    }
 }
 
 
@@ -367,11 +460,6 @@ void draw_blocks(cv::Mat frame, cv::InputOutputArray image_skeleton, std::vector
 {
     if (ids.size() > 0 && orientation_check)
     {
-//        ROS_WARN_STREAM("Orientation ArUcos Detected");
-
-        // Crop paper to desired position
-        perspective_correction(frame);
-
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
@@ -392,11 +480,13 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners;
 
-    cv::aruco::detectMarkers(frame, dict, corners, ids);
+    cv::aruco::detectMarkers(frame, dict, corners, ids); // corners returned clockwise, starting with top lef
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
-    detect_orientation_blocks(frameCopy, corners, ids);
+    orientation_block markers = detect_orientation_blocks(corners, ids);
+
+    perspective_correction(frameCopy, markers); // mudar para frame!
 
     draw_blocks(frameCopy, skeleton, corners, ids);
 

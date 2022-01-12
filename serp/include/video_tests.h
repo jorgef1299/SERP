@@ -56,3 +56,9 @@ bool orientation_check = false;
 
 //dictionary 4X4
 cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
+
+
+struct orientation_block {
+    std::vector<std::vector<cv::Point2f>> corners;
+    std::vector<int> ids;
+};
