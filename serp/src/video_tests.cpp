@@ -183,30 +183,6 @@ cv::Mat correctImage(cv::Mat frame, int type)
 
 // ---------- ARUCO IDENTIFICATION ---------- (add to separate library)
 
-//save coordinates of orientation arucos
-void orientation(int id ,int x_corner, int y_corner)
-{
-    if (id == 28)
-    {
-        o_sup_left.x = x_corner;
-        o_sup_left.y = y_corner;
-    }
-
-    else if (id == 29)
-    {
-        o_inf_left.x = x_corner;
-        o_inf_left.y = y_corner;
-    }
-
-    else if (id == 30)
-    {
-        o_inf_right.x = x_corner;
-        o_inf_right.y = y_corner;
-    }
-    else return;
-}
-
-
 //get measures of blocks given the size of aruco that is being read
 int get_topmargin(int size_aruco) {
     return size_aruco * (0.3 / 0.8);
@@ -254,6 +230,7 @@ void check_function(int id, int x, int y, cv::InputOutputArray image) {
     else if (id == 26) putText(image, "OR", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
     else if (id == 27) putText(image, "mux", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
 }
+
 
 //draw inputs and outputs of blocks (to-do: mux-->condition circle not working)
 void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, cv::InputOutputArray image)
@@ -350,8 +327,6 @@ orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-            orientation(ids[i], corners[i][0].x, corners[i][0].y);
-
             if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30)
             {
                 corners_detected++;
@@ -372,12 +347,12 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
 {
     std::vector<cv::Point2f> pts_src, pts_dst;
 
-    cv::Point2f id_28, id_29, id_30, fake_point;
+    cv::Point2f id_28, id_29, id_30, id_31;
 
     cv::Mat new_frame;
 
 
-    if(markers.ids.size()==3 && orientation_check)
+    if(markers.ids.size()==3 /*==4*/ && orientation_check)
     {
 //        ROS_WARN_STREAM("Detected orientation blocks:");
 
@@ -407,16 +382,24 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
                 id_30 = cv::Point2f(markers.corners[i][2].x,markers.corners[i][2].y);
                 cv::circle(frame, id_30, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
             }
+//            else if(markers.ids[i]==31)
+//            {
+//                id_30 = cv::Point2f(markers.corners[i][1].x,markers.corners[i][1].y);
+//                cv::circle(frame, id_31, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+//            }
         }
 
         // Conect real points
         cv::line(frame, id_28, id_29, (255, 0, 0), 2);
         cv::line(frame, id_29, id_30, (255, 0, 0), 2);
+//        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
+//        cv::line(frame, id_31, id_30, (255, 0, 0), 2);
 
         // Save by order
         pts_src.push_back(id_28);
         pts_src.push_back(id_29);
         pts_src.push_back(id_30);
+//        pts_src.push_back(id_31);
 
 
         // Check orientation and calculate new frame dimensions
@@ -429,7 +412,7 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.x-id_28.x);
             width = abs(id_30.y-id_29.y);
 
-            fake_point = cv::Point2f(id_28.x, id_30.y);
+            id_31 = cv::Point2f(id_28.x, id_30.y); // Fake point
 
             if(id_28.x < id_29.x) ROS_WARN_STREAM("28 is at the bottom left");
             else ROS_WARN_STREAM("28 is at the top right");
@@ -441,7 +424,7 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.y-id_28.y);
             width = abs(id_30.x-id_29.x);
 
-            fake_point = cv::Point2f(id_30.x, id_28.y);
+            id_31 = cv::Point2f(id_30.x, id_28.y); // Fake point
 
             if(id_28.y < id_29.y) ROS_WARN_STREAM("28 is at the top left");
             else ROS_WARN_STREAM("28 is at the bottom right");
@@ -450,11 +433,10 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
         ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
 
         // Conect fake point
-        cv::circle(frame, fake_point, 5, cv::Scalar(0,255,255), cv::FILLED, 8, 0);
-        cv::line(frame, fake_point, id_28, (255, 0, 0), 2);
-        cv::line(frame, fake_point, id_30, (255, 0, 0), 2);
-
-        pts_src.push_back(fake_point);
+        cv::circle(frame, id_31, 5, cv::Scalar(0,255,255), cv::FILLED, 8, 0);
+        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
+        cv::line(frame, id_31, id_30, (255, 0, 0), 2);
+        pts_src.push_back(id_31);
 
         // Points in new frame
         pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
