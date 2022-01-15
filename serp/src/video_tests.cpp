@@ -273,7 +273,7 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
 
 void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_skeleton, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
 {
-    if ((id != 28) && (id != 29) && (id != 30))
+    if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
     {
         size_aruco = corners[pos][1].x - corners[pos][0].x;
         block_i.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
@@ -327,7 +327,7 @@ orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-            if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30)
+            if(ids[i] == 28 || ids[i] == 29 || ids[i] == 30 || ids[i] == 31)
             {
                 corners_detected++;
 
@@ -335,7 +335,7 @@ orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>
                 markers.ids.push_back(ids[i]);
             }
 
-            if(corners_detected == 3) orientation_check=true;
+            if(corners_detected == 4) orientation_check=true;
         }
     }
 
@@ -352,7 +352,7 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
     cv::Mat new_frame;
 
 
-    if(markers.ids.size()==3 /*==4*/ && orientation_check)
+    if(markers.ids.size()==4 && orientation_check)
     {
 //        ROS_WARN_STREAM("Detected orientation blocks:");
 
@@ -382,24 +382,24 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
                 id_30 = cv::Point2f(markers.corners[i][2].x,markers.corners[i][2].y);
                 cv::circle(frame, id_30, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
             }
-//            else if(markers.ids[i]==31)
-//            {
-//                id_30 = cv::Point2f(markers.corners[i][1].x,markers.corners[i][1].y);
-//                cv::circle(frame, id_31, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
-//            }
+            else if(markers.ids[i]==31)
+            {
+                id_31 = cv::Point2f(markers.corners[i][1].x,markers.corners[i][1].y);
+                cv::circle(frame, id_31, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+            }
         }
 
         // Conect real points
         cv::line(frame, id_28, id_29, (255, 0, 0), 2);
         cv::line(frame, id_29, id_30, (255, 0, 0), 2);
-//        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
-//        cv::line(frame, id_31, id_30, (255, 0, 0), 2);
+        cv::line(frame, id_30, id_31, (255, 0, 0), 2);
+        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
 
         // Save by order
         pts_src.push_back(id_28);
         pts_src.push_back(id_29);
         pts_src.push_back(id_30);
-//        pts_src.push_back(id_31);
+        pts_src.push_back(id_31);
 
 
         // Check orientation and calculate new frame dimensions
@@ -412,8 +412,6 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.x-id_28.x);
             width = abs(id_30.y-id_29.y);
 
-            id_31 = cv::Point2f(id_28.x, id_30.y); // Fake point
-
             if(id_28.x < id_29.x) ROS_WARN_STREAM("28 is at the bottom left");
             else ROS_WARN_STREAM("28 is at the top right");
         }
@@ -424,25 +422,18 @@ void perspective_correction(cv::Mat frame, orientation_block markers)
             height = abs(id_29.y-id_28.y);
             width = abs(id_30.x-id_29.x);
 
-            id_31 = cv::Point2f(id_30.x, id_28.y); // Fake point
-
             if(id_28.y < id_29.y) ROS_WARN_STREAM("28 is at the top left");
             else ROS_WARN_STREAM("28 is at the bottom right");
         }
 
         ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
 
-        // Conect fake point
-        cv::circle(frame, id_31, 5, cv::Scalar(0,255,255), cv::FILLED, 8, 0);
-        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
-        cv::line(frame, id_31, id_30, (255, 0, 0), 2);
-        pts_src.push_back(id_31);
 
         // Points in new frame
         pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
         pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_29
         pts_dst.push_back(cv::Point2f(width-1, height-1)); // Matches id_30
-        pts_dst.push_back(cv::Point2f(width-1, 0)); // Assumption
+        pts_dst.push_back(cv::Point2f(width-1, 0)); // Matches id_31
 
         // Calculate Homography
         cv::Mat h = cv::findHomography(pts_src, pts_dst);
@@ -514,7 +505,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
       // If the input is the web camera, pass 0 instead of the video file name
-      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/video.h264");
+      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/test2.mp4");
 
       // Check if camera opened successfully
       if(!cap.isOpened())
