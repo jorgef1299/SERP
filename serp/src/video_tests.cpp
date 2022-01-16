@@ -436,7 +436,7 @@ std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::
 }
 
 
-void perspective_correction(cv::Mat original, cv::Mat frame, orientation_block markers)
+cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_block markers)
 {
     std::vector<cv::Point2f> pts_src, pts_dst;
 
@@ -444,13 +444,10 @@ void perspective_correction(cv::Mat original, cv::Mat frame, orientation_block m
 
     cv::Mat new_frame;
 
+//    ROS_WARN_STREAM("Detected orientation blocks:");
 
-    if(markers.ids.size()==4 && orientation_check)
+    for(int i=0; i<markers.ids.size(); i++)
     {
-//        ROS_WARN_STREAM("Detected orientation blocks:");
-
-        for(int i=0; i<markers.ids.size(); i++)
-        {
 //            ROS_WARN_STREAM("id="<<markers.ids[i]);
 //            ROS_WARN_STREAM("x="<<markers.corners[i][0].x<<" y="<<markers.corners[0][0].y);
 //            ROS_WARN_STREAM("x="<<markers.corners[i][1].x<<" y="<<markers.corners[0][1].y);
@@ -459,124 +456,122 @@ void perspective_correction(cv::Mat original, cv::Mat frame, orientation_block m
 //            ROS_WARN_STREAM("");
 
 
-            // Save corners take keep the most info from the paper (the farthest ones)
-            if(markers.ids[i]==28)
-            {
-                id_28 = cv::Point2f(markers.corners[i][0].x,markers.corners[i][0].y);
-                cv::circle(frame, id_28, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
-            }
-            else if(markers.ids[i]==29)
-            {
-                id_29 = cv::Point2f(markers.corners[i][3].x,markers.corners[i][3].y);
-                cv::circle(frame, id_29, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
-            }
-            else if(markers.ids[i]==30)
-            {
-                id_30 = cv::Point2f(markers.corners[i][2].x,markers.corners[i][2].y);
-                cv::circle(frame, id_30, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
-            }
-            else if(markers.ids[i]==31)
-            {
-                id_31 = cv::Point2f(markers.corners[i][1].x,markers.corners[i][1].y);
-                cv::circle(frame, id_31, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
-            }
-        }
-
-        // Conect real points
-        cv::line(frame, id_28, id_29, (255, 0, 0), 2);
-        cv::line(frame, id_29, id_30, (255, 0, 0), 2);
-        cv::line(frame, id_30, id_31, (255, 0, 0), 2);
-        cv::line(frame, id_31, id_28, (255, 0, 0), 2);
-
-        // Points in original frame
-        pts_src.push_back(id_28);
-        pts_src.push_back(id_29);
-        pts_src.push_back(id_30);
-        pts_src.push_back(id_31);
-
-        std::vector<cv::Point2f> new_points;
-
-        // Check orientation and calculate new frame dimensions
-        int height, width;
-
-        if(abs(id_28.y-id_29.y) < abs(id_28.x-id_29.x))
+        // Save corners take keep the most info from the paper (the farthest ones)
+        if(markers.ids[i]==28)
         {
-            ROS_WARN_STREAM("Paper is vertically oriented");
+            id_28 = cv::Point2f(markers.corners[i][0].x,markers.corners[i][0].y);
+            cv::circle(frame, id_28, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+        }
+        else if(markers.ids[i]==29)
+        {
+            id_29 = cv::Point2f(markers.corners[i][3].x,markers.corners[i][3].y);
+            cv::circle(frame, id_29, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+        }
+        else if(markers.ids[i]==30)
+        {
+            id_30 = cv::Point2f(markers.corners[i][2].x,markers.corners[i][2].y);
+            cv::circle(frame, id_30, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+        }
+        else if(markers.ids[i]==31)
+        {
+            id_31 = cv::Point2f(markers.corners[i][1].x,markers.corners[i][1].y);
+            cv::circle(frame, id_31, 5, cv::Scalar(255,255,255), cv::FILLED, 8, 0);
+        }
+    }
 
-            if(id_28.x < id_29.x)
-            {
-                ROS_WARN_STREAM("28 is at the bottom left");
+    // Conect real points
+    cv::line(frame, id_28, id_29, (255, 0, 0), 2);
+    cv::line(frame, id_29, id_30, (255, 0, 0), 2);
+    cv::line(frame, id_30, id_31, (255, 0, 0), 2);
+    cv::line(frame, id_31, id_28, (255, 0, 0), 2);
 
-                // Replace original points by extensions, to account for distortion
-                new_points = calculateExtendedPoints(frame, pts_src, 0);
-                id_28 = new_points[0];
-                id_29 = new_points[1];
-                id_30 = new_points[2];
-                id_31 = new_points[3];
-            }
-            else
-            {
-                ROS_WARN_STREAM("28 is at the top right");
+    // Points in original frame
+    pts_src.push_back(id_28);
+    pts_src.push_back(id_29);
+    pts_src.push_back(id_30);
+    pts_src.push_back(id_31);
 
-                // Replace original points by extensions, to account for distortion
-                new_points = calculateExtendedPoints(frame, pts_src, 1);
-                id_28 = new_points[0];
-                id_29 = new_points[1];
-                id_30 = new_points[2];
-                id_31 = new_points[3];
-            }
+    std::vector<cv::Point2f> new_points;
 
-            height = abs(id_29.x-id_28.x);
-            width = abs(id_30.y-id_29.y);
+    // Check orientation and calculate new frame dimensions
+    int height, width;
+
+    if(abs(id_28.y-id_29.y) < abs(id_28.x-id_29.x))
+    {
+        ROS_WARN_STREAM("Paper is vertically oriented");
+
+        if(id_28.x < id_29.x)
+        {
+            ROS_WARN_STREAM("28 is at the bottom left");
+
+            // Replace original points by extensions, to account for distortion
+            new_points = calculateExtendedPoints(frame, pts_src, 0);
+            id_28 = new_points[0];
+            id_29 = new_points[1];
+            id_30 = new_points[2];
+            id_31 = new_points[3];
         }
         else
         {
-            ROS_WARN_STREAM("Paper is horizontally oriented");
+            ROS_WARN_STREAM("28 is at the top right");
 
-            if(id_28.y < id_29.y)
-            {
-                ROS_WARN_STREAM("28 is at the top left");
-
-                // Replace original points by extensions, to account for distortion
-                new_points = calculateExtendedPoints(frame, pts_src, 2);
-                id_28 = new_points[0];
-                id_29 = new_points[1];
-                id_30 = new_points[2];
-                id_31 = new_points[3];
-            }
-            else
-            {
-                ROS_WARN_STREAM("28 is at the bottom right");
-
-                // Replace original points by extensions, to account for distortion
-                new_points = calculateExtendedPoints(frame, pts_src, 3);
-                id_28 = new_points[0];
-                id_29 = new_points[1];
-                id_30 = new_points[2];
-                id_31 = new_points[3];
-            }
-
-            height = abs(id_29.y-id_28.y);
-            width = abs(id_30.x-id_29.x);
+            // Replace original points by extensions, to account for distortion
+            new_points = calculateExtendedPoints(frame, pts_src, 1);
+            id_28 = new_points[0];
+            id_29 = new_points[1];
+            id_30 = new_points[2];
+            id_31 = new_points[3];
         }
 
-        ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
-
-        // Points in new frame
-        pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
-        pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_29
-        pts_dst.push_back(cv::Point2f(width-1, height-1)); // Matches id_30
-        pts_dst.push_back(cv::Point2f(width-1, 0)); // Matches id_31
-
-        // Calculate Homography
-        cv::Mat h = cv::findHomography(new_points, pts_dst);
-
-        // Warp source image to destination based on homography
-        cv::warpPerspective(original, new_frame, h, cv::Size(width, height));
-
-        cv::imshow("Paper", new_frame);
-        cv::waitKey(1);
+        height = abs(id_29.x-id_28.x);
+        width = abs(id_30.y-id_29.y);
     }
+    else
+    {
+        ROS_WARN_STREAM("Paper is horizontally oriented");
+
+        if(id_28.y < id_29.y)
+        {
+            ROS_WARN_STREAM("28 is at the top left");
+
+            // Replace original points by extensions, to account for distortion
+            new_points = calculateExtendedPoints(frame, pts_src, 2);
+            id_28 = new_points[0];
+            id_29 = new_points[1];
+            id_30 = new_points[2];
+            id_31 = new_points[3];
+        }
+        else
+        {
+            ROS_WARN_STREAM("28 is at the bottom right");
+
+            // Replace original points by extensions, to account for distortion
+            new_points = calculateExtendedPoints(frame, pts_src, 3);
+            id_28 = new_points[0];
+            id_29 = new_points[1];
+            id_30 = new_points[2];
+            id_31 = new_points[3];
+        }
+
+        height = abs(id_29.y-id_28.y);
+        width = abs(id_30.x-id_29.x);
+    }
+
+    ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
+
+    // Points in new frame
+    pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
+    pts_dst.push_back(cv::Point2f(0, height-1)); // Matches id_29
+    pts_dst.push_back(cv::Point2f(width-1, height-1)); // Matches id_30
+    pts_dst.push_back(cv::Point2f(width-1, 0)); // Matches id_31
+
+    // Calculate Homography
+    cv::Mat h = cv::findHomography(new_points, pts_dst);
+
+    // Warp source image to destination based on homography
+    cv::warpPerspective(original, new_frame, h, cv::Size(width, height));
+
+    return new_frame;
 }
 
 
@@ -612,10 +607,20 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
 
     cv::Mat original = frame.clone();
 
-    perspective_correction(original, frameCopy, markers); // mudar para frame!
+    if(markers.ids.size()==4 && orientation_check)
+    {
+        cv::Mat new_frame = perspective_correction(original, frameCopy, markers);
 
-    draw_blocks(frameCopy, skeleton, corners, ids);
+        std::vector<int> new_ids;
+        std::vector<std::vector<cv::Point2f>> new_corners;
 
+        cv::aruco::detectMarkers(new_frame, dict, new_corners, new_ids);
+
+        draw_blocks(new_frame, skeleton, new_corners, new_ids);
+
+        cv::imshow("Paper", new_frame);
+        cv::waitKey(1);
+    }
 
     imshow("out", frameCopy);
     char key = (char)cv::waitKey(30);
