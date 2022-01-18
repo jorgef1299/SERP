@@ -246,18 +246,18 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
     else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
     {
         //1 input 1 output
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.20))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
     }
     else if (id == 7 || id == 8)
     {
         //1 input
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.20))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input
     }
     else if (id == 9 || id == 10 || id == 11 || id == 12)
     {
         //1 output
-        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5);
     }
     else if (id == 27)
     {
@@ -276,21 +276,22 @@ void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_sk
     if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
     {
         size_aruco = corners[pos][1].x - corners[pos][0].x;
+
         block_i.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
         block_i.b_sup_left.y = corners[pos][0].y - get_topmargin(size_aruco);
 
         block_i.b_sup_right.x = corners[pos][1].x + get_topblock(size_aruco);
         block_i.b_sup_right.y = corners[pos][1].y - get_topmargin(size_aruco);
 
-        block_i.b_inf_left.x = corners[pos][3].x - get_topblock(size_aruco);
-        block_i.b_inf_left.y = corners[pos][3].y + get_bottommargin(size_aruco);
-
         block_i.b_inf_right.x = corners[pos][2].x + get_topblock(size_aruco);
         block_i.b_inf_right.y = corners[pos][2].y + get_bottommargin(size_aruco);
 
+        block_i.b_inf_left.x = corners[pos][3].x - get_topblock(size_aruco);
+        block_i.b_inf_left.y = corners[pos][3].y + get_bottommargin(size_aruco);
 
-        line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //topo
-        line(image_skeleton, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //topo
+
+        line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
+        line(image_skeleton, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
 
         line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
         line(image_skeleton, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
@@ -343,7 +344,7 @@ orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>
 }
 
 
-cv::Point2f extendLines(cv::Mat frame, cv::Point2f point1, cv::Point2f point2)
+cv::Point2f extendLines(cv::Mat frame, cv::Point2f point1, cv::Point2f point2, int height, int width)
 {
     double x1, y1, x2, y2;
     double m, b;
@@ -354,6 +355,7 @@ cv::Point2f extendLines(cv::Mat frame, cv::Point2f point1, cv::Point2f point2)
     x2 = point2.x;
     y2 = point2.y;
 
+    // Calculate line equation
     m = (y1-y2) / (x1-x2);
     b = y1 - (x1 * m);
 
@@ -361,9 +363,10 @@ cv::Point2f extendLines(cv::Mat frame, cv::Point2f point1, cv::Point2f point2)
 //    ROS_WARN_STREAM("x1="<<x1<<" x2="<<x2);
 //    ROS_WARN_STREAM("m="<<m<<" b="<<b);
 
+    // Calculate New Point
     cv::Point2f new_point;
 
-    new_point.x = point1.x-100;
+    new_point.x = point1.x - (0.3 * height); // extends point by a ratio
     new_point.y = m * new_point.x + b;
     cv::circle(frame, new_point, 5, cv::Scalar(0,255,255), cv::FILLED, 8, 0);
     cv::line(frame, new_point, point1, (0, 0, 255), 2);
@@ -372,7 +375,7 @@ cv::Point2f extendLines(cv::Mat frame, cv::Point2f point1, cv::Point2f point2)
 }
 
 
-std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::Point2f> pts_src, int pos_id)
+std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::Point2f> pts_src, int pos_id, int height, int width)
 {
     cv::Point2f id_28 = pts_src[0];
     cv::Point2f id_29 = pts_src[1];
@@ -384,8 +387,8 @@ std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::
     if(pos_id == 0) // Paper is vertically oriented and 28 is at the bottom left
     {
         // Draw Extended Lines
-        cv::Point2f new_point1 = extendLines(frame, id_28, id_29);
-        cv::Point2f new_point2 = extendLines(frame, id_31, id_30);
+        cv::Point2f new_point1 = extendLines(frame, id_28, id_29, height, width);
+        cv::Point2f new_point2 = extendLines(frame, id_31, id_30, height, width);
         cv::line(frame, new_point1, new_point2, (0, 0, 255), 2);
 
         // Substitute exterior detections by extensions
@@ -395,8 +398,8 @@ std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::
     else if(pos_id == 1) // Paper is vertically oriented and 28 is at the top right
     {
         // Draw Extended Lines
-        cv::Point2f new_point1 = extendLines(frame, id_29, id_28);
-        cv::Point2f new_point2 = extendLines(frame, id_30, id_31);
+        cv::Point2f new_point1 = extendLines(frame, id_29, id_28, height, width);
+        cv::Point2f new_point2 = extendLines(frame, id_30, id_31, height, width);
         cv::line(frame, new_point1, new_point2, (0, 0, 255), 2);
 
         // Substitute exterior detections by extensions
@@ -406,8 +409,8 @@ std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::
     else if(pos_id == 2) // Paper is horizontally oriented and 28 is at the top left
     {
         // Draw Extended Lines
-        cv::Point2f new_point1 = extendLines(frame, id_28, id_29);
-        cv::Point2f new_point2 = extendLines(frame, id_31, id_30);
+        cv::Point2f new_point1 = extendLines(frame, id_28, id_29, height, width);
+        cv::Point2f new_point2 = extendLines(frame, id_31, id_30, height, width);
         cv::line(frame, new_point1, new_point2, (0, 0, 255), 2);
 
         // Substitute exterior detections by extensions
@@ -417,8 +420,8 @@ std::vector<cv::Point2f> calculateExtendedPoints(cv::Mat frame, std::vector<cv::
     else if(pos_id == 3) // Paper is horizontally oriented and 28 is at the bottom right
     {
         // Draw Extended Lines
-        cv::Point2f new_point1 = extendLines(frame, id_29, id_28);
-        cv::Point2f new_point2 = extendLines(frame, id_30, id_31);
+        cv::Point2f new_point1 = extendLines(frame, id_29, id_28, height, width);
+        cv::Point2f new_point2 = extendLines(frame, id_30, id_31, height, width);
         cv::line(frame, new_point1, new_point2, (0, 0, 255), 2);
 
         // Substitute exterior detections by extensions
@@ -500,12 +503,16 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
     {
         ROS_WARN_STREAM("Paper is vertically oriented");
 
+        // Calculate original dimensions
+        height = abs(id_29.x-id_28.x);
+        width = abs(id_30.y-id_29.y);
+
         if(id_28.x < id_29.x)
         {
             ROS_WARN_STREAM("28 is at the bottom left");
 
             // Replace original points by extensions, to account for distortion
-            new_points = calculateExtendedPoints(frame, pts_src, 0);
+            new_points = calculateExtendedPoints(frame, pts_src, 0, height, width);
             id_28 = new_points[0];
             id_29 = new_points[1];
             id_30 = new_points[2];
@@ -516,13 +523,14 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
             ROS_WARN_STREAM("28 is at the top right");
 
             // Replace original points by extensions, to account for distortion
-            new_points = calculateExtendedPoints(frame, pts_src, 1);
+            new_points = calculateExtendedPoints(frame, pts_src, 1, height, width);
             id_28 = new_points[0];
             id_29 = new_points[1];
             id_30 = new_points[2];
             id_31 = new_points[3];
         }
 
+        // Calculate new dimensions
         height = abs(id_29.x-id_28.x);
         width = abs(id_30.y-id_29.y);
     }
@@ -530,12 +538,16 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
     {
         ROS_WARN_STREAM("Paper is horizontally oriented");
 
+        // Calculate original dimensions
+        height = abs(id_29.y-id_28.y);
+        width = abs(id_30.x-id_29.x);
+
         if(id_28.y < id_29.y)
         {
             ROS_WARN_STREAM("28 is at the top left");
 
             // Replace original points by extensions, to account for distortion
-            new_points = calculateExtendedPoints(frame, pts_src, 2);
+            new_points = calculateExtendedPoints(frame, pts_src, 2, height, width);
             id_28 = new_points[0];
             id_29 = new_points[1];
             id_30 = new_points[2];
@@ -546,13 +558,14 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
             ROS_WARN_STREAM("28 is at the bottom right");
 
             // Replace original points by extensions, to account for distortion
-            new_points = calculateExtendedPoints(frame, pts_src, 3);
+            new_points = calculateExtendedPoints(frame, pts_src, 3, height, width);
             id_28 = new_points[0];
             id_29 = new_points[1];
             id_30 = new_points[2];
             id_31 = new_points[3];
         }
 
+        // Calculate new dimensions
         height = abs(id_29.y-id_28.y);
         width = abs(id_30.x-id_29.x);
     }
@@ -593,6 +606,8 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
 {
     cv::Mat frameCopy;
     cv::Mat skeleton(500, 900, CV_8UC3, cv::Scalar(255, 255, 255)); //blank image to draw skeleton
+
+//    cv::cvtColor(frame, frame, CV_BGR2GRAY);
 
     frame.copyTo(frameCopy);
 
