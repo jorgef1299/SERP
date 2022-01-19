@@ -588,6 +588,36 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
 }
 
 
+void validatePicture(std::vector<int> ids)
+{
+    count_frames ++;
+
+    if(count_frames < 10)
+    {
+        arucoCount.push_back(ids.size());
+    }
+    else if(count_frames == 10)
+    {
+        float average = accumulate(arucoCount.begin(), arucoCount.end(), 0.0) / arucoCount.size();
+
+        ROS_WARN_STREAM("After "<<count_frames<<" frames, avg=" <<average << "\n");
+
+        // Check if number is integer (stable average)
+        if(average > 4 && std::floor(average) == average) // >4 to account for orientation blocks
+        {
+            pictureValidated = true;
+            ROS_WARN_STREAM("-- Picture Validated --\n");
+        }
+    }
+    else if(count_frames > 10)
+    {
+        pictureValidated = false;
+        count_frames = 0;
+        arucoCount.clear();
+    }
+}
+
+
 void draw_blocks(cv::Mat frame, cv::InputOutputArray image_skeleton, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
 {
     if (ids.size() > 0 && orientation_check)
@@ -617,6 +647,8 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
     cv::aruco::detectMarkers(frame, dict, corners, ids); // corners returned clockwise, starting with top lef
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
+
+    validatePicture(ids);
 
     orientation_block markers = detect_orientation_blocks(corners, ids);
 

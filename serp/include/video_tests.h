@@ -12,6 +12,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
+#include <numeric>
 
 
 
@@ -53,6 +54,9 @@ struct block {
 int current_ids_size=0;
 int size_aruco;
 bool orientation_check = false;
+int count_frames = 0;
+std::vector<int> arucoCount;
+bool pictureValidated = false;
 
 //dictionary 4X4
 cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
