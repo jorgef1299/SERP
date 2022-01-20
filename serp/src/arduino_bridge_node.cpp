@@ -35,6 +35,8 @@ void getInfo(const serp::RobotInfo &msg)
 {
     robot.battery_level=msg.battery_level;
     ROS_INFO("Received battery level from arduino: %d%%", robot.battery_level);
+    ROS_INFO("Received left speed: %d%% right speed: %d%%", robot.vel_linear, robot.vel_angular);
+}
 }
 int main(int argc, char** argv)
 {
