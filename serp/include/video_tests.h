@@ -57,6 +57,7 @@ bool orientation_check = false;
 int count_frames = 0;
 int arucoCount = 0;
 bool pictureValidated = false;
+bool vertical = false;
 
 //dictionary 4X4
 cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
