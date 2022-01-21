@@ -1,6 +1,8 @@
 #include "arduino_bridge_node.h"
 #include <serp/RobotInfo.h>
 #include <serp/Velocity.h>
+serp::RobotInfo robotget;
+
 
 bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPointResponse &res)
 {
@@ -21,7 +23,7 @@ bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPoint
     else {
         res.success = false;
     }
-    ROS_INFO("Received request to set the following velocity values: ML=%d%%\tMR=%d%%", robot.motor_left_velocity, robot.motor_right_velocity);
+    //ROS_INFO("Received request to set the following velocity values: ML=%d%%\tMR=%d%%", robot.motor_left_velocity, robot.motor_right_velocity);
     return res.success;
 }
 
@@ -33,11 +35,11 @@ bool sendBatteryLevel(std_srvs::TriggerRequest &req, std_srvs::TriggerResponse &
 
 void getInfo(const serp::RobotInfo &msg)
 {
-    robot.battery_level=msg.battery_level;
-    ROS_INFO("Received battery level from arduino: %d%%", robot.battery_level);
-    ROS_INFO("Received left speed: %d%% right speed: %d%%", robot.vel_linear, robot.vel_angular);
+    robotget.battery_level=msg.battery_level;
+    ROS_INFO("Received battery level from arduino: %d%%", robotget.battery_level);
+    ROS_INFO("Received left speed: %d%% right speed: %d%%", robotget.vel_linear, robotget.vel_angular);
 }
-}
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "arduino_bridge_node");
