@@ -501,7 +501,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
 
     if(abs(id_28.y-id_29.y) < abs(id_28.x-id_29.x))
     {
-        ROS_WARN_STREAM("Paper is vertically oriented");
+//        ROS_WARN_STREAM("Paper is vertically oriented");
 
         // Calculate original dimensions
         height = abs(id_29.x-id_28.x);
@@ -509,7 +509,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
 
         if(id_28.x < id_29.x)
         {
-            ROS_WARN_STREAM("28 is at the bottom left");
+//            ROS_WARN_STREAM("28 is at the bottom left");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 0, height, width);
@@ -520,7 +520,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
         }
         else
         {
-            ROS_WARN_STREAM("28 is at the top right");
+//            ROS_WARN_STREAM("28 is at the top right");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 1, height, width);
@@ -536,7 +536,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
     }
     else
     {
-        ROS_WARN_STREAM("Paper is horizontally oriented");
+//        ROS_WARN_STREAM("Paper is horizontally oriented");
 
         // Calculate original dimensions
         height = abs(id_29.y-id_28.y);
@@ -544,7 +544,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
 
         if(id_28.y < id_29.y)
         {
-            ROS_WARN_STREAM("28 is at the top left");
+//            ROS_WARN_STREAM("28 is at the top left");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 2, height, width);
@@ -555,7 +555,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
         }
         else
         {
-            ROS_WARN_STREAM("28 is at the bottom right");
+//            ROS_WARN_STREAM("28 is at the bottom right");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 3, height, width);
@@ -570,7 +570,7 @@ cv::Mat perspective_correction(cv::Mat original, cv::Mat frame, orientation_bloc
         width = abs(id_30.x-id_29.x);
     }
 
-    ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
+//    ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
 
     // Points in new frame
     pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
@@ -592,28 +592,29 @@ void validatePicture(std::vector<int> ids)
 {
     count_frames ++;
 
+    int n_detected = ids.size() - 4; // Ignores the orientation arucos
+
     if(count_frames < 10)
     {
-        arucoCount.push_back(ids.size());
+        if(arucoCount != n_detected)
+        {
+            count_frames = 1;
+            arucoCount = n_detected;
+        }
     }
     else if(count_frames == 10)
     {
-        float average = accumulate(arucoCount.begin(), arucoCount.end(), 0.0) / arucoCount.size();
+        ROS_WARN_STREAM("During "<<count_frames<<" frames, detected "<< arucoCount << " arucos\n");
 
-        ROS_WARN_STREAM("After "<<count_frames<<" frames, avg=" <<average << "\n");
-
-        // Check if number is integer (stable average)
-        if(average > 4 && std::floor(average) == average) // >4 to account for orientation blocks
-        {
-            pictureValidated = true;
-            ROS_WARN_STREAM("-- Picture Validated --\n");
-        }
+        pictureValidated = true;
+        ROS_WARN_STREAM("-- Picture Validated --\n");
     }
-    else if(count_frames > 10)
+    else if(count_frames > 10 || arucoCount != n_detected)
     {
         pictureValidated = false;
-        count_frames = 0;
-        arucoCount.clear();
+
+        count_frames = 1;
+        arucoCount = n_detected;
     }
 }
 
@@ -648,25 +649,34 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
-    validatePicture(ids);
-
     orientation_block markers = detect_orientation_blocks(corners, ids);
 
     cv::Mat original = frame.clone();
 
     if(markers.ids.size()==4 && orientation_check)
     {
-        cv::Mat new_frame = perspective_correction(original, frameCopy, markers);
+        validatePicture(ids);
 
-        std::vector<int> new_ids;
-        std::vector<std::vector<cv::Point2f>> new_corners;
+        if(pictureValidated)
+        {
+            cv::Mat new_frame = perspective_correction(original, frameCopy, markers);
 
-        cv::aruco::detectMarkers(new_frame, dict, new_corners, new_ids);
+            std::vector<int> new_ids;
+            std::vector<std::vector<cv::Point2f>> new_corners;
 
-        draw_blocks(new_frame, skeleton, new_corners, new_ids);
+            cv::aruco::detectMarkers(new_frame, dict, new_corners, new_ids);
 
-        cv::imshow("Paper", new_frame);
-        cv::waitKey(1);
+            draw_blocks(new_frame, skeleton, new_corners, new_ids);
+
+            cv::imshow("Paper", new_frame);
+            cv::waitKey(1);
+        }
+    }
+    else
+    {
+        // Paper not detected and picture validation count is interrupted
+        count_frames = 0;
+        arucoCount = 0;
     }
 
     imshow("out", frameCopy);

@@ -55,7 +55,7 @@ int current_ids_size=0;
 int size_aruco;
 bool orientation_check = false;
 int count_frames = 0;
-std::vector<int> arucoCount;
+int arucoCount = 0;
 bool pictureValidated = false;
 
 //dictionary 4X4
