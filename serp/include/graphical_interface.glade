@@ -2,534 +2,6 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkWindow">
-    <property name="can_focus">False</property>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkBox" id="control_right1">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkGrid" id="manual1">
-            <property name="name">manual</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">20</property>
-            <child>
-              <object class="GtkBox" id="box_manual1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel" id="tittle_manual1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_top">10</property>
-                    <property name="margin_bottom">10</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="label" translatable="yes">Controlo Manual</property>
-                    <attributes>
-                      <attribute name="font-desc" value="Lato Bold 10"/>
-                      <attribute name="style" value="normal"/>
-                      <attribute name="weight" value="bold"/>
-                      <attribute name="scale" value="1"/>
-                    </attributes>
-                    <style>
-                      <class name="section_title"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkGrid" id="grid_manual1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_bottom">10</property>
-                    <child>
-                      <object class="GtkLabel" id="motor_right1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="valign">center</property>
-                        <property name="vexpand">True</property>
-                        <property name="label" translatable="yes">Motor Direita:</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Lato 9"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="motor_left1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="valign">center</property>
-                        <property name="margin_top">5</property>
-                        <property name="vexpand">True</property>
-                        <property name="label" translatable="yes">Motor Esquerda:</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Lato 9"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_manual_go1">
-                        <property name="label" translatable="yes">Go!!!</property>
-                        <property name="width_request">-1</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="valign">center</property>
-                        <property name="vexpand">True</property>
-                        <style>
-                          <class name="button_green"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_manual_stop1">
-                        <property name="label" translatable="yes">STOP</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="valign">center</property>
-                        <property name="margin_top">7</property>
-                        <property name="vexpand">True</property>
-                        <style>
-                          <class name="button_red"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="value_motor_right1">
-                        <property name="height_request">30</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="valign">start</property>
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                        <child>
-                          <object class="GtkScale" id="range_motor_right1">
-                            <property name="width_request">100</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="halign">start</property>
-                            <property name="valign">start</property>
-                            <property name="margin_top">4</property>
-                            <property name="margin_bottom">7</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
-                            <property name="adjustment">adjustment2</property>
-                            <property name="show_fill_level">True</property>
-                            <property name="fill_level">100</property>
-                            <property name="round_digits">0</property>
-                            <property name="digits">0</property>
-                            <style>
-                              <class name="label_style"/>
-                            </style>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="value_motor_left1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="valign">start</property>
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                        <child>
-                          <object class="GtkScale" id="range_motor_left1">
-                            <property name="width_request">100</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="halign">start</property>
-                            <property name="valign">start</property>
-                            <property name="margin_bottom">6</property>
-                            <property name="adjustment">adjustment1</property>
-                            <property name="show_fill_level">True</property>
-                            <property name="fill_level">100</property>
-                            <property name="round_digits">0</property>
-                            <property name="digits">0</property>
-                            <style>
-                              <class name="label_style"/>
-                            </style>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <style>
-                          <class name="input_box1"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="fixed_area_control"/>
-                </style>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkGrid" id="paper1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">10</property>
-            <child>
-              <object class="GtkBox" id="box_paper1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel" id="tittle_paper1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_top">10</property>
-                    <property name="margin_bottom">10</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Programação em Papel</property>
-                    <attributes>
-                      <attribute name="font-desc" value="Lato Bold 10"/>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                    <style>
-                      <class name="section_title"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box_paper_1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel" id="label_version1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Versão:</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Lato 9"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="box_version1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_top">5</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel" id="input_version1">
-                            <property name="width_request">150</property>
-                            <property name="height_request">20</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">False</property>
-                            <property name="vexpand">False</property>
-                            <property name="label" translatable="yes">label</property>
-                            <attributes>
-                              <attribute name="font-desc" value="Lato Semi-Bold 8"/>
-                            </attributes>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <style>
-                          <class name="input_box"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="state_capture1">
-                        <property name="width_request">150</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_bottom">5</property>
-                        <property name="label" translatable="yes">label</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Lato Italic 8"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_ver_ultima_folha1">
-                        <property name="label" translatable="yes">Ver a última folha</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="margin_bottom">10</property>
-                        <style>
-                          <class name="button_white"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">4</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="fixed_area_control"/>
-                </style>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkGrid" id="extra1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">10</property>
-            <child>
-              <object class="GtkBox" id="box_extra1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel" id="tittle_extra1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_top">10</property>
-                    <property name="margin_bottom">10</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Funcionalidades Extra</property>
-                    <attributes>
-                      <attribute name="font-desc" value="Lato Bold 10"/>
-                      <attribute name="style" value="normal"/>
-                      <attribute name="weight" value="bold"/>
-                      <attribute name="scale" value="1"/>
-                    </attributes>
-                    <style>
-                      <class name="section_title"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="grid_extra1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel" id="tittle_mode1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Modo de funcionamento:</property>
-                        <attributes>
-                          <attribute name="font-desc" value="Lato 9"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkFixed">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkComboBox">
-                            <property name="width_request">150</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="x">10</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="column_homogeneous">True</property>
-                        <child>
-                          <object class="GtkButton" id="button_extra_go1">
-                            <property name="label" translatable="yes">Go!!!</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="valign">center</property>
-                            <property name="margin_bottom">15</property>
-                            <property name="vexpand">True</property>
-                            <style>
-                              <class name="button_green"/>
-                            </style>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="button_extra_stop1">
-                            <property name="label" translatable="yes">STOP</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="valign">center</property>
-                            <property name="margin_bottom">15</property>
-                            <property name="vexpand">True</property>
-                            <style>
-                              <class name="button_red"/>
-                            </style>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="fixed_area_control"/>
-                </style>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
@@ -614,7 +86,7 @@
 with behavior defined by Paper</property>
                         <property name="justify">center</property>
                         <attributes>
-                          <attribute name="font-desc" value="Lato Heavy 18"/>
+                          <attribute name="font-desc" value="Lato Heavy 16"/>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
@@ -681,7 +153,7 @@ Instruções da Interface....</property>
               </object>
               <packing>
                 <property name="name">HOME</property>
-                <property name="title" translatable="yes">                          HOME                           </property>
+                <property name="title" translatable="yes">                       HOME                       </property>
               </packing>
             </child>
             <child>
@@ -752,26 +224,26 @@ Instruções da Interface....</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                    <property name="width">2</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFixed" id="control_left">
+                  <object class="GtkFixed" id="camera">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkImage" id="camera_frame">
-                        <property name="width_request">300</property>
-                        <property name="height_request">300</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin_left">110</property>
                         <property name="margin_right">20</property>
+                        <property name="margin_top">20</property>
+                        <property name="margin_bottom">20</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                       </object>
-                      <packing>
-                        <property name="x">17</property>
-                        <property name="y">17</property>
-                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -780,148 +252,63 @@ Instruções da Interface....</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="control_right">
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkGrid" id="manual">
+                      <object class="GtkStack" id="stack2">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkBox" id="box_manual">
+                          <object class="GtkGrid" id="manual">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="margin_left">20</property>
                             <property name="margin_right">20</property>
-                            <property name="margin_top">20</property>
-                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkLabel" id="tittle_manual">
+                              <object class="GtkBox" id="box_manual">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="margin_left">10</property>
-                                <property name="margin_right">10</property>
+                                <property name="margin_left">20</property>
+                                <property name="margin_right">20</property>
                                 <property name="margin_top">10</property>
-                                <property name="margin_bottom">10</property>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="label" translatable="yes">Controlo Manual</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Lato Bold 10"/>
-                                  <attribute name="style" value="normal"/>
-                                  <attribute name="weight" value="bold"/>
-                                  <attribute name="scale" value="1"/>
-                                </attributes>
-                                <style>
-                                  <class name="section_title"/>
-                                </style>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkGrid" id="grid_manual">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkLabel" id="motor_right">
+                                  <object class="GtkLabel" id="tittle_manual">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="halign">start</property>
-                                    <property name="valign">center</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="label" translatable="yes">Motor Direita:</property>
-                                    <attributes>
-                                      <attribute name="font-desc" value="Lato 9"/>
-                                    </attributes>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">0</property>
-                                    <property name="top_attach">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="motor_left">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="valign">center</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="margin_top">5</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="label" translatable="yes">Motor Esquerda:</property>
-                                    <attributes>
-                                      <attribute name="font-desc" value="Lato 9"/>
-                                    </attributes>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">0</property>
-                                    <property name="top_attach">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="button_manual_go">
-                                    <property name="label" translatable="yes">Go!!!</property>
-                                    <property name="width_request">-1</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="valign">center</property>
-                                    <property name="margin_right">10</property>
-                                    <property name="vexpand">True</property>
-                                    <signal name="clicked" handler="on_button_go_manual_control_clicked" swapped="no"/>
-                                    <style>
-                                      <class name="button_green"/>
-                                    </style>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="top_attach">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="button_manual_stop">
-                                    <property name="label" translatable="yes">STOP</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="valign">center</property>
-                                    <property name="margin_right">10</property>
-                                    <property name="margin_top">7</property>
                                     <property name="margin_bottom">10</property>
-                                    <property name="vexpand">True</property>
-                                    <signal name="clicked" handler="on_button_stop_manual_control_clicked" swapped="no"/>
-                                    <style>
-                                      <class name="button_red"/>
-                                    </style>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="top_attach">3</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkGrid" id="value_motor_right">
-                                    <property name="height_request">30</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="valign">start</property>
                                     <property name="hexpand">True</property>
                                     <property name="vexpand">True</property>
+                                    <property name="label" translatable="yes">Controlo Manual</property>
+                                    <attributes>
+                                      <attribute name="font-desc" value="Lato Bold 10"/>
+                                      <attribute name="style" value="normal"/>
+                                      <attribute name="weight" value="bold"/>
+                                      <attribute name="scale" value="1"/>
+                                    </attributes>
+                                    <style>
+                                      <class name="section_title"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkGrid" id="grid_manual">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <child>
                                       <object class="GtkScale" id="range_motor_right">
-                                        <property name="width_request">100</property>
+                                        <property name="width_request">200</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">start</property>
-                                        <property name="margin_left">10</property>
                                         <property name="margin_top">4</property>
                                         <property name="margin_bottom">7</property>
                                         <property name="hexpand">True</property>
@@ -937,68 +324,150 @@ Instruções da Interface....</property>
                                         </style>
                                       </object>
                                       <packing>
-                                        <property name="left_attach">0</property>
+                                        <property name="left_attach">1</property>
                                         <property name="top_attach">0</property>
                                       </packing>
                                     </child>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">0</property>
-                                    <property name="top_attach">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkGrid" id="value_motor_left">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="halign">start</property>
-                                    <property name="valign">start</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="vexpand">True</property>
                                     <child>
                                       <object class="GtkScale" id="range_motor_left">
-                                        <property name="width_request">100</property>
+                                        <property name="width_request">200</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">start</property>
-                                        <property name="margin_left">10</property>
                                         <property name="margin_bottom">6</property>
                                         <property name="adjustment">adjustment1</property>
                                         <property name="show_fill_level">True</property>
                                         <property name="fill_level">100</property>
                                         <property name="round_digits">0</property>
                                         <property name="digits">0</property>
-                                        <signal name="format-value" handler="on_range_left_motor_changed" swapped="no"/>
+                                        <signal name="value-changed" handler="on_range_left_motor_changed" swapped="no"/>
                                         <style>
                                           <class name="label_style"/>
                                         </style>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="button_manual_go">
+                                        <property name="label" translatable="yes">Go!!!</property>
+                                        <property name="width_request">-1</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <signal name="clicked" handler="on_button_go_manual_control_clicked" swapped="no"/>
+                                        <style>
+                                          <class name="button_green"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">2</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkGrid" id="value_motor_right">
+                                        <property name="height_request">30</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="motor_right">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="halign">start</property>
+                                            <property name="valign">center</property>
+                                            <property name="vexpand">True</property>
+                                            <property name="label" translatable="yes">Motor Direita:</property>
+                                            <attributes>
+                                              <attribute name="font-desc" value="Lato 9"/>
+                                            </attributes>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="left_attach">0</property>
                                         <property name="top_attach">0</property>
                                       </packing>
                                     </child>
-                                    <style>
-                                      <class name="input_box1"/>
-                                    </style>
+                                    <child>
+                                      <object class="GtkGrid" id="value_motor_left">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="motor_left">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="halign">start</property>
+                                            <property name="valign">center</property>
+                                            <property name="margin_top">5</property>
+                                            <property name="vexpand">True</property>
+                                            <property name="label" translatable="yes">Motor Esquerda:</property>
+                                            <attributes>
+                                              <attribute name="font-desc" value="Lato 9"/>
+                                            </attributes>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
+                                        <style>
+                                          <class name="input_box1"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="button_manual_stop">
+                                        <property name="label" translatable="yes">STOP</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="valign">center</property>
+                                        <property name="margin_top">7</property>
+                                        <property name="margin_bottom">10</property>
+                                        <property name="vexpand">True</property>
+                                        <signal name="clicked" handler="on_button_stop_manual_control_clicked" swapped="no"/>
+                                        <style>
+                                          <class name="button_red"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">2</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
-                                    <property name="left_attach">0</property>
-                                    <property name="top_attach">3</property>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
                               </packing>
                             </child>
                             <style>
@@ -1006,91 +475,59 @@ Instruções da Interface....</property>
                             </style>
                           </object>
                           <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
+                            <property name="name">page0</property>
+                            <property name="title" translatable="yes">Controlo Manual</property>
                           </packing>
                         </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="paper">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_top">10</property>
                         <child>
-                          <object class="GtkBox" id="box_paper">
+                          <object class="GtkGrid" id="paper">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="margin_left">20</property>
                             <property name="margin_right">20</property>
-                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkLabel" id="tittle_paper">
+                              <object class="GtkBox" id="box_paper">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="margin_left">10</property>
+                                <property name="margin_left">20</property>
+                                <property name="margin_right">20</property>
                                 <property name="margin_top">10</property>
-                                <property name="margin_bottom">10</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Programação em Papel</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Lato Bold 10"/>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
-                                <style>
-                                  <class name="section_title"/>
-                                </style>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox" id="box_paper_">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkLabel" id="label_version">
+                                  <object class="GtkLabel" id="tittle_paper">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="halign">start</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="label" translatable="yes">Versão:</property>
+                                    <property name="margin_bottom">10</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Programação em Papel</property>
                                     <attributes>
-                                      <attribute name="font-desc" value="Lato 9"/>
+                                      <attribute name="font-desc" value="Lato Bold 10"/>
+                                      <attribute name="weight" value="bold"/>
                                     </attributes>
+                                    <style>
+                                      <class name="section_title"/>
+                                    </style>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
+                                    <property name="expand">True</property>
                                     <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="box_version">
+                                  <object class="GtkBox" id="box_paper_">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="margin_right">10</property>
                                     <property name="orientation">vertical</property>
                                     <child>
-                                      <object class="GtkLabel" id="input_version">
-                                        <property name="height_request">20</property>
+                                      <object class="GtkLabel" id="label_version">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="hexpand">False</property>
-                                        <property name="vexpand">False</property>
-                                        <property name="label" translatable="yes">label</property>
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Versão:</property>
                                         <attributes>
-                                          <attribute name="font-desc" value="Lato Semi-Bold 8"/>
+                                          <attribute name="font-desc" value="Lato 9"/>
                                         </attributes>
                                       </object>
                                       <packing>
@@ -1099,9 +536,73 @@ Instruções da Interface....</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
-                                    <style>
-                                      <class name="input_box"/>
-                                    </style>
+                                    <child>
+                                      <object class="GtkBox" id="box_version">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel" id="input_version">
+                                            <property name="height_request">20</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="hexpand">False</property>
+                                            <property name="vexpand">False</property>
+                                            <property name="label" translatable="yes">label</property>
+                                            <attributes>
+                                              <attribute name="font-desc" value="Lato Semi-Bold 8"/>
+                                            </attributes>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <style>
+                                          <class name="input_box"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="state_capture">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_bottom">5</property>
+                                        <property name="label" translatable="yes">label</property>
+                                        <attributes>
+                                          <attribute name="font-desc" value="Lato Italic 8"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="button_ver_ultima_folha">
+                                        <property name="label" translatable="yes">Ver a última folha</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="margin_bottom">10</property>
+                                        <signal name="clicked" handler="on_button_ver_ultima_folha_clicked" swapped="no"/>
+                                        <style>
+                                          <class name="button_white"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1109,49 +610,10 @@ Instruções da Interface....</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <object class="GtkLabel" id="state_capture">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="margin_right">10</property>
-                                    <property name="margin_bottom">5</property>
-                                    <property name="label" translatable="yes">label</property>
-                                    <attributes>
-                                      <attribute name="font-desc" value="Lato Italic 8"/>
-                                    </attributes>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="button_ver_ultima_folha">
-                                    <property name="label" translatable="yes">Ver a última folha</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="margin_right">10</property>
-                                    <property name="margin_bottom">10</property>
-                                    <signal name="clicked" handler="on_button_ver_ultima_folha_clicked" swapped="no"/>
-                                    <style>
-                                      <class name="button_white"/>
-                                    </style>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
                               </packing>
                             </child>
                             <style>
@@ -1159,105 +621,153 @@ Instruções da Interface....</property>
                             </style>
                           </object>
                           <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
+                            <property name="name">page1</property>
+                            <property name="title" translatable="yes">Programação em Papel</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="extra">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_top">10</property>
                         <child>
-                          <object class="GtkBox" id="box_extra">
+                          <object class="GtkGrid" id="extra">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="margin_left">20</property>
                             <property name="margin_right">20</property>
-                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkLabel" id="tittle_extra">
+                              <object class="GtkBox" id="box_extra">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="margin_left">10</property>
+                                <property name="margin_left">20</property>
+                                <property name="margin_right">20</property>
                                 <property name="margin_top">10</property>
-                                <property name="margin_bottom">10</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Funcionalidades Extra</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Lato Bold 10"/>
-                                  <attribute name="style" value="normal"/>
-                                  <attribute name="weight" value="bold"/>
-                                  <attribute name="scale" value="1"/>
-                                </attributes>
-                                <style>
-                                  <class name="section_title"/>
-                                </style>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox" id="grid_extra">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkLabel" id="tittle_mode">
+                                  <object class="GtkLabel" id="tittle_extra">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="halign">start</property>
-                                    <property name="margin_left">10</property>
-                                    <property name="label" translatable="yes">Modo de funcionamento:</property>
+                                    <property name="margin_bottom">10</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Funcionalidades Extra</property>
                                     <attributes>
-                                      <attribute name="font-desc" value="Lato 9"/>
+                                      <attribute name="font-desc" value="Lato Bold 10"/>
+                                      <attribute name="style" value="normal"/>
+                                      <attribute name="weight" value="bold"/>
+                                      <attribute name="scale" value="1"/>
                                     </attributes>
+                                    <style>
+                                      <class name="section_title"/>
+                                    </style>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkFixed">
+                                  <object class="GtkBox" id="grid_extra">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
+                                    <property name="orientation">vertical</property>
                                     <child>
-                                      <object class="GtkComboBox" id="choose_mode">
-                                        <property name="width_request">100</property>
+                                      <object class="GtkLabel" id="tittle_mode">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="margin_right">10</property>
-                                        <property name="margin_bottom">10</property>
-                                        <property name="model">liststore1</property>
-                                        <property name="has_entry">True</property>
-                                        <property name="entry_text_column">0</property>
-                                        <child internal-child="entry">
-                                          <object class="GtkEntry" id="mode_entry">
+                                        <property name="halign">start</property>
+                                        <property name="label" translatable="yes">Modo de funcionamento:</property>
+                                        <attributes>
+                                          <attribute name="font-desc" value="Lato 9"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkFixed">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkComboBox" id="choose_mode">
+                                            <property name="width_request">100</property>
+                                            <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="placeholder_text" translatable="yes">Escolher modo</property>
+                                            <property name="margin_bottom">10</property>
+                                            <property name="model">liststore1</property>
+                                            <property name="has_entry">True</property>
+                                            <property name="entry_text_column">0</property>
+                                            <child internal-child="entry">
+                                              <object class="GtkEntry">
+                                                <property name="can_focus">True</property>
+                                                <property name="placeholder_text" translatable="yes">Escolher modo</property>
+                                                <style>
+                                                  <class name="label_style"/>
+                                                </style>
+                                              </object>
+                                            </child>
                                             <style>
                                               <class name="label_style"/>
                                             </style>
                                           </object>
+                                          <packing>
+                                            <property name="x">10</property>
+                                          </packing>
                                         </child>
-                                        <style>
-                                          <class name="label_style"/>
-                                        </style>
                                       </object>
                                       <packing>
-                                        <property name="x">10</property>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkGrid">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="column_homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkButton" id="button_extra_go">
+                                            <property name="label" translatable="yes">Go!!!</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                            <property name="valign">center</property>
+                                            <property name="margin_bottom">15</property>
+                                            <property name="vexpand">True</property>
+                                            <style>
+                                              <class name="button_green"/>
+                                            </style>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton" id="button_extra_stop">
+                                            <property name="label" translatable="yes">STOP</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">True</property>
+                                            <property name="valign">center</property>
+                                            <property name="margin_bottom">15</property>
+                                            <property name="vexpand">True</property>
+                                            <style>
+                                              <class name="button_red"/>
+                                            </style>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">1</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
                                       </packing>
                                     </child>
                                   </object>
@@ -1267,63 +777,10 @@ Instruções da Interface....</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <object class="GtkGrid">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="column_homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkButton" id="button_extra_go">
-                                        <property name="label" translatable="yes">Go!!!</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="valign">center</property>
-                                        <property name="margin_left">10</property>
-                                        <property name="margin_right">5</property>
-                                        <property name="margin_bottom">15</property>
-                                        <property name="vexpand">True</property>
-                                        <style>
-                                          <class name="button_green"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">0</property>
-                                        <property name="top_attach">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="button_extra_stop">
-                                        <property name="label" translatable="yes">STOP</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="valign">center</property>
-                                        <property name="margin_left">5</property>
-                                        <property name="margin_right">10</property>
-                                        <property name="margin_bottom">15</property>
-                                        <property name="vexpand">True</property>
-                                        <style>
-                                          <class name="button_red"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="top_attach">0</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
                               </packing>
                             </child>
                             <style>
@@ -1331,27 +788,43 @@ Instruções da Interface....</property>
                             </style>
                           </object>
                           <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
+                            <property name="name">page2</property>
+                            <property name="title" translatable="yes">Funcionalidades Extra</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkStackSwitcher">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">20</property>
+                        <property name="margin_right">20</property>
+                        <property name="stack">stack2</property>
+                        <style>
+                          <class name="label_style"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
                 <property name="name">page1</property>
-                <property name="title" translatable="yes">                MODO CONTROLO               </property>
+                <property name="title" translatable="yes">             MODO CONTROLO            </property>
                 <property name="position">1</property>
               </packing>
             </child>

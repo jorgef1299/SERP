@@ -90,20 +90,36 @@ void* cb_timer10s(gpointer data) {
 }
 
 void* cb_ros_spin(gpointer data) {
+    ros::Duration(0.03).sleep();
     ros::spin();
 }
 
+gboolean setImage(gpointer data) {
+    GdkPixbuf* buf = (GdkPixbuf*)data;
+    buf = gdk_pixbuf_rotate_simple(buf, GDK_PIXBUF_ROTATE_CLOCKWISE);
+    gtk_image_set_from_pixbuf(camera_image_frame, buf);
+    g_object_unref(buf);
+    g_mutex_unlock(&mutex_camera);
+    return false;
+}
+
+static void destroy_pixbuf(guchar *pixels, gpointer data)
+{
+    g_free(pixels);
+}
+
 void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
-    // Convert ROS message to OpenCV Mat
-    cv_bridge::CvImagePtr cv_ptr;
-    cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-    cv::cvtColor(cv_ptr->image, cv_ptr->image, cv::COLOR_BGR2RGB);
+    if(g_mutex_trylock(&mutex_camera)) {
+        // Convert ROS message to OpenCV Mat
+        cv_bridge::CvImagePtr cv_ptr;
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+        cv::cvtColor(cv_ptr->image, cv_ptr->image, cv::COLOR_BGR2RGB);
 
-    GdkPixbuf *pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB,FALSE, 8,
-                                                     cv_ptr->image.cols, cv_ptr->image.rows, cv_ptr->image.step, NULL, NULL);
-
-    gtk_image_set_from_pixbuf(camera_image_frame, pixbuf_rgb);
-    g_object_unref(pixbuf_rgb);
+        GdkPixbuf *pixbuf_rgb;
+        pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB,FALSE, 8,
+                                              cv_ptr->image.cols, cv_ptr->image.rows, cv_ptr->image.step, destroy_pixbuf, NULL);
+        g_idle_add ((GSourceFunc) setImage, pixbuf_rgb);
+    }
 }
 
 void initializeGtkInterface() {
@@ -202,103 +218,103 @@ int main(int argc, char *argv[])
 
 extern "C"
 {
-    void on_button_go_manual_control_clicked(GtkButton *clicked_button) {
-        if(robot.state == Stopped) {
-            // Send service request
-            serp::VelocitySetPoint srv;
-            srv.request.state = true;
-            srv.request.vel_motor_left = robot.motor_left_requested_velocity;
-            srv.request.vel_motor_right = robot.motor_right_requested_velocity;
-            if(client_velocity_setpoint.call(srv) && srv.response.success) {
-                // Change buttons color
-                enable_interface_button(button_manual_go, true);
-                disable_interface_button(button_manual_stop, false);
-                robot.state = ManualControl;
-                // Add text to the log box
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual ativado!");
-            }
-            else {
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível ativar o modo de controlo manual...", true);
-            }
-
-        }
-    }
-
-    void on_button_stop_manual_control_clicked(GtkButton *clicked_button) {
-        if(robot.state == ManualControl) {
-            // Send service request
-            serp::VelocitySetPoint srv;
-            srv.request.state = false;
-            srv.request.vel_motor_left = robot.motor_left_velocity;
-            srv.request.vel_motor_right = robot.motor_right_velocity;
-            if(client_velocity_setpoint.call(srv) && srv.response.success) {
-                // Change button color to appear disabled
-                disable_interface_button(button_manual_go, true);
-                enable_interface_button(button_manual_stop, false);
-                robot.state = Stopped;
-                // Reset Ranges
-                gtk_range_set_value(range_motor_left, 0);
-                gtk_range_set_value(range_motor_right, 0);
-                // Add text to the log box
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual desativado!");
-            }
-            else {
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível desativar o modo de controlo manual...", true);
-            }
-        }
-    }
-
-    void on_range_left_motor_changed(GtkRange *range) {
-        gdouble value;
-        value = gtk_range_get_value(range);
-        if (robot.state == ManualControl) {
-            // Send service request
-            serp::VelocitySetPoint srv;
-            srv.request.state = true; // activate setpoint mode
-            srv.request.vel_motor_left = (int8_t) value;
-            srv.request.vel_motor_right = robot.motor_right_requested_velocity; // Only update motor left velocity
-            if (!(client_velocity_setpoint.call(srv) && srv.response.success)) {
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível atualizar manualmente a velocidade do robô.", true);
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Controlo manual desativado, por segurança!", true);
-                robot.state = Stopped;
-                enable_interface_button(button_manual_stop, false);
-                disable_interface_button(button_manual_go, true);
-            }
-            else {
-                robot.motor_left_requested_velocity = srv.request.vel_motor_left;
-            }
+void on_button_go_manual_control_clicked(GtkButton *clicked_button) {
+    if(robot.state == Stopped) {
+        // Send service request
+        serp::VelocitySetPoint srv;
+        srv.request.state = true;
+        srv.request.vel_motor_left = robot.motor_left_requested_velocity;
+        srv.request.vel_motor_right = robot.motor_right_requested_velocity;
+        if(client_velocity_setpoint.call(srv) && srv.response.success) {
+            // Change buttons color
+            enable_interface_button(button_manual_go, true);
+            disable_interface_button(button_manual_stop, false);
+            robot.state = ManualControl;
+            // Add text to the log box
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual ativado!");
         }
         else {
-            robot.motor_left_requested_velocity = (int8_t) value;
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível ativar o modo de controlo manual...", true);
         }
-    }
 
-    void on_range_right_motor_changed(GtkRange *range) {
-        gdouble value;
-        value = gtk_range_get_value(range);
-        if (robot.state == ManualControl) {
-            // Send service request
-            serp::VelocitySetPoint srv;
-            srv.request.state = true; // activate setpoint mode
-            srv.request.vel_motor_left = robot.motor_left_requested_velocity; // Only update motor right velocity
-            srv.request.vel_motor_right = (int8_t) value;
-            if (!(client_velocity_setpoint.call(srv) && srv.response.success)) {
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível atualizar manualmente a velocidade do robô.", true);
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Controlo manual desativado, por segurança!", true);
-                robot.state = Stopped;
-                enable_interface_button(button_manual_stop, false);
-                disable_interface_button(button_manual_go, true);
-            }
-            else {
-                robot.motor_right_requested_velocity = srv.request.vel_motor_right;
-            }
+    }
+}
+
+void on_button_stop_manual_control_clicked(GtkButton *clicked_button) {
+    if(robot.state == ManualControl) {
+        // Send service request
+        serp::VelocitySetPoint srv;
+        srv.request.state = false;
+        srv.request.vel_motor_left = robot.motor_left_velocity;
+        srv.request.vel_motor_right = robot.motor_right_velocity;
+        if(client_velocity_setpoint.call(srv) && srv.response.success) {
+            // Change button color to appear disabled
+            disable_interface_button(button_manual_go, true);
+            enable_interface_button(button_manual_stop, false);
+            robot.state = Stopped;
+            // Reset Ranges
+            gtk_range_set_value(range_motor_left, 0);
+            gtk_range_set_value(range_motor_right, 0);
+            // Add text to the log box
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual desativado!");
         }
         else {
-            robot.motor_right_requested_velocity = (int8_t) value;
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível desativar o modo de controlo manual...", true);
         }
     }
+}
 
-    void on_button_ver_ultima_folha_clicked(GtkButton *button) {
-
+void on_range_left_motor_changed(GtkRange *range) {
+    gdouble value;
+    value = gtk_range_get_value(range);
+    if (robot.state == ManualControl) {
+        // Send service request
+        serp::VelocitySetPoint srv;
+        srv.request.state = true; // activate setpoint mode
+        srv.request.vel_motor_left = (int8_t) value;
+        srv.request.vel_motor_right = robot.motor_right_requested_velocity; // Only update motor left velocity
+        if (!(client_velocity_setpoint.call(srv) && srv.response.success)) {
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível atualizar manualmente a velocidade do robô.", true);
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Controlo manual desativado, por segurança!", true);
+            robot.state = Stopped;
+            enable_interface_button(button_manual_stop, false);
+            disable_interface_button(button_manual_go, true);
+        }
+        else {
+            robot.motor_left_requested_velocity = srv.request.vel_motor_left;
+        }
     }
+    else {
+        robot.motor_left_requested_velocity = (int8_t) value;
+    }
+}
+
+void on_range_right_motor_changed(GtkRange *range) {
+    gdouble value;
+    value = gtk_range_get_value(range);
+    if (robot.state == ManualControl) {
+        // Send service request
+        serp::VelocitySetPoint srv;
+        srv.request.state = true; // activate setpoint mode
+        srv.request.vel_motor_left = robot.motor_left_requested_velocity; // Only update motor right velocity
+        srv.request.vel_motor_right = (int8_t) value;
+        if (!(client_velocity_setpoint.call(srv) && srv.response.success)) {
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível atualizar manualmente a velocidade do robô.", true);
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Controlo manual desativado, por segurança!", true);
+            robot.state = Stopped;
+            enable_interface_button(button_manual_stop, false);
+            disable_interface_button(button_manual_go, true);
+        }
+        else {
+            robot.motor_right_requested_velocity = srv.request.vel_motor_right;
+        }
+    }
+    else {
+        robot.motor_right_requested_velocity = (int8_t) value;
+    }
+}
+
+void on_button_ver_ultima_folha_clicked(GtkButton *button) {
+
+}
 }

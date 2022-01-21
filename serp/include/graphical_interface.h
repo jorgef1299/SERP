@@ -29,6 +29,8 @@ GtkRange *range_motor_right;
 GtkLabel  *label_battery;
 GtkImage *camera_image_frame;
 
+GMutex mutex_camera;
+
 ros::ServiceClient client_velocity_setpoint;
 ros::ServiceClient client_battery_level;
 ros::Publisher pub_twist;

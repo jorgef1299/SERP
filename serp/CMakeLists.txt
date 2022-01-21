@@ -13,6 +13,8 @@ set(OpenCV_DIR /usr/share/OpenCV)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED gtk+-3.0)
 
+find_package(raspicam REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
@@ -171,6 +173,7 @@ add_dependencies(arduino_bridge_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catki
 target_link_libraries(rpi_camera_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${raspicam_CV_LIBS}
 )
 
 target_link_libraries(graphical_interface
