@@ -29,15 +29,17 @@ bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPoint
 
 bool sendBatteryLevel(std_srvs::TriggerRequest &req, std_srvs::TriggerResponse &res) {
     res.success = true;
-    res.message = std::to_string(robot.battery_level);
+    res.message = std::to_string(robotget.battery_level);
     return true;
 }
 
 void getInfo(const serp::RobotInfo &msg)
 {
     robotget.battery_level=msg.battery_level;
-    ROS_INFO("Received battery level from arduino: %d%%", robotget.battery_level);
-    ROS_INFO("Received left speed: %d%% right speed: %d%%", robotget.vel_linear, robotget.vel_angular);
+    robotget.vel_linear=msg.vel_linear;
+    robotget.vel_angular=msg.vel_angular;		
+    ROS_INFO("batt: %d%%", robotget.battery_level);
+    ROS_INFO("left speed: %0.1f right speed: %0.1f", robotget.vel_linear, robotget.vel_angular);
 }
 
 int main(int argc, char** argv)
@@ -58,6 +60,7 @@ int main(int argc, char** argv)
     //ros::Rate rate(100); //100hz update frequency
     while (ros::ok())
     {
+	ros::Duration(0.1).sleep();
         pvel_l=vel_cmd.vel_motor_left;
         pvel_r=vel_cmd.vel_motor_right;
         vel_cmd.vel_motor_left=robot.motor_left_velocity;
