@@ -470,7 +470,7 @@ std::vector<cv::Point2f> calculateNewDimensions(cv::Mat frame, orientation_block
     if(abs(id_28.y-id_29.y) < abs(id_28.x-id_29.x))
     {
         vertical = true;
-        ROS_WARN_STREAM("Paper is vertically oriented");
+//        ROS_WARN_STREAM("Paper is vertically oriented");
 
         // Calculate original dimensions
         height = abs(id_29.x-id_28.x);
@@ -478,7 +478,7 @@ std::vector<cv::Point2f> calculateNewDimensions(cv::Mat frame, orientation_block
 
         if(id_28.x < id_29.x)
         {
-            ROS_WARN_STREAM("28 is at the bottom left\n");
+//            ROS_WARN_STREAM("28 is at the bottom left\n");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 0, height, width);
@@ -489,7 +489,7 @@ std::vector<cv::Point2f> calculateNewDimensions(cv::Mat frame, orientation_block
         }
         else
         {
-            ROS_WARN_STREAM("28 is at the top right\n");
+//            ROS_WARN_STREAM("28 is at the top right\n");
 
             // Replace original points by extensions, to account for distortion
             new_points = calculateExtendedPoints(frame, pts_src, 1, height, width);
@@ -503,7 +503,7 @@ std::vector<cv::Point2f> calculateNewDimensions(cv::Mat frame, orientation_block
     {
         vertical = false;
         ROS_WARN_STREAM("Paper is horizontally oriented");
-        ROS_WARN_STREAM("Rotate paper\n");
+        ROS_WARN_STREAM("Rotate paper for detection\n");
     }
 
     return new_points;
@@ -512,7 +512,7 @@ std::vector<cv::Point2f> calculateNewDimensions(cv::Mat frame, orientation_block
 
 cv::Mat perspective_correction(cv::Mat original, std::vector<cv::Point2f> new_points)
 {
-    std::vector<cv::Point2f> pts_src, pts_dst;
+    std::vector<cv::Point2f> pts_dst;
 
     cv::Mat new_frame;
 
@@ -643,6 +643,17 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
     if (key == 's') //save blank image with skeleton by pressing "s" key
         imwrite("my_image.png", skeleton);
 }
+
+
+
+// ---------- LINE DETECTION ---------- (add to separate library)
+
+
+
+
+
+
+
 
 
 
