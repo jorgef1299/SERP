@@ -40,15 +40,22 @@ const double PI = 3.141592653589793;
 struct coordinates {
     int x;
     int y;
-} o_sup_left, o_inf_left, o_inf_right;
+};
 
 //X and Y coordinates of 4 corners of block arucos
 struct block {
+    int id;
+    int count;
+    int size_aruco;
     coordinates b_sup_left;
     coordinates b_sup_right;
     coordinates b_inf_left;
     coordinates b_inf_right;
-} block_i;
+    coordinates input1;
+    coordinates input2;
+    coordinates outputs;
+    coordinates condition;
+};
 
 //global variables
 int current_ids_size=0;

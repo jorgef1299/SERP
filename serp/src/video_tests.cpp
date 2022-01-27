@@ -277,31 +277,33 @@ void draw_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<
     {
         size_aruco = corners[pos][1].x - corners[pos][0].x;
 
-        block_i.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
-        block_i.b_sup_left.y = corners[pos][0].y - get_topmargin(size_aruco);
+        block bock_box;
 
-        block_i.b_sup_right.x = corners[pos][1].x + get_topblock(size_aruco);
-        block_i.b_sup_right.y = corners[pos][1].y - get_topmargin(size_aruco);
+        bock_box.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
+        bock_box.b_sup_left.y = corners[pos][0].y - get_topmargin(size_aruco);
 
-        block_i.b_inf_right.x = corners[pos][2].x + get_topblock(size_aruco);
-        block_i.b_inf_right.y = corners[pos][2].y + get_bottommargin(size_aruco);
+        bock_box.b_sup_right.x = corners[pos][1].x + get_topblock(size_aruco);
+        bock_box.b_sup_right.y = corners[pos][1].y - get_topmargin(size_aruco);
 
-        block_i.b_inf_left.x = corners[pos][3].x - get_topblock(size_aruco);
-        block_i.b_inf_left.y = corners[pos][3].y + get_bottommargin(size_aruco);
+        bock_box.b_inf_right.x = corners[pos][2].x + get_topblock(size_aruco);
+        bock_box.b_inf_right.y = corners[pos][2].y + get_bottommargin(size_aruco);
 
-
-        line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
-
-        line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
-
-        line(image_camera, cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
-
-        line(image_camera, cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
+        bock_box.b_inf_left.x = corners[pos][3].x - get_topblock(size_aruco);
+        bock_box.b_inf_left.y = corners[pos][3].y + get_bottommargin(size_aruco);
 
 
-        draw_check_function(id, block_i.b_sup_left.x, block_i.b_sup_left.y - 5, image_camera);
+        line(image_camera, cv::Point(bock_box.b_sup_left.x, bock_box.b_sup_left.y), cv::Point(bock_box.b_sup_right.x, bock_box.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
 
-        draw_points(id, block_i.b_sup_left, block_i.b_sup_right, block_i.b_inf_left, block_i.b_inf_right, image_camera);
+        line(image_camera, cv::Point(bock_box.b_sup_left.x, bock_box.b_sup_left.y), cv::Point(bock_box.b_inf_left.x, bock_box.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
+
+        line(image_camera, cv::Point(bock_box.b_inf_left.x, bock_box.b_inf_left.y), cv::Point(bock_box.b_inf_right.x, bock_box.b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
+
+        line(image_camera, cv::Point(bock_box.b_inf_right.x, bock_box.b_inf_right.y), cv::Point(bock_box.b_sup_right.x, bock_box.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
+
+
+        draw_check_function(id, bock_box.b_sup_left.x, bock_box.b_sup_left.y - 5, image_camera);
+
+        draw_points(id, bock_box.b_sup_left, bock_box.b_sup_right, bock_box.b_inf_left, bock_box.b_inf_right, image_camera);
     }
 }
 
