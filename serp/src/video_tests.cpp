@@ -200,7 +200,7 @@ int get_topblock(int size_aruco) {
 
 
 //check what function is associated with the detected aruco
-void check_function(int id, int x, int y, cv::InputOutputArray image) {
+void draw_check_function(int id, int x, int y, cv::InputOutputArray image) {
     if (id == 0) putText(image, "Sum", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
     else if (id == 1) putText(image, "*", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
     else if (id == 2) putText(image, "-x", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
@@ -265,13 +265,13 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.20))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-        //circle(image, Point(inf_dir.y, inf_esq.x + ((inf_dir.x - inf_esq.x) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //condition
+        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_dir.y), 9, CV_RGB(0, 0, 255), 1.5); //condition
     }
 
 }
 
 
-void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_skeleton, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+void draw_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
 {
     if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
     {
@@ -291,24 +291,17 @@ void draw_block(cv::InputOutputArray image_camera, cv::InputOutputArray image_sk
 
 
         line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
-        line(image_skeleton, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
 
         line(image_camera, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
-        line(image_skeleton, cv::Point(block_i.b_sup_left.x, block_i.b_sup_left.y), cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
 
         line(image_camera, cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
-        line(image_skeleton, cv::Point(block_i.b_inf_left.x, block_i.b_inf_left.y), cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
 
         line(image_camera, cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
-        line(image_skeleton, cv::Point(block_i.b_inf_right.x, block_i.b_inf_right.y), cv::Point(block_i.b_sup_right.x, block_i.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
 
 
-        check_function(id, block_i.b_sup_left.x, block_i.b_sup_left.y - 5, image_camera);
-        check_function(id, block_i.b_sup_left.x, block_i.b_sup_left.y - 5, image_skeleton);
-
+        draw_check_function(id, block_i.b_sup_left.x, block_i.b_sup_left.y - 5, image_camera);
 
         draw_points(id, block_i.b_sup_left, block_i.b_sup_right, block_i.b_inf_left, block_i.b_inf_right, image_camera);
-        draw_points(id, block_i.b_sup_left, block_i.b_sup_right, block_i.b_inf_left, block_i.b_inf_right, image_skeleton);
     }
 }
 
@@ -574,7 +567,7 @@ void validatePicture(std::vector<int> ids)
 }
 
 
-void draw_blocks(cv::Mat frame, cv::InputOutputArray image_skeleton, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+void draw_blocks(cv::Mat frame, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
 {
     if (ids.size() > 0 && orientation_check)
     {
@@ -582,18 +575,34 @@ void draw_blocks(cv::Mat frame, cv::InputOutputArray image_skeleton, std::vector
         for (int i = 0; i < corners.size(); i++)
         {
             //if sheet is in the right orientation start analysis and drawing skeleton
-            draw_block(frame, image_skeleton, ids[i], i, corners);
+            draw_block(frame, ids[i], i, corners);
         }
     }
 }
 
 
-void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
+
+// ---------- LINE DETECTION ---------- (add to separate library)
+
+void detectAndInterpret_Lines(cv::Mat paper, cv::Ptr<cv::aruco::Dictionary> dict)
+{
+    std::vector<int> new_ids;
+    std::vector<std::vector<cv::Point2f>> new_corners;
+
+    cv::aruco::detectMarkers(paper, dict, new_corners, new_ids);
+
+//    draw_blocks(paper, new_corners, new_ids);
+
+    cv::imshow("Paper", paper);
+    cv::waitKey(1);
+}
+
+
+
+// ---------- PAPER LOGIC MAIN FUNCTION ----------
+void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
 {
     cv::Mat frameCopy;
-    cv::Mat skeleton(500, 900, CV_8UC3, cv::Scalar(255, 255, 255)); //blank image to draw skeleton
-
-//    cv::cvtColor(frame, frame, CV_BGR2GRAY);
 
     frame.copyTo(frameCopy);
 
@@ -618,15 +627,7 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
         {
             cv::Mat new_frame = perspective_correction(original, new_points);
 
-            std::vector<int> new_ids;
-            std::vector<std::vector<cv::Point2f>> new_corners;
-
-            cv::aruco::detectMarkers(new_frame, dict, new_corners, new_ids);
-
-            draw_blocks(new_frame, skeleton, new_corners, new_ids);
-
-            cv::imshow("Paper", new_frame);
-            cv::waitKey(1);
+            detectAndInterpret_Lines(new_frame, dict);
         }
     }
     else
@@ -637,23 +638,8 @@ void aruco_mainfunction(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
     }
 
     imshow("out", frameCopy);
-    char key = (char)cv::waitKey(30);
-//    if (key == 27)
-//        break;
-    if (key == 's') //save blank image with skeleton by pressing "s" key
-        imwrite("my_image.png", skeleton);
+    cv::waitKey(1);
 }
-
-
-
-// ---------- LINE DETECTION ---------- (add to separate library)
-
-
-
-
-
-
-
 
 
 
@@ -698,7 +684,7 @@ int main(int argc, char** argv)
 //        cv::waitKey(1);
 
         // ArUco Identification
-        aruco_mainfunction(frame, dictionary);
+        detectAndInterpret_Paper(frame, dictionary);
 
         ros::spinOnce();
     }
