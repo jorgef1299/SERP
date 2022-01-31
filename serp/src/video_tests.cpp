@@ -686,28 +686,128 @@ void saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::
 }
 
 
+std::string check_function(int id)
+{
+    if (id == 0) return "Aruco SUM";
+    else if (id == 1)return "Aruco PRODUCT";
+    else if (id == 2) return "Aruco INVERSE";
+    else if (id == 3) return "Aruco IF";
+    else if (id == 4) return "Aruco LESS THAN";
+    else if (id == 5) return "Aruco MORE THAN";
+    else if (id == 6) return "Aruco EQUAL";
+    else if (id == 7) return "Aruco LEFT MOTOR";
+    else if (id == 8) return "Aruco RIGHT MOTOR";
+    else if (id == 9) return "Aruco LEFT SENSOR";
+    else if (id == 10) return "Aruco RIGHT SENSOR";
+    else if (id == 11) return "Aruco FRONT SENSOR";
+    else if (id == 12) return "Aruco REAR SENSOR";
+    else if (id == 13) return "Aruco TIMER";
+    else if (id == 14) return "Aruco NUMBER 0";
+    else if (id == 15) return "Aruco NUMBER 1";
+    else if (id == 16) return "Aruco NUMBER 2";
+    else if (id == 17) return "Aruco NUMBER 3";
+    else if (id == 18) return "Aruco NUMBER 4";
+    else if (id == 19) return "Aruco NUMBER 5";
+    else if (id == 20) return "Aruco NUMBER 6";
+    else if (id == 21) return "Aruco NUMBER 7";
+    else if (id == 22) return "Aruco NUMBER 8";
+    else if (id == 23) return "Aruco NUMBER 9";
+    else if (id == 24) return "Aruco DOT";
+    else if (id == 25) return "Aruco AND";
+    else if (id == 26) return "Aruco OR";
+    else if (id == 27) return "Aruco MUX";
+}
+
+
+std::vector<block> put_arucos_order(std::vector<block> blocks )
+{
+  std::vector<block> new_order_block;
+
+  //copy.assign(blocks.begin(),blocks.end());
+
+  int min;
+  int index_min;
+
+
+  while(blocks.size()>0)
+  {
+    //cout  << "Iteration: " << blocks.size() << "\n";
+
+    min=blocks[0].b_sup_left.x;
+    index_min=0;
+    for(int i=0; i<blocks.size(); i++)
+    {
+      //cout << blocks[i].id << "  " << check_function(blocks[i].id) << "\n";
+
+      if(blocks[i].b_sup_left.x < min)
+      {
+        min = blocks[i].b_sup_left.x;
+        index_min=i;
+      }
+    }
+    //cout << min << "  IMHERE\n";
+
+    new_order_block.push_back(blocks[index_min]);
+
+    std::vector<block>::iterator it;
+    it= blocks.begin()+index_min;
+    blocks.erase(it);
+  }
+
+  return new_order_block;
+}
+
+
+void DebugBlocks()
+{
+    for (int j = 0; j < block_in_order.size(); j++)
+    {
+        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].outputs.x << "  " << block_in_order[j].outputs.y << "  " << "\n");
+        ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_in_order[j].input1.x << "  " << block_in_order[j].input1.y << "  " << "\n");
+        ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_in_order[j].input2.x << "  " << block_in_order[j].input2.y << "  " << "\n");
+        ROS_WARN_STREAM("MASK    minx " << masks[j][0] << "    maxx " << masks[j][1] << "    miny " << masks[j][2] << "    maxy " << masks[j][3] << "\n");
+        ROS_WARN_STREAM("-----------------------------------------------------------------------------------------\n");
+    }
+}
+
+
+
+// ---------- LINE DETECTION ---------- (add to separate library)
+
+
+
+
 // ---------- LINE DETECTION LOGIC ----------
 void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> dict)
 {
     cv::Mat paper = new_frame.clone();
+    cv::Mat paperDrawn = new_frame.clone();
 
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners;
 
     cv::aruco::detectMarkers(paper, dict, corners, ids);
 
+
+    // Block Formation
+
     saving_coordinates(paper,corners,ids);
 
-    drawing_functions(paper,corners,ids);
+    drawing_functions(paperDrawn,corners,ids);
 
-//    block_in_order = put_arucos_order(block_i);
+    block_in_order = put_arucos_order(block_i);
 
-//    graph g(block_in_order.size());
+//    DebugBlocks();
 
-//    //ADD LINKS TO GRAPH
+
+    // Line Detection
+
+    graph g(block_in_order.size());
+
+    //Add links to graph
 //    links(paper,g,block_in_order);
 
-    cv::imshow("Paper", paper);
+    cv::imshow("Paper", paperDrawn);
     cv::waitKey(1);
 }
 
