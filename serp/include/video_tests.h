@@ -57,9 +57,13 @@ struct block {
     coordinates condition;
 };
 
+std::vector <block> block_i;
+std::vector<block> block_in_order;
+
 //global variables
+int size_detect=0;
+int pos_list;
 int current_ids_size=0;
-int size_aruco;
 bool orientation_check = false;
 int count_frames = 0;
 int arucoCount = 0;
@@ -73,4 +77,44 @@ cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(c
 struct orientation_block {
     std::vector<std::vector<cv::Point2f>> corners;
     std::vector<int> ids;
+};
+
+
+
+// ---------- LINE DETECTION ---------- (add to separate library)
+
+std::vector<cv::Vec4i> masks;
+
+class graph
+{
+    public:
+
+        std::list<int> *adjlist;
+        int n;
+
+        graph(int v)
+        {
+            adjlist=new std::list<int> [v];
+            n=v;
+        }
+
+        void addedge(int u,int v,bool bi)
+        {
+            adjlist[u].push_back(v);
+
+            if(bi) adjlist[v].push_back(u);
+        }
+
+        void print()
+        {
+            for(int i=0;i<n;i++)
+            {
+                std::cout<< "ARUCO ID: "<<block_in_order[i].id<<"  "<<i<<" -->";
+                for(auto it:adjlist[i]){
+                    std::cout<<it<<" ";
+                }
+                std::cout<<std::endl;
+            }
+            std::cout<<std::endl;
+        }
 };

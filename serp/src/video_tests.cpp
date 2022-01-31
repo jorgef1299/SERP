@@ -181,131 +181,7 @@ cv::Mat correctImage(cv::Mat frame, int type)
 
 
 
-// ---------- ARUCO IDENTIFICATION ---------- (add to separate library)
-
-//get measures of blocks given the size of aruco that is being read
-int get_topmargin(int size_aruco) {
-    return size_aruco * (0.3 / 0.8);
-}
-
-
-int get_bottommargin(int size_aruco) {
-    return size_aruco * (0.2 / 0.8);
-}
-
-
-int get_topblock(int size_aruco) {
-    return size_aruco * (1 / 0.8) * 0.15;
-}
-
-
-//check what function is associated with the detected aruco
-void draw_check_function(int id, int x, int y, cv::InputOutputArray image) {
-    if (id == 0) putText(image, "Sum", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 1) putText(image, "*", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 2) putText(image, "-x", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 3) putText(image, "If", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 4) putText(image, "<", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 5) putText(image, ">", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 6) putText(image, "=", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 7) putText(image, "Me", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 8) putText(image, "Md", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 9) putText(image, "Se", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 10) putText(image, "Sd", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 11) putText(image, "Sf", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 12) putText(image, "St", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 13) putText(image, "Temp", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 14) putText(image, "0", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 15) putText(image, "1", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 16) putText(image, "2", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 17) putText(image, "3", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 18) putText(image, "4", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 19) putText(image, "5", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 20) putText(image, "6", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 21) putText(image, "7", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 22) putText(image, "8", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 23) putText(image, "9", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 24) putText(image, ".", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 25) putText(image, "AND", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 26) putText(image, "OR", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-    else if (id == 27) putText(image, "mux", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
-}
-
-
-//draw inputs and outputs of blocks (to-do: mux-->condition circle not working)
-void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, cv::InputOutputArray image)
-{
-    if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26)
-    {
-        //2 inputs 1 output
-        circle(image, cv::Point(sup_esq.x, sup_esq.y+((inf_esq.y-sup_esq.y)*(0.20))), 9, CV_RGB(0, 0, 255), 1.5); //input top
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
-        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-
-    }
-    else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
-    {
-        //1 input 1 output
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input
-        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-    }
-    else if (id == 7 || id == 8)
-    {
-        //1 input
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input
-    }
-    else if (id == 9 || id == 10 || id == 11 || id == 12)
-    {
-        //1 output
-        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5);
-    }
-    else if (id == 27)
-    {
-        //2 inputs 1 output 1 condition
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.20))), 9, CV_RGB(0, 0, 255), 1.5); //input top
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
-        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_dir.y), 9, CV_RGB(0, 0, 255), 1.5); //condition
-    }
-
-}
-
-
-void draw_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
-{
-    if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
-    {
-        size_aruco = corners[pos][1].x - corners[pos][0].x;
-
-        block bock_box;
-
-        bock_box.b_sup_left.x = corners[pos][0].x - get_topblock(size_aruco);
-        bock_box.b_sup_left.y = corners[pos][0].y - get_topmargin(size_aruco);
-
-        bock_box.b_sup_right.x = corners[pos][1].x + get_topblock(size_aruco);
-        bock_box.b_sup_right.y = corners[pos][1].y - get_topmargin(size_aruco);
-
-        bock_box.b_inf_right.x = corners[pos][2].x + get_topblock(size_aruco);
-        bock_box.b_inf_right.y = corners[pos][2].y + get_bottommargin(size_aruco);
-
-        bock_box.b_inf_left.x = corners[pos][3].x - get_topblock(size_aruco);
-        bock_box.b_inf_left.y = corners[pos][3].y + get_bottommargin(size_aruco);
-
-
-        line(image_camera, cv::Point(bock_box.b_sup_left.x, bock_box.b_sup_left.y), cv::Point(bock_box.b_sup_right.x, bock_box.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //top
-
-        line(image_camera, cv::Point(bock_box.b_sup_left.x, bock_box.b_sup_left.y), cv::Point(bock_box.b_inf_left.x, bock_box.b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
-
-        line(image_camera, cv::Point(bock_box.b_inf_left.x, bock_box.b_inf_left.y), cv::Point(bock_box.b_inf_right.x, bock_box.b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
-
-        line(image_camera, cv::Point(bock_box.b_inf_right.x, bock_box.b_inf_right.y), cv::Point(bock_box.b_sup_right.x, bock_box.b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
-
-
-        draw_check_function(id, bock_box.b_sup_left.x, bock_box.b_sup_left.y - 5, image_camera);
-
-        draw_points(id, bock_box.b_sup_left, bock_box.b_sup_right, bock_box.b_inf_left, bock_box.b_inf_right, image_camera);
-    }
-}
+// ---------- ARUCO IDENTIFICATION AND HOMOGRAPHY ---------- (add to separate library)
 
 
 orientation_block detect_orientation_blocks(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
@@ -569,31 +445,267 @@ void validatePicture(std::vector<int> ids)
 }
 
 
-void draw_blocks(cv::Mat frame, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+
+// ---------- BLOCK FORMATION ---------- (add to separate library)
+
+
+//check what function is associated with the detected aruco
+void draw_check_function(int id, int x, int y, cv::InputOutputArray image) {
+    if (id == 0) putText(image, "Sum", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 1) putText(image, "*", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 2) putText(image, "-x", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 3) putText(image, "If", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 4) putText(image, "<", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 5) putText(image, ">", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 6) putText(image, "=", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 7) putText(image, "Me", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 8) putText(image, "Md", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 9) putText(image, "Se", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 10) putText(image, "Sd", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 11) putText(image, "Sf", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 12) putText(image, "St", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 13) putText(image, "Temp", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 14) putText(image, "0", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 15) putText(image, "1", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 16) putText(image, "2", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 17) putText(image, "3", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 18) putText(image, "4", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 19) putText(image, "5", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 20) putText(image, "6", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 21) putText(image, "7", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 22) putText(image, "8", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 23) putText(image, "9", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 24) putText(image, ".", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 25) putText(image, "AND", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 26) putText(image, "OR", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 27) putText(image, "mux", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+}
+
+
+//draw inputs and outputs of blocks (to-do: mux-->condition circle not working)
+void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, cv::InputOutputArray image)
 {
-    if (ids.size() > 0 && orientation_check)
-    {
+    if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26) {
+        //2 inputs 1 output
+        circle(image, cv::Point(sup_esq.x, sup_esq.y+((inf_esq.y-sup_esq.y)*(0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+  }
+    else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24) {
+        //1 input 1 output
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+    }
+    else if (id == 7 || id == 8) {
+        //1 input
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+    }
+    else if (id == 9 || id == 10 || id == 11 || id == 12) {
+        //1 output
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+    }
+    else if (id == 27) {
+        //2 inputs 1 output 1 condition
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_dir.y), 9, CV_RGB(0, 0, 255), 1.5); //condition
+    }
+}
+
+
+// Draws block body
+void draw_full_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+{
+        line(image_camera, cv::Point(block_i[pos].b_sup_left.x, block_i[pos].b_sup_left.y), cv::Point(block_i[pos].b_sup_right.x, block_i[pos].b_sup_right.y), cv::Scalar(255), 2, 8, 0); //topo
+        line(image_camera, cv::Point(block_i[pos].b_sup_left.x, block_i[pos].b_sup_left.y), cv::Point(block_i[pos].b_inf_left.x, block_i[pos].b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
+        line(image_camera, cv::Point(block_i[pos].b_inf_left.x, block_i[pos].b_inf_left.y), cv::Point(block_i[pos].b_inf_right.x, block_i[pos].b_inf_right.y), cv::Scalar(255), 2, 8, 0); //bottom
+        line(image_camera, cv::Point(block_i[pos].b_inf_right.x, block_i[pos].b_inf_right.y), cv::Point(block_i[pos].b_sup_right.x, block_i[pos].b_sup_right.y), cv::Scalar(255), 2, 8, 0); //right
+
+        draw_check_function(id, block_i[pos].b_sup_left.x, block_i[pos].b_sup_left.y - 5, image_camera);
+
+        draw_points(id, block_i[pos].b_sup_left, block_i[pos].b_sup_right, block_i[pos].b_inf_left, block_i[pos].b_inf_right, image_camera);
+}
+
+
+void drawing_functions(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+{
+    if (ids.size() > 0) {
+        current_ids_size = ids.size();
+        //aruco::drawDetectedMarkers(image, corners, ids);
+
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-            //if sheet is in the right orientation start analysis and drawing skeleton
-            draw_block(frame, ids[i], i, corners);
+            draw_full_block(image, ids[i], i, corners);
         }
     }
 }
 
 
-
-// ---------- LINE DETECTION ---------- (add to separate library)
-
-void detectAndInterpret_Lines(cv::Mat paper, cv::Ptr<cv::aruco::Dictionary> dict)
+// Count number of times ArUco type was detected
+int check_occurences(int id, std::vector<block> vect)
 {
-    std::vector<int> new_ids;
-    std::vector<std::vector<cv::Point2f>> new_corners;
+  int count=0;
 
-    cv::aruco::detectMarkers(paper, dict, new_corners, new_ids);
+  for (int j = 0; j < vect.size(); j++)
+  {
+      if(vect[j].id == id) count++;
+  }
 
-//    draw_blocks(paper, new_corners, new_ids);
+    return count;
+}
+
+
+//get measures of blocks given the size of aruco that is being read
+int get_topmargin(int size_aruco) {
+    return size_aruco * (0.2/ 0.8);
+}
+
+int get_bottommargin(int size_aruco) {
+    return size_aruco * (0.15/ 0.8);
+}
+
+int get_topblock(int size_aruco) {
+    return size_aruco * (1 / 0.8) * 0.15;
+}
+
+
+// Saves corners of the Block
+void corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+{
+  if ((id != 28) && (id != 29) && (id != 30) && (id<31))
+  {
+      block_i.push_back(block());
+
+      block_i[pos].count=check_occurences(id,block_i)+1;
+
+      block_i[pos].id=id;
+
+
+
+      block_i[pos].size_aruco = corners[pos][1].x - corners[pos][0].x;
+      block_i[pos].b_sup_left.x = corners[pos][0].x - get_topblock(block_i[pos].size_aruco);
+      block_i[pos].b_sup_left.y = corners[pos][0].y - get_topmargin(block_i[pos].size_aruco);
+
+      block_i[pos].b_sup_right.x = corners[pos][1].x + get_topblock(block_i[pos].size_aruco);
+      block_i[pos].b_sup_right.y = corners[pos][1].y - get_topmargin(block_i[pos].size_aruco);
+
+      block_i[pos].b_inf_left.x = corners[pos][3].x - get_topblock(block_i[pos].size_aruco);
+      block_i[pos].b_inf_left.y = corners[pos][3].y + get_bottommargin(block_i[pos].size_aruco);
+
+      block_i[pos].b_inf_right.x = corners[pos][2].x + get_topblock(block_i[pos].size_aruco);
+      block_i[pos].b_inf_right.y = corners[pos][2].y + get_bottommargin(block_i[pos].size_aruco);
+  }
+
+}
+
+
+// Saves Block Inputs and Outputs
+void save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id)
+{
+
+    masks.push_back(cv::Vec4i());
+    //min_x max_x min_y max_y
+    masks[pos_list][0]=sup_esq.x;
+    masks[pos_list][1]=inf_dir.x;
+    masks[pos_list][2]=sup_esq.y;
+    masks[pos_list][3]=inf_dir.y;
+
+    if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26)
+    {
+        //2 inputs 1 output
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].outputs.x = sup_dir.x;
+        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.x = sup_esq.x;
+        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+        block_i[pos_list].input2.x = sup_esq.x;
+        block_i[pos_list].input2.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+    }
+    else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
+    {
+        //1 input 1 output
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].outputs.x = sup_dir.x;
+        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.x = sup_esq.x;
+        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
+    }
+    else if (id == 7 || id == 8)
+    {
+        //1 input
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].input1.x = sup_esq.x;
+        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
+    }
+    else if (id == 9 || id == 10 || id == 11 || id == 12)
+    {
+        //1 output
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].outputs.x = sup_dir.x;
+        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+    }
+    else if (id == 27)
+    {
+        //2 inputs 1 output 1 condition
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].outputs.x = sup_dir.x;
+        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.x = sup_esq.x;
+        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+        block_i[pos_list].input2.x = sup_esq.x;
+        block_i[pos_list].input2.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+        block_i[pos_list].condition.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
+        block_i[pos_list].condition.y = inf_dir.y;
+    }
+
+}
+
+
+// Saves every Block's Corners and I/Os
+void saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+{
+    if (ids.size() > 0)
+    {
+        current_ids_size = ids.size();
+
+        //run through every detected aruco
+        for (int i = 0; i < corners.size(); i++)
+        {
+            corners_blocks(ids[i], i, corners);
+
+            save_in_out(image,block_i[i].b_sup_left, block_i[i].b_sup_right, block_i[i].b_inf_left, block_i[i].b_inf_right, i, ids[i]);
+        }
+    }
+}
+
+
+// ---------- LINE DETECTION LOGIC ----------
+void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> dict)
+{
+    cv::Mat paper = new_frame.clone();
+
+    std::vector<int> ids;
+    std::vector<std::vector<cv::Point2f>> corners;
+
+    cv::aruco::detectMarkers(paper, dict, corners, ids);
+
+    saving_coordinates(paper,corners,ids);
+
+    drawing_functions(paper,corners,ids);
+
+//    block_in_order = put_arucos_order(block_i);
+
+//    graph g(block_in_order.size());
+
+//    //ADD LINKS TO GRAPH
+//    links(paper,g,block_in_order);
 
     cv::imshow("Paper", paper);
     cv::waitKey(1);
@@ -601,7 +713,7 @@ void detectAndInterpret_Lines(cv::Mat paper, cv::Ptr<cv::aruco::Dictionary> dict
 
 
 
-// ---------- PAPER LOGIC MAIN FUNCTION ----------
+// ---------- PAPER LOGIC (MAIN FUNCTION) ----------
 void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict)
 {
     cv::Mat frameCopy;
