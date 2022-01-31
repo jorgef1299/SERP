@@ -775,6 +775,227 @@ void DebugBlocks()
 // ---------- LINE DETECTION ---------- (add to separate library)
 
 
+bool isInside(int circle_x, int circle_y, int rad, int x, int y)
+{
+    // Compare radius of circle with distance
+    // of its center from given point
+    if ((x - circle_x) * (x - circle_x) +
+        (y - circle_y) * (y - circle_y) <= rad * rad)
+        return true;
+    else
+        return false;
+}
+
+
+bool check_lines(cv::Vec4i lin, size_t j, int radius, graph g,std::vector<block> vec)
+{
+    for(int k=0;k<vec.size();k++)
+    {
+        // output points
+        if(isInside(vec[k].outputs.x, vec[k].outputs.y,radius,lin[0], lin[1])==1)
+        {
+            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
+
+            for(int j=0;j<vec.size();j++)
+            {
+
+                if((isInside(vec[j].input1.x, vec[j].input1.y,radius,lin[2], lin[3])==1))
+                {
+                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(k,j,false);
+                    return 1;
+                }
+                else if((isInside(vec[j].input2.x, vec[j].input2.y,radius,lin[2], lin[3])==1))
+                {
+                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(k,j,false);
+                    return 1;
+                }
+                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+        else if(isInside(vec[k].outputs.x, vec[k].outputs.y,radius,lin[2], lin[3])==1)
+        {
+            //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside(vec[j].input1.x, vec[j].input1.y,radius,lin[0], lin[1])==1))
+                {
+                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
+
+                    g.addedge(k,j,false);
+                    return 1;
+                }
+                else if((isInside(vec[j].input2.x, vec[j].input2.y,radius,lin[0], lin[1])==1))
+                {
+                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
+
+                    g.addedge(k,j,false);
+                    return 1;
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+
+
+        // input1 points
+        else if (isInside(vec[k].input1.x, vec[k].input1.y,radius,lin[0], lin[1])==1)
+        {
+            //std::cout <<"It is that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " top input\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside( vec[j].outputs.x, vec[j].outputs.y,radius,lin[2], lin[3])==1))
+                {
+                    ROS_WARN_STREAM("The top input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(j,k,false);
+                    return 1;
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+        else if(isInside(vec[k].input1.x, vec[k].input1.y,radius,lin[2], lin[3])==1)
+        {
+            //std::cout <<"It is that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " top input\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[0], lin[1])==1))
+                {
+                    ROS_WARN_STREAM("The top input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(j,k,false);
+                    return 1;
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+
+
+        // input2 points
+        else if(isInside(vec[k].input2.x, vec[k].input2.y,radius,lin[0], lin[1])==1)
+        {
+            //std::cout <<"It is that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " bottom input\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[2], lin[3])==1))
+                {
+                    ROS_WARN_STREAM("The bottom input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(j,k,false);
+                    return 1;
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+        else if(isInside(vec[k].input2.x, vec[k].input2.y,radius,lin[2], lin[3])==1)
+        {
+            //std::cout <<"It is that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " bottom input\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[0], lin[1])==1))
+                {
+                    ROS_WARN_STREAM("The bottom input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+
+                    g.addedge(j,k,false);
+                    return 1;
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+
+    }
+
+
+    return 0;
+}
+
+
+std::vector<cv::Vec4i> detectLines(cv::Mat paper)
+{
+    cv::Mat image;
+    cv::cvtColor(paper, image, cv::COLOR_BGR2GRAY);
+
+//    imshow("Input Image", image);
+
+
+    // Mask To Eliminate ArUcos
+    for(int q=0; q<masks.size(); q++)
+    {
+        for(int w=masks[q][2]-8; w<masks[q][3]+8; w++)
+        {
+            for(int e=masks[q][0]-5; e<masks[q][1]+5; e++)
+            {
+                image.at<uchar>(w,e)=255;
+            }
+        }
+    }
+
+//    imshow("Take Off Arucos", image);
+
+
+    // Threshold to eliminate white background
+    image = image < 200;
+//    imshow("Mask I < 200 ", image);
+
+
+    // Keep only paper area
+    rectangle(image, cv::Rect(0, 0, image.cols, image.rows), cv::Scalar(255));
+    floodFill(image, cv::Point(0, 0), cv::Scalar(0));
+
+//    imshow("Flood Fill After Rect", image);
+
+
+    // Line dilation
+    cv::Mat kernel=cv::Mat(cv::Size(5,5),CV_8UC1,cv::Scalar(255));
+    morphologyEx(image,image,cv::MORPH_DILATE,kernel);
+
+//    imshow("Dilation", image);
+
+
+    // Detect Lines
+    std::vector<std::vector<cv::Point> > contours;
+    findContours(image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
+
+    std::vector<cv::Vec4i> linesP;
+
+    for(size_t k=0; k<contours.size();k++)
+    {
+        auto val=minmax_element(contours[k].begin(), contours[k].end(), [](cv::Point const& a, cv::Point const& b)
+        {
+          return a.x < b.x;
+        });
+
+        //circle(image, Point(val.first->x,val.first->y), 13, Scalar(0, 255, 0), 8, LINE_AA);
+        //circle(image, Point(val.second->x,val.second->y), 13, Scalar(0, 255, 0), 8, LINE_AA);
+        linesP.push_back(cv::Vec4i());
+        linesP[k][0]=val.first->x;
+        linesP[k][1]=val.first->y;
+        linesP[k][2]=val.second->x;
+        linesP[k][3]=val.second->y;
+
+//        ROS_WARN_STREAM(" leftMost [ " << val.first->x << ", " << val.first->y << " ]");
+//        ROS_WARN_STREAM(" RightMost [ " << val.second->x << ", " << val.second->y << " ]");
+    }
+
+    return linesP;
+}
+
+
+void drawLines(cv::InputOutputArray paper, std::vector<cv::Vec4i> linesP, graph g, std::vector<block> blocks)
+{
+    // Draw Lines
+    for (size_t i = 0; i < linesP.size(); i++)
+    {
+        cv::Vec4i l = linesP[i];
+
+        if(check_lines(l,i,15,g,blocks)==1)
+        {
+            line(paper, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
+        }
+    }
+}
 
 
 // ---------- LINE DETECTION LOGIC ----------
@@ -804,11 +1025,14 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     graph g(block_in_order.size());
 
-    //Add links to graph
-//    links(paper,g,block_in_order);
+    std::vector<cv::Vec4i> linesP = detectLines(paper);
 
-    cv::imshow("Paper", paperDrawn);
-    cv::waitKey(1);
+    drawLines(paperDrawn, linesP, g, block_in_order);
+
+//    g.print();
+
+    cv::imshow("Paper Drawn", paperDrawn);
+    cv::waitKey(0);
 }
 
 
