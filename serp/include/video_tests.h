@@ -57,9 +57,6 @@ struct block {
     coordinates condition;
 };
 
-std::vector <block> block_i;
-std::vector<block> block_in_order;
-
 //global variables
 int size_detect=0;
 int pos_list;
@@ -105,16 +102,16 @@ class graph
             if(bi) adjlist[v].push_back(u);
         }
 
-        void print()
-        {
-            for(int i=0;i<n;i++)
-            {
-                std::cout<< "ARUCO ID: "<<block_in_order[i].id<<"  "<<i<<" -->";
-                for(auto it:adjlist[i]){
-                    std::cout<<it<<" ";
-                }
-                std::cout<<std::endl;
-            }
-            std::cout<<std::endl;
-        }
+//        void print()
+//        {
+//            for(int i=0;i<n;i++)
+//            {
+//                std::cout<< "ARUCO ID: "<<block_in_order[i].id<<"  "<<i<<" -->";
+//                for(auto it:adjlist[i]){
+//                    std::cout<<it<<" ";
+//                }
+//                std::cout<<std::endl;
+//            }
+//            std::cout<<std::endl;
+//        }
 };

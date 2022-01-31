@@ -515,7 +515,7 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
 
 
 // Draws block body
-void draw_full_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+void draw_full_block(cv::InputOutputArray image_camera, int id, int pos, std::vector<std::vector<cv::Point2f>> corners, std::vector <block> block_i)
 {
         line(image_camera, cv::Point(block_i[pos].b_sup_left.x, block_i[pos].b_sup_left.y), cv::Point(block_i[pos].b_sup_right.x, block_i[pos].b_sup_right.y), cv::Scalar(255), 2, 8, 0); //topo
         line(image_camera, cv::Point(block_i[pos].b_sup_left.x, block_i[pos].b_sup_left.y), cv::Point(block_i[pos].b_inf_left.x, block_i[pos].b_inf_left.y), cv::Scalar(255), 2, 8, 0); //left
@@ -528,7 +528,7 @@ void draw_full_block(cv::InputOutputArray image_camera, int id, int pos, std::ve
 }
 
 
-void drawing_functions(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+void drawing_functions(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, std::vector <block> block_i)
 {
     if (ids.size() > 0) {
         current_ids_size = ids.size();
@@ -537,7 +537,7 @@ void drawing_functions(cv::InputOutputArray image, std::vector<std::vector<cv::P
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-            draw_full_block(image, ids[i], i, corners);
+            draw_full_block(image, ids[i], i, corners, block_i);
         }
     }
 }
@@ -572,7 +572,7 @@ int get_topblock(int size_aruco) {
 
 
 // Saves corners of the Block
-void corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corners)
+std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corners, std::vector <block> block_i)
 {
   if ((id != 28) && (id != 29) && (id != 30) && (id<31))
   {
@@ -598,11 +598,12 @@ void corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corne
       block_i[pos].b_inf_right.y = corners[pos][2].y + get_bottommargin(block_i[pos].size_aruco);
   }
 
+  return block_i;
 }
 
 
 // Saves Block Inputs and Outputs
-void save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id)
+std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id, std::vector <block> block_i)
 {
 
     masks.push_back(cv::Vec4i());
@@ -665,11 +666,12 @@ void save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates su
         block_i[pos_list].condition.y = inf_dir.y;
     }
 
+    return block_i;
 }
 
 
 // Saves every Block's Corners and I/Os
-void saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids)
+std::vector <block> saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, std::vector <block> block_i)
 {
     if (ids.size() > 0)
     {
@@ -678,11 +680,13 @@ void saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
-            corners_blocks(ids[i], i, corners);
+            block_i = corners_blocks(ids[i], i, corners, block_i);
 
-            save_in_out(image,block_i[i].b_sup_left, block_i[i].b_sup_right, block_i[i].b_inf_left, block_i[i].b_inf_right, i, ids[i]);
+            block_i = save_in_out(image, block_i[i].b_sup_left, block_i[i].b_sup_right, block_i[i].b_inf_left, block_i[i].b_inf_right, i, ids[i], block_i);
         }
     }
+
+    return block_i;
 }
 
 
@@ -758,7 +762,7 @@ std::vector<block> put_arucos_order(std::vector<block> blocks )
 }
 
 
-void DebugBlocks()
+void DebugBlocks(std::vector<block> block_in_order)
 {
     for (int j = 0; j < block_in_order.size(); j++)
     {
@@ -1012,13 +1016,15 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     // Block Formation
 
-    saving_coordinates(paper,corners,ids);
+    std::vector <block> block_i;
 
-    drawing_functions(paperDrawn,corners,ids);
+    block_i = saving_coordinates(paper, corners, ids, block_i);
 
-    block_in_order = put_arucos_order(block_i);
+    drawing_functions(paperDrawn, corners, ids, block_i);
 
-//    DebugBlocks();
+    std::vector<block> block_in_order = put_arucos_order(block_i);
+
+//    DebugBlocks(block_in_order);
 
 
     // Line Detection
