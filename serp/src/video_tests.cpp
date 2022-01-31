@@ -1017,6 +1017,7 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     // Block Formation
 
     std::vector <block> block_i;
+    masks.clear(); // used to eliminate the arucos during line detection
 
     block_i = saving_coordinates(paper, corners, ids, block_i);
 
@@ -1038,7 +1039,7 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 //    g.print();
 
     cv::imshow("Paper Drawn", paperDrawn);
-    cv::waitKey(0);
+    cv::waitKey(1);
 }
 
 
