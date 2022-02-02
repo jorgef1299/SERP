@@ -1,7 +1,9 @@
 #include "arduino_bridge_node.h"
 #include <serp/RobotInfo.h>
 #include <serp/Velocity.h>
+#include "logica.h"
 serp::RobotInfo robotget;
+
 
 
 bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPointResponse &res)
@@ -44,6 +46,32 @@ void getInfo(const serp::RobotInfo &msg)
 
 int main(int argc, char** argv)
 {
+    float velocidades[2]={0};
+    float matrixValores[61][61]={0};
+    int ligacoes[61][61]={0};
+    float velocidadesblocos[2]={0};
+    //exemplo de teste
+    ligacoes[4][8] = 1;
+    ligacoes[8][4] = 1;
+    ligacoes[9][2] = 1;
+    ligacoes[2][9] = 1; //inicializa valor sensor esq
+
+    matrixValores[4][8] = 2;
+    matrixValores[8][4] = 2;
+    matrixValores[9][2] = 2;
+    matrixValores[2][9] = 2; //inicializa valor sensor esq
+
+    ligacoes[59][3] = 1;
+    ligacoes[3][59] = 1;
+    ligacoes[60][10] = 1;
+    ligacoes[10][60] = 1;
+    matrixValores[59][3] = 4;
+    matrixValores[3][59] = 4;
+
+    ligacoes[61][24] = 1;
+    ligacoes[24][61] = 1;
+    //fim de exemplo de teste
+    verificarBlocos(ligacoes, matrixValores, velocidades);
     ros::init(argc, argv, "arduino_bridge_node");
     ros::NodeHandle n_public;
     serp::Velocity vel_cmd;
@@ -56,7 +84,7 @@ int main(int argc, char** argv)
 
     ros::Publisher send_velocities = n_public.advertise<serp::Velocity>("motors_vel", 2);
     ros::Subscriber receive_info = n_public.subscribe("hardware_info", 2, getInfo);
-
+    ROS_INFO("vel: %f%%", velocidades[2]);
     //ros::Rate rate(100); //100hz update frequency
     while (ros::ok())
     {
@@ -71,6 +99,5 @@ int main(int argc, char** argv)
           }
         ros::spinOnce();
     }
-    //ros::spin();
     return 0;
 }

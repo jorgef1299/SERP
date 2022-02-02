@@ -152,7 +152,7 @@ add_definitions(${GTK_CFLAGS_OTHER})
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
-add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
+add_executable(arduino_bridge_node src/arduino_bridge_node.cpp src/logica.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
