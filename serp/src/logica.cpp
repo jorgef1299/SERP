@@ -1,6 +1,6 @@
 #include "logica.h"
 #include <ros/ros.h>
-void verificarBlocos(int ligacoes[][61], float matrixValores[][61], float velocidades[2])
+void verificarBlocos(int ligacoes[][63], float matrixValores[][63], float velocidades[2])
 {
 float motorEsq;
 float motorDir;
@@ -28,6 +28,7 @@ bool blocoOr;
 bool blocoMaior;
 bool blocoMenor;
 bool blocoIgual;
+bool blocoTrans;
 int l;
 int k;
 
@@ -60,8 +61,9 @@ bool entradaMenor1;
 bool entradaMenor2;
 bool entradaIgual1;
 bool entradaIgual2;
+bool entradaTrans1;
 
-int rc = 61;
+int rc = 63;
 
         //----------------------------------------------------------------------
         //
@@ -493,6 +495,30 @@ int rc = 61;
             }
             i = i + 1;
         }
+
+        //Bloco trans
+        i = 1;
+        while (i < rc + 1)
+        {
+            if (ligacoes[62][i] == 1)
+            {
+
+                entradaTrans1 = true;
+            }
+            i = i + 1;
+        }
+        i = 1;
+        while (i < rc + 1)
+        {
+            if (ligacoes[63][i] == 1)
+            {
+                if ((entradaTrans1 == true))
+                {
+                    blocoTrans = true;
+                }
+            }
+            i = i + 1;
+        }
         //----------------------------------------------------------------------
         //
         //
@@ -595,7 +621,7 @@ int rc = 61;
         }
         blocoTemp2 = false;
 
-        while ((blocoInv1 == true) || (blocoInv2 == true) || (blocoSoma1 == true) || (blocoSoma2 == true) || (blocoTemp1 == true) || (blocoDecisor1 == true) || (blocoDecisor2 == true) || (blocoTemp2 == true) || (blocoProduto == true) || (blocoIf == true) || (blocoElse == true) || (blocoAnd == true) || (blocoOr == true) || (blocoMaior == true) || (blocoMenor == true) || (blocoIgual == true))
+        while ((blocoInv1 == true) || (blocoInv2 == true) || (blocoSoma1 == true) || (blocoSoma2 == true) || (blocoTemp1 == true) || (blocoDecisor1 == true) || (blocoDecisor2 == true) || (blocoTemp2 == true) || (blocoProduto == true) || (blocoIf == true) || (blocoElse == true) || (blocoAnd == true) || (blocoOr == true) || (blocoMaior == true) || (blocoMenor == true) || (blocoIgual == true) || (blocoTrans== true))
         {
 
             //----------------------------------------------------------------------
@@ -913,6 +939,26 @@ int rc = 61;
                             {
                                 matrixValores[7][j] = -matrixValores[7][i];
                                 matrixValores[j][7] = -matrixValores[7][i];
+                            }
+                            j = j + 1;
+                        }
+                        blocoInv1 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[6][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+
+                        j = 1;
+                        while (j < rc + 1)
+                        {
+                            if (ligacoes[7][j] == 1)
+                            {
+                                matrixValores[7][j] = -matrixValores[63][i];
+                                matrixValores[j][7] = -matrixValores[63][i];
                             }
                             j = j + 1;
                         }
@@ -1238,6 +1284,26 @@ int rc = 61;
                         blocoInv2 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[15][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+
+                        j = 1;
+                        while (j < rc + 1)
+                        {
+                            if (ligacoes[16][j] == 1)
+                            {
+                                matrixValores[16][j] = -matrixValores[63][i];
+                                matrixValores[j][16] = -matrixValores[63][i];
+                            }
+                            j = j + 1;
+                        }
+                        blocoInv2 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -1410,6 +1476,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaProd1 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[20][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaProd1 = false;
                     }
@@ -1588,6 +1663,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaProd2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[28][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaProd2 = false;
                     }
@@ -1821,6 +1905,15 @@ int rc = 61;
                         entradaSoma11 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[8][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                        entradaSoma11 = false;
+                    }
+                }
             }
 
             //Bloco Soma12
@@ -1986,6 +2079,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaSoma12 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[9][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaSoma12 = false;
                     }
@@ -2220,6 +2322,15 @@ int rc = 61;
                         entradaSoma21 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[11][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                        entradaSoma21 = false;
+                    }
+                }
             }
 
             //Bloco Soma22
@@ -2384,6 +2495,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaSoma22 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[12][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaSoma22 = false;
                     }
@@ -2615,6 +2735,15 @@ int rc = 61;
                         entradaMux11 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[26][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                        entradaMux11 = false;
+                    }
+                }
             }
 
             //Bloco Mux12
@@ -2779,6 +2908,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaMux12 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[27][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaMux12 = false;
                     }
@@ -2948,6 +3086,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaDec1 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[28][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaDec1 = false;
                     }
@@ -3203,6 +3350,15 @@ int rc = 61;
                         entradaMux21 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[31][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                       entradaMux21 = false;
+                    }
+                }
             }
 
             //Bloco Mux22
@@ -3372,6 +3528,15 @@ int rc = 61;
                         entradaMux22 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[32][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                       entradaMux22 = false;
+                    }
+                }
             }
 
             //Bloco Decisor 2
@@ -3539,6 +3704,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaDec2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[33][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                       entradaDec2 = false;
                     }
                 }
             }
@@ -3780,6 +3954,15 @@ int rc = 61;
                         entradaIf1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[39][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                        entradaIf1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -3945,6 +4128,15 @@ int rc = 61;
                 {
                     //Esta pronto
                     if (blocoIgual == false)
+                    {
+                        entradaIf2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[40][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
                     {
                         entradaIf2 = false;
                     }
@@ -4166,6 +4358,15 @@ int rc = 61;
                         entradaElseA = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[42][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaElseA = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -4335,6 +4536,15 @@ int rc = 61;
                         entradaElseB = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[43][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaElseB = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -4501,6 +4711,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaElseC = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[44][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaElseC = false;
                     }
                 }
             }
@@ -4672,6 +4891,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaElseD = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[45][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaElseD = false;
                     }
                 }
             }
@@ -4909,6 +5137,15 @@ int rc = 61;
                         entradaAnd1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[47][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaAnd1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -5076,6 +5313,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaAnd2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[48][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaAnd2 = false;
                     }
                 }
             }
@@ -5292,6 +5538,15 @@ int rc = 61;
                         entradaOr1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[50][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaOr1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -5459,6 +5714,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaOr2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[51][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaOr2 = false;
                     }
                 }
             }
@@ -5676,6 +5940,15 @@ int rc = 61;
                         entradaMaior1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[53][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaMaior1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -5843,6 +6116,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaMaior2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[54][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaMaior2 = false;
                     }
                 }
             }
@@ -6067,6 +6349,15 @@ int rc = 61;
                         entradaMenor1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[56][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaMenor1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -6235,6 +6526,15 @@ int rc = 61;
                     if (blocoIgual == false)
                     {
                         entradaMenor2 = false;
+                    }
+                }
+                //caso em que vem da saida do trans
+                if (ligacoes[57][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaMenor2 = false;
                     }
                 }
             }
@@ -6461,6 +6761,15 @@ int rc = 61;
                         entradaIgual1 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[59][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaIgual1 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -6630,6 +6939,15 @@ int rc = 61;
                         entradaIgual2 = false;
                     }
                 }
+                //caso em que vem da saida do trans
+                if (ligacoes[60][63] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTrans == false)
+                    {
+                         entradaIgual2 = false;
+                    }
+                }
             }
             //----------------------------------------------------------------------
             //
@@ -6680,6 +6998,224 @@ int rc = 61;
                                 }
                                 j = j + 1;
                             }
+                        }
+                        i = i + 1;
+                    }
+                    blocoIgual = false;
+                }
+            }
+
+            //----------------------------------------------------------------------
+            //
+            //
+            //
+            //Bloco transposição
+            //verifica se entrada1 ja esta pronta
+            //
+            //
+            //----------------------------------------------------------------------
+            //entrada trans1
+            if (entradaTrans1 == true)
+            {
+
+                //Caigualso facil em que e um input imediato
+                if ((ligacoes[1][62] == 1) || (ligacoes[2][62] == 1) ||
+                    (ligacoes[3][62] == 1) || (ligacoes[4][62] == 1) ||
+                    (ligacoes[5][62] == 1) || (ligacoes[14][62] == 1) ||
+                    (ligacoes[25][62] == 1) || (ligacoes[30][62] == 1) ||
+                    (ligacoes[35][62] == 1) || (ligacoes[36][62] == 1) ||
+                    (ligacoes[37][62] == 1))
+                {
+                    entradaTrans1 = false;
+                    //printf("2\n");
+                }
+
+                //Caso em que vem da saida da inv1
+                if (ligacoes[62][7] == 1)
+                {
+                    //Esta pronto
+                    if (blocoInv1 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //Caso em que vem da saida da soma1
+                if (ligacoes[62][10] == 1)
+                {
+                    //Esta pronto
+                    if (blocoSoma1 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //Caso em que vem da saida da soma2
+                if (ligacoes[62][13] == 1)
+                {
+                    //Esta pronto
+                    if (blocoSoma2 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida da inv2
+                if (ligacoes[62][16] == 1)
+                {
+                    //Esta pronto
+                    if (blocoInv2 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida da temp1
+                if (ligacoes[62][19] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTemp1 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida da temp2
+                if (ligacoes[62][23] == 1)
+                {
+                    //Esta pronto
+                    if (blocoTemp2 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida da decisor1
+                if (ligacoes[62][29] == 1)
+                {
+                    //Esta pronto
+                    if (blocoDecisor1 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida da decisor2
+                if (ligacoes[62][34] == 1)
+                {
+                    //Esta pronto
+                    if (blocoDecisor2 == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+
+                //Caso em que vem da saida do produto
+                if (ligacoes[62][21] == 1)
+                {
+                    //Esta pronto
+                    if (blocoProduto == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do else
+                if (ligacoes[62][46] == 1)
+                {
+                    //Esta pronto
+                    if (blocoElse == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do if
+                if (ligacoes[62][41] == 1)
+                {
+                    //Esta pronto
+                    if (blocoIf == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do and
+                if (ligacoes[62][49] == 1)
+                {
+                    //Esta pronto
+                    if (blocoAnd == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do or
+                if (ligacoes[62][52] == 1)
+                {
+                    //Esta pronto
+                    if (blocoOr == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do maior
+                if (ligacoes[62][55] == 1)
+                {
+                    //Esta pronto
+                    if (blocoMaior == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do menor
+                if (ligacoes[62][58] == 1)
+                {
+                    //Esta pronto
+                    if (blocoMenor == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+                //caso em que vem da saida do igual
+                if (ligacoes[62][61] == 1)
+                {
+                    //Esta pronto
+                    if (blocoIgual == false)
+                    {
+                        entradaTrans1 = false;
+                    }
+                }
+            }
+            //----------------------------------------------------------------------
+            //
+            //
+            //
+            //Blocos trans
+            //realiza trans
+            //
+            //
+            //----------------------------------------------------------------------
+            //Bloco trans
+            if (blocoIgual == true)
+            {
+
+                if ((entradaTrans1 == false))
+                {
+
+                    i = 1;
+                    while (i < rc + 1)
+                    {
+                        //printf("4\n");
+                        if (ligacoes[i][62] == 1)
+                        {
+                                    aux = 1;
+                                    while (aux < rc + 1)
+                                    {
+                                        if (ligacoes[aux][63] == 1)
+                                        {
+                                            ligacoes[i][aux]=1;
+                                            ligacoes[aux][i]=1;
+                                            matrixValores[i][aux]=matrixValores[i][62];
+                                            matrixValores[aux][i]=matrixValores[i][62];
+                                        }
+                                        aux = aux + 1;
+                                    }
+
                         }
                         i = i + 1;
                     }
