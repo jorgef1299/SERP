@@ -65,11 +65,14 @@ struct block {
 int size_detect=0;
 int pos_list;
 int current_ids_size=0;
+
+//paper validation
 bool orientation_check = false;
-int count_frames = 0;
-int arucoCount = 0;
 bool pictureValidated = false;
 bool vertical = false;
+std::vector<int> detections(35, 0); // 40 values equal to 0
+int count_stable_frames = 0;
+int count_total_arucos = 0;
 
 //sensor values
 int sensor_value_se;

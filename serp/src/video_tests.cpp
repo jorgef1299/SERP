@@ -416,32 +416,57 @@ cv::Mat perspective_correction(cv::Mat original, std::vector<cv::Point2f> new_po
 
 void validatePicture(std::vector<int> ids)
 {
-    count_frames ++;
+    pictureValidated = false;
 
-    int n_detected = ids.size() - 4; // Ignores the orientation arucos
+    sort(ids.begin(), ids.end());
 
-    if(count_frames < 10)
+    for(auto id = std::cbegin(ids); id != std::cend(ids); )
     {
-        if(arucoCount != n_detected)
+        // Count detections
+        int count = std::count(id, std::cend(ids), *id);
+//        ROS_WARN_STREAM("id=" << *id << " count="<< count);
+
+        // Save number of detections
+        if(detections[*id] < count) detections[*id] = count;
+
+        for(auto last = *id; *++id == last; );
+    }
+
+    int total = std::accumulate(detections.begin(), detections.end(), 0);
+
+
+    int n_stable = 5;
+
+
+    if(count_total_arucos == total && count_stable_frames < n_stable)
+    {
+        // If total hasn't changed, increase count of stable frames
+        count_stable_frames++;
+    }
+    else if(count_total_arucos < total)
+    {
+        ROS_WARN_STREAM("ArUco count=" << count_total_arucos << " VS detected="<< total << "\n");
+
+        count_total_arucos = total;
+        count_stable_frames = 0;
+    }
+
+    if(count_stable_frames == n_stable)
+    {
+        ROS_WARN_STREAM("Final total = " << count_total_arucos << "\n");
+
+        // Get a frame where number of detections is equal to expected total
+        if(ids.size() == count_total_arucos)
         {
-            count_frames = 1;
-            arucoCount = n_detected;
+            ROS_WARN_STREAM("Detected " << ids.size() << " ArUcos");
+
+            for(int i=0; i<ids.size(); i++) ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
+
+            pictureValidated = true;
+            ROS_WARN_STREAM("Picture Validated\n");
         }
     }
-    else if(count_frames == 10)
-    {
-//        ROS_WARN_STREAM("During "<<count_frames<<" frames, detected "<< arucoCount << " arucos\n");
 
-        pictureValidated = true;
-//        ROS_WARN_STREAM("-- Picture Validated --\n");
-    }
-    else if(count_frames > 10 || arucoCount != n_detected)
-    {
-        pictureValidated = false;
-
-        count_frames = 1;
-        arucoCount = n_detected;
-    }
 }
 
 
@@ -1662,7 +1687,7 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
 
     cv::imshow("Paper Drawn", paperDrawn);
-    cv::waitKey(1);
+    cv::waitKey(0);
 }
 
 
@@ -1681,15 +1706,20 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
+//    imshow("out", frameCopy);
+//    cv::waitKey(1);
+
     orientation_block markers = detect_orientation_blocks(corners, ids);
 
     cv::Mat original = frame.clone();
 
+    validatePicture(ids);
+
     if(markers.ids.size()==4 && orientation_check)
     {
-        validatePicture(ids);
-
         std::vector<cv::Point2f> new_points = calculateNewDimensions(frameCopy, markers);
+        imshow("out", frameCopy);
+        cv::waitKey(1);
 
         if(pictureValidated)
         {
@@ -1698,15 +1728,6 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
             detectAndInterpret_Lines(new_frame, dict);
         }
     }
-    else
-    {
-        // Paper not detected and picture validation count is interrupted
-        count_frames = 0;
-        arucoCount = 0;
-    }
-
-    imshow("out", frameCopy);
-    cv::waitKey(1);
 }
 
 
@@ -1719,19 +1740,19 @@ int main(int argc, char** argv)
     ros::NodeHandle n_public;
 
 
-//    // Get Camera Calibration Parameters
-//    camera_parameters(1);
+    //    // Get Camera Calibration Parameters
+    //    camera_parameters(1);
 
     // Create a VideoCapture object and open the input file
-      // If the input is the web camera, pass 0 instead of the video file name
-      cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/test2.mp4");
+    // If the input is the web camera, pass 0 instead of the video file name
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
 
-      // Check if camera opened successfully
-      if(!cap.isOpened())
-      {
+    // Check if camera opened successfully
+    if(!cap.isOpened())
+    {
         ROS_WARN_STREAM("Error opening video stream or file");
         return -1;
-      }
+    }
 
     while(ros::ok())
     {
