@@ -395,7 +395,7 @@ cv::Mat perspective_correction(cv::Mat original, std::vector<cv::Point2f> new_po
         height = abs(new_points[1].x-new_points[0].x);
         width = abs(new_points[2].y-new_points[1].y);
 
-        ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
+//        ROS_WARN_STREAM("Height="<<height<<" Width="<<width<<"\n");
 
         // Points in new frame
         pts_dst.push_back(cv::Point2f(0, 0)); // Matches id_28
@@ -430,10 +430,10 @@ void validatePicture(std::vector<int> ids)
     }
     else if(count_frames == 10)
     {
-        ROS_WARN_STREAM("During "<<count_frames<<" frames, detected "<< arucoCount << " arucos\n");
+//        ROS_WARN_STREAM("During "<<count_frames<<" frames, detected "<< arucoCount << " arucos\n");
 
         pictureValidated = true;
-        ROS_WARN_STREAM("-- Picture Validated --\n");
+//        ROS_WARN_STREAM("-- Picture Validated --\n");
     }
     else if(count_frames > 10 || arucoCount != n_detected)
     {
@@ -618,52 +618,52 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
         //2 inputs 1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.x = sup_dir.x;
-        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
-        block_i[pos_list].input1.x = sup_esq.x;
-        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
-        block_i[pos_list].input2.x = sup_esq.x;
-        block_i[pos_list].input2.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+        block_i[pos_list].outputs.point.x = sup_dir.x;
+        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+        block_i[pos_list].input2.point.x = sup_esq.x;
+        block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
     }
     else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
     {
         //1 input 1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.x = sup_dir.x;
-        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
-        block_i[pos_list].input1.x = sup_esq.x;
-        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
+        block_i[pos_list].outputs.point.x = sup_dir.x;
+        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
     }
     else if (id == 7 || id == 8)
     {
         //1 input
 
         block_i[pos_list].id = id;
-        block_i[pos_list].input1.x = sup_esq.x;
-        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
     }
     else if (id == 9 || id == 10 || id == 11 || id == 12)
     {
         //1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.x = sup_dir.x;
-        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].outputs.point.x = sup_dir.x;
+        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
     }
     else if (id == 27)
     {
         //2 inputs 1 output 1 condition
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.x = sup_dir.x;
-        block_i[pos_list].outputs.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
-        block_i[pos_list].input1.x = sup_esq.x;
-        block_i[pos_list].input1.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
-        block_i[pos_list].input2.x = sup_esq.x;
-        block_i[pos_list].input2.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
-        block_i[pos_list].condition.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition.y = inf_dir.y;
+        block_i[pos_list].outputs.point.x = sup_dir.x;
+        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+        block_i[pos_list].input2.point.x = sup_esq.x;
+        block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+        block_i[pos_list].condition.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
+        block_i[pos_list].condition.point.y = inf_dir.y;
     }
 
     return block_i;
@@ -766,9 +766,9 @@ void DebugBlocks(std::vector<block> block_in_order)
 {
     for (int j = 0; j < block_in_order.size(); j++)
     {
-        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].outputs.x << "  " << block_in_order[j].outputs.y << "  " << "\n");
-        ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_in_order[j].input1.x << "  " << block_in_order[j].input1.y << "  " << "\n");
-        ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_in_order[j].input2.x << "  " << block_in_order[j].input2.y << "  " << "\n");
+        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].outputs.point.x << "  " << block_in_order[j].outputs.point.y << "  " << "\n");
+        ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_in_order[j].input1.point.x << "  " << block_in_order[j].input1.point.y << "  " << "\n");
+        ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_in_order[j].input2.point.x << "  " << block_in_order[j].input2.point.y << "  " << "\n");
         ROS_WARN_STREAM("MASK    minx " << masks[j][0] << "    maxx " << masks[j][1] << "    miny " << masks[j][2] << "    maxy " << masks[j][3] << "\n");
         ROS_WARN_STREAM("-----------------------------------------------------------------------------------------\n");
     }
@@ -777,6 +777,563 @@ void DebugBlocks(std::vector<block> block_in_order)
 
 
 // ---------- LINE DETECTION ---------- (add to separate library)
+
+int position_matrix_input1(int id, int count){
+  if(id==0){
+    if(count==1){
+      return 8;
+    }
+    else if(count==2){
+      return 12;
+    }
+  }
+
+  else if(id==1){
+    if(count==1){
+      return 20;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==2){
+    if(count==1){
+      return 6;
+    }
+    else if(count==2){
+      return 15;
+    }
+  }
+
+  else if(id==3){
+    if(count==1){
+      return 39;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==4){
+    if(count==1){
+      return 56;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==5){
+    if(count==1){
+      return 53;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==6){
+    if(count==1){
+      return 59;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==7){
+    if(count==1){
+      return 17;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==8){
+    if(count==1){
+      return 24;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==13){
+    if(count==1){
+      return 22;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==14){
+    if(count==1){
+      return 62;
+    }
+    else if(count==2){
+      return 84;
+    }
+  }
+
+  else if(id==15){
+    if(count==1){
+      return 64;
+    }
+    else if(count==2){
+      return 86;
+    }
+  }
+
+  else if(id==16){
+    if(count==1){
+      return 66;
+    }
+    else if(count==2){
+      return 88;
+    }
+  }
+
+  else if(id==17){
+    if(count==1){
+      return 68;
+    }
+    else if(count==2){
+      return 90;
+    }
+  }
+
+  else if(id==18){
+    if(count==1){
+      return 70;
+    }
+    else if(count==2){
+      return 92;
+    }
+  }
+
+  else if(id==19){
+    if(count==1){
+      return 72;
+    }
+    else if(count==2){
+      return 94;
+    }
+  }
+
+  else if(id==20){
+    if(count==1){
+      return 74;
+    }
+    else if(count==2){
+      return 96;
+    }
+  }
+
+  else if(id==21){
+    if(count==1){
+      return 76;
+    }
+    else if(count==2){
+      return 98;
+    }
+  }
+
+  else if(id==22){
+    if(count==1){
+      return 78;
+    }
+    else if(count==2){
+      return 100;
+    }
+  }
+
+  else if(id==23){
+    if(count==1){
+      return 80;
+    }
+    else if(count==2){
+      return 102;
+    }
+  }
+
+  else if(id==24){
+    if(count==1){
+      return 82;
+    }
+    else if(count==2){
+      return 104;
+    }
+  }
+
+  else if(id==25){
+    if(count==1){
+      return  47;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==26){
+    if(count==1){
+      return 50;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==27){
+    if(count==1){
+      return 26;
+    }
+    else if(count==2){
+      return 31;
+    }
+  }
+
+
+}
+
+int position_matrix_input2(int id,int count){
+
+  if(id==0){
+    if(count==1){
+      return 9;
+    }
+    else if(count==2){
+      return 11;
+    }
+  }
+
+  else if(id==1){
+    if(count==1){
+      return 38;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==3){
+    if(count==1){
+      return 40;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==4){
+    if(count==1){
+      return 57;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==5){
+    if(count==1){
+      return 54;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==6){
+    if(count==1){
+      return 60;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==25){
+    if(count==1){
+      return 48;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==26){
+    if(count==1){
+      return 51;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==27){
+    if(count==1){
+      return 27;
+    }
+    else if(count==2){
+      return 32;
+    }
+  }
+
+
+
+}
+
+int position_matrix_output(int id, int count){
+  if(id==0){
+    if(count==1){
+      return 10;
+    }
+    else if(count==2){
+      return 13;
+    }
+  }
+
+  else if(id==1){
+    if(count==1){
+      return 21;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==2){
+    if(count==1){
+      return 7;
+    }
+    else if(count==2){
+      return 16;
+    }
+  }
+
+  else if(id==3){
+    if(count==1){
+      return 41;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==4){
+    if(count==1){
+      return 58;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==5){
+    if(count==1){
+      return 55;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==6){
+    if(count==1){
+      return 61;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==9){
+    if(count==1){
+      return 2;
+    }
+    else if(count==2){
+      return 106;
+    }
+  }
+
+  else if(id==10){
+    if(count==1){
+      return 4;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==11){
+    if(count==1){
+      return 3;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==12){
+    if(count==1){
+      return 35;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==13){
+    if(count==1){
+      return 23;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==14){
+    if(count==1){
+      return 63;
+    }
+    else if(count==2){
+      return 85;
+    }
+  }
+
+  else if(id==15){
+    if(count==1){
+      return 65;
+    }
+    else if(count==2){
+      return 87;
+    }
+  }
+
+  else if(id==16){
+    if(count==1){
+      return 67;
+    }
+    else if(count==2){
+      return 89;
+    }
+  }
+
+  else if(id==17){
+    if(count==1){
+      return 69;
+    }
+    else if(count==2){
+      return 91;
+    }
+  }
+
+  else if(id==18){
+    if(count==1){
+      return 71;
+    }
+    else if(count==2){
+      return 93;
+    }
+  }
+
+  else if(id==19){
+    if(count==1){
+      return 73;
+    }
+    else if(count==2){
+      return 95;
+    }
+  }
+
+  else if(id==20){
+    if(count==1){
+      return 75;
+    }
+    else if(count==2){
+      return 97;
+    }
+  }
+
+  else if(id==21){
+    if(count==1){
+      return 77;
+    }
+    else if(count==2){
+      return 99;
+    }
+  }
+
+  else if(id==22){
+    if(count==1){
+      return 79;
+    }
+    else if(count==2){
+      return 101;
+    }
+  }
+
+  else if(id==23){
+    if(count==1){
+      return 81;
+    }
+    else if(count==2){
+      return 103;
+    }
+  }
+
+  else if(id==24){
+    if(count==1){
+      return 83;
+    }
+    else if(count==2){
+      return 105;
+    }
+  }
+
+  else if(id==25){
+    if(count==1){
+      return 49;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==26){
+    if(count==1){
+      return 52;
+    }
+    else if(count==2){
+      return -1;
+    }
+  }
+
+  else if(id==27){
+    if(count==1){
+      return 29;
+    }
+    else if(count==2){
+      return 34;
+    }
+  }
+
+
+
+}
+
+int position_matrix_condition(int id, int count){
+  if(id==27){
+    if(count==1){
+      return 28;
+    }
+    else if(count==2){
+      return 33;
+    }
+  }
+}
 
 
 bool isInside(int circle_x, int circle_y, int rad, int x, int y)
@@ -791,128 +1348,119 @@ bool isInside(int circle_x, int circle_y, int rad, int x, int y)
 }
 
 
-bool check_lines(cv::Vec4i lin, size_t j, int radius, graph g,std::vector<block> vec)
+std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<block> vec)
 {
     for(int k=0;k<vec.size();k++)
     {
         // output points
-        if(isInside(vec[k].outputs.x, vec[k].outputs.y,radius,lin[0], lin[1])==1)
+        if(isInside(vec[k].outputs.point.x, vec[k].outputs.point.y,radius,lin[0], lin[1])==1)
         {
-            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
+//            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
 
             for(int j=0;j<vec.size();j++)
             {
 
-                if((isInside(vec[j].input1.x, vec[j].input1.y,radius,lin[2], lin[3])==1))
+                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[2], lin[3])==1))
                 {
-                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
 
-                    g.addedge(k,j,false);
-                    return 1;
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+
+                    vec[j].input1.linked=true;
+                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
+
                 }
-                else if((isInside(vec[j].input2.x, vec[j].input2.y,radius,lin[2], lin[3])==1))
+                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[2], lin[3])==1))
                 {
-                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
 
-                    g.addedge(k,j,false);
-                    return 1;
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+
+                    vec[j].input2.linked=true;
+                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
                 }
-                else ROS_WARN_STREAM("WRONG lINK\n");
+                else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_condition(vec[j].id,vec[j].count);
+
+                    vec[j].condition.linked=true;
+                    vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
             }
         }
-        else if(isInside(vec[k].outputs.x, vec[k].outputs.y,radius,lin[2], lin[3])==1)
+        else if(isInside(vec[k].outputs.point.x, vec[k].outputs.point.y,radius,lin[2], lin[3])==1)
         {
             //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
             for(int j=0;j<vec.size();j++)
             {
-                if((isInside(vec[j].input1.x, vec[j].input1.y,radius,lin[0], lin[1])==1))
+                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[0], lin[1])==1))
                 {
-                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
 
-                    g.addedge(k,j,false);
-                    return 1;
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+
+                    vec[j].input1.linked=true;
+                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
+
                 }
-                else if((isInside(vec[j].input2.x, vec[j].input2.y,radius,lin[0], lin[1])==1))
+                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[0], lin[1])==1))
                 {
-                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
-                    g.addedge(k,j,false);
-                    return 1;
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+
+                    vec[j].input2.linked=true;
+                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
                 }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-
-
-        // input1 points
-        else if (isInside(vec[k].input1.x, vec[k].input1.y,radius,lin[0], lin[1])==1)
-        {
-            //std::cout <<"It is that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " top input\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside( vec[j].outputs.x, vec[j].outputs.y,radius,lin[2], lin[3])==1))
+                else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[0], lin[1])==1))
                 {
-                    ROS_WARN_STREAM("The top input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
-                    g.addedge(j,k,false);
-                    return 1;
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-        else if(isInside(vec[k].input1.x, vec[k].input1.y,radius,lin[2], lin[3])==1)
-        {
-            //std::cout <<"It is that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " top input\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[0], lin[1])==1))
-                {
-                    ROS_WARN_STREAM("The top input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
+                    vec[k].outputs.linked=true;
+                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].outputs.link_end=position_matrix_condition(vec[j].id,vec[j].count);
 
-                    g.addedge(j,k,false);
-                    return 1;
+                    vec[j].condition.linked=true;
+                    vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
+
+
                 }
 //                else ROS_WARN_STREAM("WRONG lINK\n");
             }
         }
-
-
-        // input2 points
-        else if(isInside(vec[k].input2.x, vec[k].input2.y,radius,lin[0], lin[1])==1)
-        {
-            //std::cout <<"It is that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " bottom input\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[2], lin[3])==1))
-                {
-                    ROS_WARN_STREAM("The bottom input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
-
-                    g.addedge(j,k,false);
-                    return 1;
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-        else if(isInside(vec[k].input2.x, vec[k].input2.y,radius,lin[2], lin[3])==1)
-        {
-            //std::cout <<"It is that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " bottom input\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside(vec[j].outputs.x, vec[j].outputs.y,radius,lin[0], lin[1])==1))
-                {
-                    ROS_WARN_STREAM("The bottom input of aruco " << vec[k].id << " is connected to the output of aruco " << vec[j].id << "\n\n");
-
-                    g.addedge(j,k,false);
-                    return 1;
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-
     }
 
 
-    return 0;
+    return vec;
 }
 
 
@@ -987,18 +1535,84 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 }
 
 
-void drawLines(cv::InputOutputArray paper, std::vector<cv::Vec4i> linesP, graph g, std::vector<block> blocks)
+std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> blocks)
 {
     // Draw Lines
     for (size_t i = 0; i < linesP.size(); i++)
     {
         cv::Vec4i l = linesP[i];
 
-        if(check_lines(l,i,15,g,blocks)==1)
-        {
-            line(paper, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
-        }
+        blocks = check_lines(l,i,15,blocks);
+
     }
+    return blocks;
+}
+
+coordinates findEndPoint(int begin, std::vector<block> blocks){
+   for (int j = 0; j < blocks.size(); j++) {
+     if(blocks[j].input1.order==begin){
+       return blocks[j].input1.point;
+     }
+     else if(blocks[j].input2.order==begin){
+       return blocks[j].input2.point;
+     }
+     else if(blocks[j].condition.order==begin){
+       return blocks[j].condition.point;
+     }
+
+   }
+
+}
+
+
+void drawLines(cv::InputOutputArray paper, std::vector<block> blocks){
+  for (int j = 0; j < blocks.size(); j++) {
+    if(blocks[j].outputs.linked==true){
+      line(paper, cv::Point(blocks[j].outputs.point.x,blocks[j].outputs.point.y), cv::Point(findEndPoint(blocks[j].outputs.link_end,blocks).x, findEndPoint(blocks[j].outputs.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
+    }
+
+  }
+}
+
+std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block){
+  for (int j = 0; j < block.size(); j++) {
+
+    if(block[j].outputs.linked==true){
+       m_links[block[j].outputs.order][block[j].outputs.link_end]=1;
+       m_links[block[j].outputs.link_end][block[j].outputs.order]=1;
+    }
+
+  }
+  return m_links;
+
+}
+
+
+std::vector<std::vector<int>> drawMatrixValues(std::vector<std::vector<int>> m_values, std::vector<block> block, int se, int sd, int sf, int st){
+  for (int j = 0; j < block.size(); j++) {
+
+    if(block[j].outputs.linked==true){
+       if(block[j].id==9){
+         m_values[block[j].outputs.order][block[j].outputs.link_end]=se;
+         m_values[block[j].outputs.link_end][block[j].outputs.order]=se;
+       }
+       else if(block[j].id==10){
+         m_values[block[j].outputs.order][block[j].outputs.link_end]=sd;
+         m_values[block[j].outputs.link_end][block[j].outputs.order]=sd;
+       }
+       else if(block[j].id==11){
+         m_values[block[j].outputs.order][block[j].outputs.link_end]=sf;
+         m_values[block[j].outputs.link_end][block[j].outputs.order]=sf;
+       }
+       else if(block[j].id==12){
+         m_values[block[j].outputs.order][block[j].outputs.link_end]=st;
+         m_values[block[j].outputs.link_end][block[j].outputs.order]=st;
+       }
+    }
+
+  }
+  return m_values;
+
 }
 
 
@@ -1030,13 +1644,22 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     // Line Detection
 
-    graph g(block_in_order.size());
-
     std::vector<cv::Vec4i> linesP = detectLines(paper);
 
-    drawLines(paperDrawn, linesP, g, block_in_order);
+    block_in_order=saveLines(linesP, block_in_order);
 
-//    g.print();
+    drawLines(paperDrawn,block_in_order);
+
+
+    // Create Link and Value Matrices
+
+    std::vector<std::vector<int>>  matrix_links(107, std::vector<int> (107, 0));
+    std::vector<std::vector<int>>  matrix_values(107, std::vector<int> (107, 0));
+     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+
+    matrix_links = drawMatrixLinks(matrix_links,block_in_order);
+    matrix_values = drawMatrixValues(matrix_values,block_in_order,sensor_value_se,sensor_value_sd,sensor_value_sf,sensor_value_st);
+
 
     cv::imshow("Paper Drawn", paperDrawn);
     cv::waitKey(1);

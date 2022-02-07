@@ -16,9 +16,6 @@
 
 
 
-// GLOBAL VARIABLES
-
-
 // ---------- CAMERA CALIBRATION + UNDISTORTION ---------- (add to separate library)
 
 // Defining the dimensions of checkerboard
@@ -42,6 +39,13 @@ struct coordinates {
     int y;
 };
 
+struct links {
+  coordinates point;
+  int order;
+  bool linked;
+  int link_end;
+};
+
 //X and Y coordinates of 4 corners of block arucos
 struct block {
     int id;
@@ -51,10 +55,10 @@ struct block {
     coordinates b_sup_right;
     coordinates b_inf_left;
     coordinates b_inf_right;
-    coordinates input1;
-    coordinates input2;
-    coordinates outputs;
-    coordinates condition;
+    links input1;
+    links input2;
+    links outputs;
+    links condition;
 };
 
 //global variables
@@ -66,6 +70,12 @@ int count_frames = 0;
 int arucoCount = 0;
 bool pictureValidated = false;
 bool vertical = false;
+
+//sensor values
+int sensor_value_se;
+int sensor_value_sd;
+int sensor_value_sf;
+int sensor_value_st;
 
 //dictionary 4X4
 cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
@@ -82,36 +92,3 @@ struct orientation_block {
 
 std::vector<cv::Vec4i> masks;
 
-class graph
-{
-    public:
-
-        std::list<int> *adjlist;
-        int n;
-
-        graph(int v)
-        {
-            adjlist=new std::list<int> [v];
-            n=v;
-        }
-
-        void addedge(int u,int v,bool bi)
-        {
-            adjlist[u].push_back(v);
-
-            if(bi) adjlist[v].push_back(u);
-        }
-
-//        void print()
-//        {
-//            for(int i=0;i<n;i++)
-//            {
-//                std::cout<< "ARUCO ID: "<<block_in_order[i].id<<"  "<<i<<" -->";
-//                for(auto it:adjlist[i]){
-//                    std::cout<<it<<" ";
-//                }
-//                std::cout<<std::endl;
-//            }
-//            std::cout<<std::endl;
-//        }
-};
