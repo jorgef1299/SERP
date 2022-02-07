@@ -47,8 +47,8 @@ void getInfo(const serp::RobotInfo &msg)
 int main(int argc, char** argv)
 {
     float velocidades[2]={0};
-    float matrixValores[63][63]={0};
-    int ligacoes[63][63]={0};
+    float matrixValores[81][81]={0};
+    int ligacoes[81][81]={0};
     float velocidadesblocos[2]={0};
     //exemplo de teste
 //    ligacoes[4][8] = 1;

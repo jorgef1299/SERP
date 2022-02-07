@@ -1,6 +1,6 @@
 #include "logica.h"
 #include <ros/ros.h>
-void verificarBlocos(int ligacoes[][63], float matrixValores[][63], float velocidades[2])
+void verificarBlocos(int ligacoes[][81], float matrixValores[][81], float velocidades[2])
 {
 float motorEsq;
 float motorDir;
@@ -183,7 +183,7 @@ int rc = 63;
         i = 1;
         while (i < rc + 1 + 1)
         {
-            if (ligacoes[9][i] == 1)
+            if (ligacoes[32][i] == 1)
             {
                 entradaSoma12 = true;
                 //printf("entrei12");
@@ -643,8 +643,13 @@ int rc = 63;
                     (ligacoes[5][6] == 1) || (ligacoes[14][6] == 1) ||
                     (ligacoes[25][6] == 1) || (ligacoes[30][6] == 1) ||
                     (ligacoes[35][6] == 1) || (ligacoes[36][6] == 1) ||
-                    (ligacoes[37][6] == 1))
-                {
+                    (ligacoes[37][6] == 1) || (ligacoes[63][6] == 1) ||
+                    (ligacoes[65][6] == 1) || (ligacoes[67][6] == 1) ||
+                    (ligacoes[69][6] == 1) || (ligacoes[71][6] == 1) ||
+                    (ligacoes[73][6] == 1) || (ligacoes[75][6] == 1) ||
+                    (ligacoes[77][6] == 1) || (ligacoes[79][6] == 1) ||
+                    (ligacoes[81][6] == 1))
+                 {
                     i = 1;
                     while (i < rc + 1)
                     {
@@ -977,7 +982,12 @@ int rc = 63;
                     (ligacoes[5][15] == 1) || (ligacoes[14][15] == 1) ||
                     (ligacoes[25][15] == 1) || (ligacoes[30][15] == 1) ||
                     (ligacoes[35][15] == 1) || (ligacoes[36][15] == 1) ||
-                    (ligacoes[37][15] == 1))
+                    (ligacoes[37][15] == 1) || (ligacoes[63][15] == 1) ||
+                    (ligacoes[65][15] == 1) || (ligacoes[67][15] == 1) ||
+                    (ligacoes[69][15] == 1) || (ligacoes[71][15] == 1) ||
+                    (ligacoes[73][15] == 1) || (ligacoes[75][15] == 1) ||
+                    (ligacoes[77][15] == 1) || (ligacoes[79][15] == 1) ||
+                    (ligacoes[81][15] == 1))
                 {
                     i = 1;
                     while (i < rc + 1)
@@ -1324,7 +1334,12 @@ int rc = 63;
                     (ligacoes[5][20] == 1) || (ligacoes[14][20] == 1) ||
                     (ligacoes[25][20] == 1) || (ligacoes[30][20] == 1) ||
                     (ligacoes[35][20] == 1) || (ligacoes[36][20] == 1) ||
-                    (ligacoes[37][20] == 1))
+                    (ligacoes[37][20] == 1) || (ligacoes[63][20] == 1) ||
+                        (ligacoes[65][20] == 1) || (ligacoes[67][20] == 1) ||
+                        (ligacoes[69][20] == 1) || (ligacoes[71][20] == 1) ||
+                        (ligacoes[73][20] == 1) || (ligacoes[75][20] == 1) ||
+                        (ligacoes[77][20] == 1) || (ligacoes[79][20] == 1) ||
+                        (ligacoes[81][20] == 1))
                 {
                     //printf("1");
                     entradaProd1 = false;
@@ -1509,7 +1524,12 @@ int rc = 63;
                     (ligacoes[5][38] == 1) || (ligacoes[14][38] == 1) ||
                     (ligacoes[25][38] == 1) || (ligacoes[30][38] == 1) ||
                     (ligacoes[35][38] == 1) || (ligacoes[36][38] == 1) ||
-                    (ligacoes[37][38] == 1))
+                    (ligacoes[37][38] == 1) || (ligacoes[63][38] == 1) ||
+                        (ligacoes[65][38] == 1) || (ligacoes[67][38] == 1) ||
+                        (ligacoes[69][38] == 1) || (ligacoes[71][38] == 1) ||
+                        (ligacoes[73][38] == 1) || (ligacoes[75][38] == 1) ||
+                        (ligacoes[77][38] == 1) || (ligacoes[79][38] == 1) ||
+                        (ligacoes[81][38] == 1))
                 {
                     //printf("2");
                     entradaProd2 = false;
@@ -1749,7 +1769,12 @@ int rc = 63;
                     (ligacoes[5][8] == 1) || (ligacoes[14][8] == 1) ||
                     (ligacoes[25][8] == 1) || (ligacoes[30][8] == 1) ||
                     (ligacoes[35][8] == 1) || (ligacoes[36][8] == 1) ||
-                    (ligacoes[37][8] == 1))
+                    (ligacoes[37][8] == 1) || (ligacoes[63][8] == 1) ||
+                        (ligacoes[65][8] == 1) || (ligacoes[67][8] == 1) ||
+                        (ligacoes[69][8] == 1) || (ligacoes[71][8] == 1) ||
+                        (ligacoes[73][8] == 1) || (ligacoes[75][8] == 1) ||
+                        (ligacoes[77][8] == 1) || (ligacoes[79][8] == 1) ||
+                        (ligacoes[81][8] == 1))
                 {
                     entradaSoma11 = false;
                     //printf("entreiiii");
@@ -1926,7 +1951,12 @@ int rc = 63;
                     (ligacoes[5][9] == 1) || (ligacoes[14][9] == 1) ||
                     (ligacoes[25][9] == 1) || (ligacoes[30][9] == 1) ||
                     (ligacoes[35][9] == 1) || (ligacoes[36][9] == 1) ||
-                    (ligacoes[37][9] == 1))
+                    (ligacoes[37][9] == 1) || (ligacoes[63][9] == 1) ||
+                        (ligacoes[65][9] == 1) || (ligacoes[67][9] == 1) ||
+                        (ligacoes[69][9] == 1) || (ligacoes[71][9] == 1) ||
+                        (ligacoes[73][9] == 1) || (ligacoes[75][9] == 1) ||
+                        (ligacoes[77][9] == 1) || (ligacoes[79][9] == 1) ||
+                        (ligacoes[81][9] == 1))
                 {
                     entradaSoma12 = false;
                     //printf("entreiiii");
@@ -2166,7 +2196,12 @@ int rc = 63;
                     (ligacoes[5][11] == 1) || (ligacoes[14][11] == 1) ||
                     (ligacoes[25][11] == 1) || (ligacoes[30][11] == 1) ||
                     (ligacoes[35][11] == 1) || (ligacoes[36][11] == 1) ||
-                    (ligacoes[37][11] == 1))
+                    (ligacoes[37][11] == 1) || (ligacoes[63][11] == 1) ||
+                        (ligacoes[65][11] == 1) || (ligacoes[67][11] == 1) ||
+                        (ligacoes[69][11] == 1) || (ligacoes[71][11] == 1) ||
+                        (ligacoes[73][11] == 1) || (ligacoes[75][11] == 1) ||
+                        (ligacoes[77][11] == 1) || (ligacoes[79][11] == 1) ||
+                        (ligacoes[81][11] == 1))
                 {
                     entradaSoma21 = false;
                 }
@@ -2343,7 +2378,12 @@ int rc = 63;
                     (ligacoes[5][12] == 1) || (ligacoes[14][12] == 1) ||
                     (ligacoes[25][12] == 1) || (ligacoes[30][12] == 1) ||
                     (ligacoes[35][12] == 1) || (ligacoes[36][12] == 1) ||
-                    (ligacoes[37][12] == 1))
+                    (ligacoes[37][12] == 1) || (ligacoes[63][12] == 1) ||
+                        (ligacoes[65][12] == 1) || (ligacoes[67][12] == 1) ||
+                        (ligacoes[69][12] == 1) || (ligacoes[71][12] == 1) ||
+                        (ligacoes[73][12] == 1) || (ligacoes[75][12] == 1) ||
+                        (ligacoes[77][12] == 1) || (ligacoes[79][12] == 1) ||
+                        (ligacoes[81][12] == 1))
                 {
                     entradaSoma22 = false;
                 }
@@ -2756,7 +2796,12 @@ int rc = 63;
                     (ligacoes[5][27] == 1) || (ligacoes[14][27] == 1) ||
                     (ligacoes[25][27] == 1) || (ligacoes[30][27] == 1) ||
                     (ligacoes[35][27] == 1) || (ligacoes[36][27] == 1) ||
-                    (ligacoes[37][27] == 1))
+                    (ligacoes[37][27] == 1) || (ligacoes[63][27] == 1) ||
+                        (ligacoes[65][27] == 1) || (ligacoes[67][27] == 1) ||
+                        (ligacoes[69][27] == 1) || (ligacoes[71][27] == 1) ||
+                        (ligacoes[73][27] == 1) || (ligacoes[75][27] == 1) ||
+                        (ligacoes[77][27] == 1) || (ligacoes[79][27] == 1) ||
+                        (ligacoes[81][27] == 1))
                 {
                     entradaMux12 = false;
                 }
@@ -2933,7 +2978,12 @@ int rc = 63;
                     (ligacoes[5][28] == 1) || (ligacoes[14][28] == 1) ||
                     (ligacoes[25][28] == 1) || (ligacoes[30][28] == 1) ||
                     (ligacoes[35][28] == 1) || (ligacoes[36][28] == 1) ||
-                    (ligacoes[37][28] == 1))
+                    (ligacoes[37][28] == 1) || (ligacoes[63][28] == 1) ||
+                        (ligacoes[65][28] == 1) || (ligacoes[67][28] == 1) ||
+                        (ligacoes[69][28] == 1) || (ligacoes[71][28] == 1) ||
+                        (ligacoes[73][28] == 1) || (ligacoes[75][28] == 1) ||
+                        (ligacoes[77][28] == 1) || (ligacoes[79][28] == 1) ||
+                        (ligacoes[81][28] == 1))
                 {
                     entradaDec1 = false;
                 }
@@ -3193,7 +3243,12 @@ int rc = 63;
                     (ligacoes[5][31] == 1) || (ligacoes[14][31] == 1) ||
                     (ligacoes[25][31] == 1) || (ligacoes[30][31] == 1) ||
                     (ligacoes[35][31] == 1) || (ligacoes[36][31] == 1) ||
-                    (ligacoes[37][31] == 1))
+                    (ligacoes[37][31] == 1) || (ligacoes[63][31] == 1) ||
+                        (ligacoes[65][31] == 1) || (ligacoes[67][31] == 1) ||
+                        (ligacoes[69][31] == 1) || (ligacoes[71][31] == 1) ||
+                        (ligacoes[73][31] == 1) || (ligacoes[75][31] == 1) ||
+                        (ligacoes[77][31] == 1) || (ligacoes[79][31] == 1) ||
+                        (ligacoes[81][31] == 1))
                 {
                     entradaMux21 = false;
                 }
@@ -3371,7 +3426,12 @@ int rc = 63;
                     (ligacoes[5][32] == 1) || (ligacoes[14][32] == 1) ||
                     (ligacoes[25][32] == 1) || (ligacoes[30][32] == 1) ||
                     (ligacoes[35][32] == 1) || (ligacoes[36][32] == 1) ||
-                    (ligacoes[37][32] == 1))
+                    (ligacoes[37][32] == 1) || (ligacoes[63][32] == 1) ||
+                        (ligacoes[65][32] == 1) || (ligacoes[67][32] == 1) ||
+                        (ligacoes[69][32] == 1) || (ligacoes[71][32] == 1) ||
+                        (ligacoes[73][32] == 1) || (ligacoes[75][32] == 1) ||
+                        (ligacoes[77][32] == 1) || (ligacoes[79][32] == 1) ||
+                        (ligacoes[81][32] == 1))
                 {
                     entradaMux22 = false;
                 }
@@ -3549,7 +3609,12 @@ int rc = 63;
                     (ligacoes[5][33] == 1) || (ligacoes[14][33] == 1) ||
                     (ligacoes[25][33] == 1) || (ligacoes[30][33] == 1) ||
                     (ligacoes[35][33] == 1) || (ligacoes[36][33] == 1) ||
-                    (ligacoes[37][33] == 1))
+                    (ligacoes[37][33] == 1) || (ligacoes[63][33] == 1) ||
+                        (ligacoes[65][33] == 1) || (ligacoes[67][33] == 1) ||
+                        (ligacoes[69][33] == 1) || (ligacoes[71][33] == 1) ||
+                        (ligacoes[73][33] == 1) || (ligacoes[75][33] == 1) ||
+                        (ligacoes[77][33] == 1) || (ligacoes[79][33] == 1) ||
+                        (ligacoes[81][33] == 1))
                 {
                     entradaDec2 = false;
                 }
@@ -3807,7 +3872,12 @@ int rc = 63;
                     (ligacoes[5][39] == 1) || (ligacoes[14][39] == 1) ||
                     (ligacoes[25][39] == 1) || (ligacoes[30][39] == 1) ||
                     (ligacoes[35][39] == 1) || (ligacoes[36][39] == 1) ||
-                    (ligacoes[37][39] == 1))
+                    (ligacoes[37][39] == 1) || (ligacoes[63][39] == 1) ||
+                        (ligacoes[65][39] == 1) || (ligacoes[67][39] == 1) ||
+                        (ligacoes[69][39] == 1) || (ligacoes[71][39] == 1) ||
+                        (ligacoes[73][39] == 1) || (ligacoes[75][39] == 1) ||
+                        (ligacoes[77][39] == 1) || (ligacoes[79][39] == 1) ||
+                        (ligacoes[81][39] == 1))
                 {
                     entradaIf1 = false;
                     //printf("2\n");
@@ -3983,7 +4053,12 @@ int rc = 63;
                     (ligacoes[5][40] == 1) || (ligacoes[14][40] == 1) ||
                     (ligacoes[25][40] == 1) || (ligacoes[30][40] == 1) ||
                     (ligacoes[35][40] == 1) || (ligacoes[36][40] == 1) ||
-                    (ligacoes[37][40] == 1))
+                    (ligacoes[37][40] == 1)|| (ligacoes[63][40] == 1) ||
+                        (ligacoes[65][40] == 1) || (ligacoes[67][40] == 1) ||
+                        (ligacoes[69][40] == 1) || (ligacoes[71][40] == 1) ||
+                        (ligacoes[73][40] == 1) || (ligacoes[75][40] == 1) ||
+                        (ligacoes[77][40] == 1) || (ligacoes[79][40] == 1) ||
+                        (ligacoes[81][40] == 1))
                 {
                     entradaIf2 = false;
                     //printf("3\n");
@@ -4209,7 +4284,12 @@ int rc = 63;
                     (ligacoes[5][42] == 1) || (ligacoes[14][42] == 1) ||
                     (ligacoes[25][42] == 1) || (ligacoes[30][42] == 1) ||
                     (ligacoes[35][42] == 1) || (ligacoes[36][42] == 1) ||
-                    (ligacoes[37][42] == 1))
+                    (ligacoes[37][42] == 1) || (ligacoes[63][42] == 1) ||
+                        (ligacoes[65][42] == 1) || (ligacoes[67][42] == 1) ||
+                        (ligacoes[69][42] == 1) || (ligacoes[71][42] == 1) ||
+                        (ligacoes[73][42] == 1) || (ligacoes[75][42] == 1) ||
+                        (ligacoes[77][42] == 1) || (ligacoes[79][42] == 1) ||
+                        (ligacoes[81][42] == 1))
                 {
                     entradaElseA = false;
                     //printf("1\n");
@@ -4387,7 +4467,12 @@ int rc = 63;
                     (ligacoes[5][43] == 1) || (ligacoes[14][43] == 1) ||
                     (ligacoes[25][43] == 1) || (ligacoes[30][43] == 1) ||
                     (ligacoes[35][43] == 1) || (ligacoes[36][43] == 1) ||
-                    (ligacoes[37][43] == 1))
+                    (ligacoes[37][43] == 1) || (ligacoes[63][43] == 1) ||
+                        (ligacoes[65][43] == 1) || (ligacoes[67][43] == 1) ||
+                        (ligacoes[69][43] == 1) || (ligacoes[71][43] == 1) ||
+                        (ligacoes[73][43] == 1) || (ligacoes[75][43] == 1) ||
+                        (ligacoes[77][43] == 1) || (ligacoes[79][43] == 1) ||
+                        (ligacoes[81][43] == 1))
                 {
                     entradaElseB = false;
                     //printf("3\n");
@@ -4565,7 +4650,12 @@ int rc = 63;
                     (ligacoes[5][44] == 1) || (ligacoes[14][44] == 1) ||
                     (ligacoes[25][44] == 1) || (ligacoes[30][44] == 1) ||
                     (ligacoes[35][44] == 1) || (ligacoes[36][44] == 1) ||
-                    (ligacoes[37][44] == 1))
+                    (ligacoes[37][44] == 1) || (ligacoes[63][44] == 1) ||
+                        (ligacoes[65][44] == 1) || (ligacoes[67][44] == 1) ||
+                        (ligacoes[69][44] == 1) || (ligacoes[71][44] == 1) ||
+                        (ligacoes[73][44] == 1) || (ligacoes[75][44] == 1) ||
+                        (ligacoes[77][44] == 1) || (ligacoes[79][44] == 1) ||
+                        (ligacoes[81][44] == 1))
                 {
                     entradaElseC = false;
                 }
@@ -4742,7 +4832,12 @@ int rc = 63;
                     (ligacoes[5][45] == 1) || (ligacoes[14][45] == 1) ||
                     (ligacoes[25][45] == 1) || (ligacoes[30][45] == 1) ||
                     (ligacoes[35][45] == 1) || (ligacoes[36][45] == 1) ||
-                    (ligacoes[37][45] == 1))
+                    (ligacoes[37][45] == 1) || (ligacoes[63][45] == 1) ||
+                        (ligacoes[65][45] == 1) || (ligacoes[67][45] == 1) ||
+                        (ligacoes[69][45] == 1) || (ligacoes[71][45] == 1) ||
+                        (ligacoes[73][45] == 1) || (ligacoes[75][45] == 1) ||
+                        (ligacoes[77][45] == 1) || (ligacoes[79][45] == 1) ||
+                        (ligacoes[81][45] == 1))
                 {
                     entradaElseD = false;
                     //printf("3\n");
@@ -4990,7 +5085,12 @@ int rc = 63;
                     (ligacoes[5][47] == 1) || (ligacoes[14][47] == 1) ||
                     (ligacoes[25][47] == 1) || (ligacoes[30][47] == 1) ||
                     (ligacoes[35][47] == 1) || (ligacoes[36][47] == 1) ||
-                    (ligacoes[37][47] == 1))
+                    (ligacoes[37][47] == 1) || (ligacoes[63][47] == 1) ||
+                        (ligacoes[65][47] == 1) || (ligacoes[67][47] == 1) ||
+                        (ligacoes[69][47] == 1) || (ligacoes[71][47] == 1) ||
+                        (ligacoes[73][47] == 1) || (ligacoes[75][47] == 1) ||
+                        (ligacoes[77][47] == 1) || (ligacoes[79][47] == 1) ||
+                        (ligacoes[81][47] == 1))
                 {
                     entradaAnd1 = false;
                     //printf("2\n");
@@ -5166,7 +5266,12 @@ int rc = 63;
                     (ligacoes[5][48] == 1) || (ligacoes[14][48] == 1) ||
                     (ligacoes[25][48] == 1) || (ligacoes[30][48] == 1) ||
                     (ligacoes[35][48] == 1) || (ligacoes[36][48] == 1) ||
-                    (ligacoes[37][48] == 1))
+                    (ligacoes[37][48] == 1) || (ligacoes[63][48] == 1) ||
+                        (ligacoes[65][48] == 1) || (ligacoes[67][48] == 1) ||
+                        (ligacoes[69][48] == 1) || (ligacoes[71][48] == 1) ||
+                        (ligacoes[73][48] == 1) || (ligacoes[75][48] == 1) ||
+                        (ligacoes[77][48] == 1) || (ligacoes[79][48] == 1) ||
+                        (ligacoes[81][48] == 1))
                 {
                     entradaAnd2 = false;
                     //printf("3\n");
@@ -5391,7 +5496,12 @@ int rc = 63;
                     (ligacoes[5][50] == 1) || (ligacoes[14][50] == 1) ||
                     (ligacoes[25][50] == 1) || (ligacoes[30][50] == 1) ||
                     (ligacoes[35][50] == 1) || (ligacoes[36][50] == 1) ||
-                    (ligacoes[37][50] == 1))
+                    (ligacoes[37][50] == 1) || (ligacoes[63][50] == 1) ||
+                     (ligacoes[65][50] == 1) || (ligacoes[67][50] == 1) ||
+                     (ligacoes[69][50] == 1) || (ligacoes[71][50] == 1) ||
+                     (ligacoes[73][50] == 1) || (ligacoes[75][50] == 1) ||
+                     (ligacoes[77][50] == 1) || (ligacoes[79][50] == 1) ||
+                     (ligacoes[81][50] == 1))
                 {
                     entradaOr1 = false;
                     //printf("2\n");
@@ -5567,7 +5677,12 @@ int rc = 63;
                     (ligacoes[5][51] == 1) || (ligacoes[14][51] == 1) ||
                     (ligacoes[25][51] == 1) || (ligacoes[30][51] == 1) ||
                     (ligacoes[35][51] == 1) || (ligacoes[36][51] == 1) ||
-                    (ligacoes[37][51] == 1))
+                    (ligacoes[37][51] == 1) || (ligacoes[63][51] == 1) ||
+                        (ligacoes[65][51] == 1) || (ligacoes[67][51] == 1) ||
+                        (ligacoes[69][51] == 1) || (ligacoes[71][51] == 1) ||
+                        (ligacoes[73][51] == 1) || (ligacoes[75][51] == 1) ||
+                        (ligacoes[77][51] == 1) || (ligacoes[79][51] == 1) ||
+                        (ligacoes[81][51] == 1))
                 {
                     entradaOr2 = false;
                     //printf("3\n");
@@ -5793,7 +5908,12 @@ int rc = 63;
                     (ligacoes[5][53] == 1) || (ligacoes[14][53] == 1) ||
                     (ligacoes[25][53] == 1) || (ligacoes[30][53] == 1) ||
                     (ligacoes[35][53] == 1) || (ligacoes[36][53] == 1) ||
-                    (ligacoes[37][53] == 1))
+                    (ligacoes[37][53] == 1) || (ligacoes[63][53] == 1) ||
+                        (ligacoes[65][53] == 1) || (ligacoes[67][53] == 1) ||
+                        (ligacoes[69][53] == 1) || (ligacoes[71][53] == 1) ||
+                        (ligacoes[73][53] == 1) || (ligacoes[75][53] == 1) ||
+                        (ligacoes[77][53] == 1) || (ligacoes[79][53] == 1) ||
+                        (ligacoes[81][53] == 1))
                 {
                     entradaMaior1 = false;
                     //printf("2\n");
@@ -5969,7 +6089,12 @@ int rc = 63;
                     (ligacoes[5][54] == 1) || (ligacoes[14][54] == 1) ||
                     (ligacoes[25][54] == 1) || (ligacoes[30][54] == 1) ||
                     (ligacoes[35][54] == 1) || (ligacoes[36][54] == 1) ||
-                    (ligacoes[37][54] == 1))
+                    (ligacoes[37][54] == 1) || (ligacoes[63][54] == 1) ||
+                        (ligacoes[65][54] == 1) || (ligacoes[67][54] == 1) ||
+                        (ligacoes[69][54] == 1) || (ligacoes[71][54] == 1) ||
+                        (ligacoes[73][54] == 1) || (ligacoes[75][54] == 1) ||
+                        (ligacoes[77][54] == 1) || (ligacoes[79][54] == 1) ||
+                        (ligacoes[81][54] == 1))
                 {
                     entradaMaior2 = false;
                     //printf("3\n");
@@ -6202,7 +6327,12 @@ int rc = 63;
                     (ligacoes[5][56] == 1) || (ligacoes[14][56] == 1) ||
                     (ligacoes[25][56] == 1) || (ligacoes[30][56] == 1) ||
                     (ligacoes[35][56] == 1) || (ligacoes[36][56] == 1) ||
-                    (ligacoes[37][56] == 1))
+                    (ligacoes[37][56] == 1) || (ligacoes[63][56] == 1) ||
+                        (ligacoes[65][56] == 1) || (ligacoes[67][56] == 1) ||
+                        (ligacoes[69][56] == 1) || (ligacoes[71][56] == 1) ||
+                        (ligacoes[73][56] == 1) || (ligacoes[75][56] == 1) ||
+                        (ligacoes[77][56] == 1) || (ligacoes[79][56] == 1) ||
+                        (ligacoes[81][56] == 1))
                 {
                     entradaMenor1 = false;
                     //printf("2\n");
@@ -6378,7 +6508,12 @@ int rc = 63;
                     (ligacoes[5][57] == 1) || (ligacoes[14][57] == 1) ||
                     (ligacoes[25][57] == 1) || (ligacoes[30][57] == 1) ||
                     (ligacoes[35][57] == 1) || (ligacoes[36][57] == 1) ||
-                    (ligacoes[37][57] == 1))
+                    (ligacoes[37][57] == 1) || (ligacoes[63][57] == 1) ||
+                        (ligacoes[65][57] == 1) || (ligacoes[67][57] == 1) ||
+                        (ligacoes[69][57] == 1) || (ligacoes[71][57] == 1) ||
+                        (ligacoes[73][57] == 1) || (ligacoes[75][57] == 1) ||
+                        (ligacoes[77][57] == 1) || (ligacoes[79][57] == 1) ||
+                        (ligacoes[81][57] == 1))
                 {
                     entradaMenor2 = false;
                     //printf("3\n");
@@ -6614,7 +6749,12 @@ int rc = 63;
                     (ligacoes[5][59] == 1) || (ligacoes[14][59] == 1) ||
                     (ligacoes[25][59] == 1) || (ligacoes[30][59] == 1) ||
                     (ligacoes[35][59] == 1) || (ligacoes[36][59] == 1) ||
-                    (ligacoes[37][59] == 1))
+                    (ligacoes[37][59] == 1) || (ligacoes[63][59] == 1) ||
+                        (ligacoes[65][59] == 1) || (ligacoes[67][59] == 1) ||
+                        (ligacoes[69][59] == 1) || (ligacoes[71][59] == 1) ||
+                        (ligacoes[73][59] == 1) || (ligacoes[75][59] == 1) ||
+                        (ligacoes[77][59] == 1) || (ligacoes[79][59] == 1) ||
+                        (ligacoes[81][59] == 1))
                 {
                     entradaIgual1 = false;
                     //printf("2\n");
@@ -6790,7 +6930,12 @@ int rc = 63;
                     (ligacoes[5][60] == 1) || (ligacoes[14][60] == 1) ||
                     (ligacoes[25][60] == 1) || (ligacoes[30][60] == 1) ||
                     (ligacoes[35][60] == 1) || (ligacoes[36][60] == 1) ||
-                    (ligacoes[37][60] == 1))
+                    (ligacoes[37][60] == 1) || (ligacoes[63][60] == 1) ||
+                        (ligacoes[65][60] == 1) || (ligacoes[67][60] == 1) ||
+                        (ligacoes[69][60] == 1) || (ligacoes[71][60] == 1) ||
+                        (ligacoes[73][60] == 1) || (ligacoes[75][60] == 1) ||
+                        (ligacoes[77][60] == 1) || (ligacoes[79][60] == 1) ||
+                        (ligacoes[81][60] == 1))
                 {
                     entradaIgual2 = false;
                     //printf("3\n");
@@ -7024,7 +7169,12 @@ int rc = 63;
                     (ligacoes[5][62] == 1) || (ligacoes[14][62] == 1) ||
                     (ligacoes[25][62] == 1) || (ligacoes[30][62] == 1) ||
                     (ligacoes[35][62] == 1) || (ligacoes[36][62] == 1) ||
-                    (ligacoes[37][62] == 1))
+                    (ligacoes[37][62] == 1) || (ligacoes[63][62] == 1) ||
+                        (ligacoes[65][62] == 1) || (ligacoes[67][62] == 1) ||
+                        (ligacoes[69][62] == 1) || (ligacoes[71][62] == 1) ||
+                        (ligacoes[73][62] == 1) || (ligacoes[75][62] == 1) ||
+                        (ligacoes[77][62] == 1) || (ligacoes[79][62] == 1) ||
+                        (ligacoes[81][62] == 1))
                 {
                     entradaTrans1 = false;
                     //printf("2\n");

@@ -1,1 +1,1 @@
-void verificarBlocos(int ligacoes[][63], float matrixValores[][63], float velocidades[2]);
+void verificarBlocos(int ligacoes[][81], float matrixValores[][81], float velocidades[2]);
