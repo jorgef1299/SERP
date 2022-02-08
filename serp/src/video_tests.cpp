@@ -1495,6 +1495,88 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 }
 
 
+std::vector<cv::Point2f> detectCrossings(cv::Mat image)
+{
+    // Skeleton
+
+    cv::Mat img = image.clone();
+    cv::Mat skel(img.size(), CV_8UC1, cv::Scalar(0));
+    cv::Mat temp;
+    cv::Mat eroded;
+
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
+
+    bool done;
+    do
+    {
+      cv::erode(img, eroded, element);
+      cv::dilate(eroded, temp, element); // temp = open(img)
+      cv::subtract(img, temp, temp);
+      cv::bitwise_or(skel, temp, skel);
+      eroded.copyTo(img);
+
+      done = (cv::countNonZero(img) == 0);
+    } while (!done);
+
+    cv::imshow("Skeleton", skel);
+
+
+
+    // Detecting corners
+
+    cv::Mat dst, dst_norm, dst_norm_scaled;
+
+    dst = cv::Mat::zeros(skel.size(), CV_32FC1);
+    cornerHarris(skel, dst, 7, 5, 0.05, cv::BORDER_DEFAULT);
+    cv::imshow("dst", dst);
+
+
+    // Normalizing
+
+    normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
+//    cv::imshow("dst_norm", dst_norm);
+
+    convertScaleAbs(dst_norm, dst_norm_scaled);
+//    cv::imshow("dst_norm_scaled", dst_norm_scaled);
+
+
+    // Filtering
+
+    cv::Mat crossingPoints;
+
+    cv::threshold(dst_norm_scaled, crossingPoints, 150, 255, CV_THRESH_BINARY);
+    cv::imshow("crossMask", crossingPoints);
+
+
+    // Save corner points
+
+    std::vector<std::vector<cv::Point> > contours;
+    std::vector<cv::Vec4i> hierarchy;
+
+    // find contours
+    cv::findContours( crossingPoints, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+
+    // get the moments
+    std::vector<cv::Moments> mu(contours.size());
+    for( int i = 0; i<contours.size(); i++ )
+    {
+        mu[i] = cv::moments( contours[i], false );
+    }
+
+    // get the centroid of figures.
+    std::vector<cv::Point2f> mc(contours.size());
+    for( int i = 0; i<contours.size(); i++)
+    {
+        mc[i] = cv::Point2f( mu[i].m10/mu[i].m00 , mu[i].m01/mu[i].m00 );
+    }
+
+
+    cv::waitKey(1);
+
+    return mc;
+}
+
+
 std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 {
     cv::Mat image;
@@ -1537,14 +1619,26 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 //    imshow("Dilation", image);
 
 
+    // Detect Crossings
+    crossingPoints.clear();
+    crossingPoints = detectCrossings(image);
+
+
     // Detect Lines
     std::vector<std::vector<cv::Point> > contours;
     findContours(image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 
     std::vector<cv::Vec4i> linesP;
 
-    for(size_t k=0; k<contours.size();k++)
+    cv::Mat paperCopy = paper.clone();
+
+    for(size_t k=0; k<contours.size(); k++)
     {
+//        // See each countour being detected
+//        cv::drawContours(paperCopy, contours, (int)k, cv::Scalar(0, 255, 0), 2, cv::LINE_8, cv::noArray(), 0);
+//        cv::imshow("countours", paperCopy);
+//        cv::waitKey(0);
+
         auto val=minmax_element(contours[k].begin(), contours[k].end(), [](cv::Point const& a, cv::Point const& b)
         {
           return a.x < b.x;
@@ -1561,6 +1655,9 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 //        ROS_WARN_STREAM(" leftMost [ " << val.first->x << ", " << val.first->y << " ]");
 //        ROS_WARN_STREAM(" RightMost [ " << val.second->x << ", " << val.second->y << " ]");
     }
+
+//    cv::imshow("countours", paperCopy);
+//    cv::waitKey(1);
 
     return linesP;
 }
@@ -1596,13 +1693,23 @@ coordinates findEndPoint(int begin, std::vector<block> blocks){
 }
 
 
-void drawLines(cv::InputOutputArray paper, std::vector<block> blocks){
-  for (int j = 0; j < blocks.size(); j++) {
-    if(blocks[j].outputs.linked==true){
+void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
+{
+  // Draw Lines
+  for (int j = 0; j < blocks.size(); j++)
+  {
+    if(blocks[j].outputs.linked==true)
+    {
       line(paper, cv::Point(blocks[j].outputs.point.x,blocks[j].outputs.point.y), cv::Point(findEndPoint(blocks[j].outputs.link_end,blocks).x, findEndPoint(blocks[j].outputs.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
-
   }
+
+  // Draw Crossings
+  for( int i = 0; i<crossingPoints.size(); i++ )
+  {
+      cv::circle(paper, crossingPoints[i], 10, cv::Scalar(0,255,0), -1, 8, 0);
+  }
+
 }
 
 std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block){

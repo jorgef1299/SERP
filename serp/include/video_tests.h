@@ -94,4 +94,4 @@ struct orientation_block {
 // ---------- LINE DETECTION ---------- (add to separate library)
 
 std::vector<cv::Vec4i> masks;
-
+std::vector<cv::Point2f> crossingPoints;
