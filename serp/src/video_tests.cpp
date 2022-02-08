@@ -1499,6 +1499,8 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
 {
     // Skeleton
 
+//    cv::imshow("input", image);
+
     cv::Mat img = image.clone();
     cv::Mat skel(img.size(), CV_8UC1, cv::Scalar(0));
     cv::Mat temp;
@@ -1521,31 +1523,39 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
     cv::imshow("Skeleton", skel);
 
 
+    // Pre-Process Skeleton
+
+    cv::morphologyEx(skel, skel, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)));
+    cv::imshow("Close", skel);
+
 
     // Detecting corners
 
     cv::Mat dst, dst_norm, dst_norm_scaled;
 
     dst = cv::Mat::zeros(skel.size(), CV_32FC1);
-    cornerHarris(skel, dst, 7, 5, 0.05, cv::BORDER_DEFAULT);
-    cv::imshow("dst", dst);
+    cornerHarris(skel, dst, 10, 5, 0.05, cv::BORDER_DEFAULT);
+//    cv::imshow("dst", dst);
 
 
     // Normalizing
 
     normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
-//    cv::imshow("dst_norm", dst_norm);
+//    cv::imshow("dst_norm", dst_norm);how to draw cross in opnecv
 
     convertScaleAbs(dst_norm, dst_norm_scaled);
-//    cv::imshow("dst_norm_scaled", dst_norm_scaled);
+    cv::imshow("dst_norm_scaled", dst_norm_scaled);
 
 
     // Filtering
 
     cv::Mat crossingPoints;
 
-    cv::threshold(dst_norm_scaled, crossingPoints, 150, 255, CV_THRESH_BINARY);
+    cv::threshold(dst_norm_scaled, crossingPoints, 120, 255, CV_THRESH_BINARY);
     cv::imshow("crossMask", crossingPoints);
+
+    cv::dilate(crossingPoints, crossingPoints, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7)));
+    cv::imshow("Dilate After Thresh", crossingPoints);
 
 
     // Save corner points
@@ -1707,7 +1717,7 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
   // Draw Crossings
   for( int i = 0; i<crossingPoints.size(); i++ )
   {
-      cv::circle(paper, crossingPoints[i], 10, cv::Scalar(0,255,0), -1, 8, 0);
+      cv::circle(paper, crossingPoints[i], 2, cv::Scalar(0,255,0), -1, 8, 0);
   }
 
 }
