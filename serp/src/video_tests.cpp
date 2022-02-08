@@ -1520,13 +1520,13 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
       done = (cv::countNonZero(img) == 0);
     } while (!done);
 
-    cv::imshow("Skeleton", skel);
+//    cv::imshow("Skeleton", skel);
 
 
     // Pre-Process Skeleton
 
     cv::morphologyEx(skel, skel, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)));
-    cv::imshow("Close", skel);
+//    cv::imshow("Close", skel);
 
 
     // Detecting corners
@@ -1544,7 +1544,7 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
 //    cv::imshow("dst_norm", dst_norm);how to draw cross in opnecv
 
     convertScaleAbs(dst_norm, dst_norm_scaled);
-    cv::imshow("dst_norm_scaled", dst_norm_scaled);
+//    cv::imshow("dst_norm_scaled", dst_norm_scaled);
 
 
     // Filtering
@@ -1552,10 +1552,10 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
     cv::Mat crossingPoints;
 
     cv::threshold(dst_norm_scaled, crossingPoints, 120, 255, CV_THRESH_BINARY);
-    cv::imshow("crossMask", crossingPoints);
+//    cv::imshow("crossMask", crossingPoints);
 
     cv::dilate(crossingPoints, crossingPoints, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7)));
-    cv::imshow("Dilate After Thresh", crossingPoints);
+//    cv::imshow("Dilate After Thresh", crossingPoints);
 
 
     // Save corner points
