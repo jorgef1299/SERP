@@ -460,7 +460,13 @@ void validatePicture(std::vector<int> ids)
         {
             ROS_WARN_STREAM("Detected " << ids.size() << " ArUcos");
 
-            for(int i=0; i<ids.size(); i++) ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
+            for(int i=0; i<ids.size(); i++)
+            {
+                ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
+
+                // To account for detections with unwanted ids
+                if(ids[i] > 35) return;
+            }
 
             pictureValidated = true;
             ROS_WARN_STREAM("Picture Validated\n");
@@ -1651,6 +1657,10 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     std::vector<std::vector<cv::Point2f>> corners;
 
     cv::aruco::detectMarkers(paper, dict, corners, ids);
+
+    // Number of detections after Homography has to be equal to the number of detections before
+    // -4 to account for loss of cropped orientation blocks
+    if(ids.size() != (count_total_arucos - 4)) return;
 
 
     // Block Formation
