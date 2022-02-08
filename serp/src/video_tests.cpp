@@ -1706,27 +1706,27 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
-//    imshow("out", frameCopy);
-//    cv::waitKey(1);
-
     orientation_block markers = detect_orientation_blocks(corners, ids);
 
     cv::Mat original = frame.clone();
 
     validatePicture(ids);
 
+    std::vector<cv::Point2f> new_points;
+
     if(markers.ids.size()==4 && orientation_check)
     {
-        std::vector<cv::Point2f> new_points = calculateNewDimensions(frameCopy, markers);
-        imshow("out", frameCopy);
-        cv::waitKey(1);
+        new_points = calculateNewDimensions(frameCopy, markers);
+    }
 
-        if(pictureValidated)
-        {
-            cv::Mat new_frame = perspective_correction(original, new_points);
+    imshow("out", frameCopy);
+    cv::waitKey(1);
 
-            detectAndInterpret_Lines(new_frame, dict);
-        }
+    if(markers.ids.size()==4 && orientation_check && pictureValidated)
+    {
+        cv::Mat new_frame = perspective_correction(original, new_points);
+
+        detectAndInterpret_Lines(new_frame, dict);
     }
 }
 
