@@ -1699,6 +1699,9 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
 
     frame.copyTo(frameCopy);
 
+
+    // ArUco Detection
+
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners;
 
@@ -1706,13 +1709,17 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
 
     cv::aruco::drawDetectedMarkers(frameCopy, corners, ids);
 
+
+    // Get orientation blocks
+
     orientation_block markers = detect_orientation_blocks(corners, ids);
 
     cv::Mat original = frame.clone();
 
-    validatePicture(ids);
-
     std::vector<cv::Point2f> new_points;
+
+
+    // Compute extended dimensions to account for distortion
 
     if(markers.ids.size()==4 && orientation_check)
     {
@@ -1722,6 +1729,12 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
     imshow("out", frameCopy);
     cv::waitKey(1);
 
+
+    // Frame Validation
+    validatePicture(ids);
+
+
+    // Perspective correction
     if(markers.ids.size()==4 && orientation_check && pictureValidated)
     {
         cv::Mat new_frame = perspective_correction(original, new_points);
