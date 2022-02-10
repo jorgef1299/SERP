@@ -1,11 +1,17 @@
 #include "rpi_camera.h"
+#include "objDetect.h"
 
-bool cb_camera_control(std_srvs::SetBoolRequest &req, std_srvs::SetBoolResponse &res) {
-    if(req.data == true) {
+std::vector<float> sensor_valores;
+
+bool cb_camera_control(std_srvs::SetBoolRequest &req, std_srvs::SetBoolResponse &res)
+{
+    if (req.data == true)
+    {
         // Publish camera data
         must_publish_camera_data = true;
     }
-    else {
+    else
+    {
         must_publish_camera_data = false;
     }
     // Send response
@@ -13,10 +19,12 @@ bool cb_camera_control(std_srvs::SetBoolRequest &req, std_srvs::SetBoolResponse 
     return true;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     ros::init(argc, argv, "rpi_camera_node");
     ros::NodeHandle n_public;
+    serp::Sensors sensors_data;
+    ros::Publisher send_sensors = n_public.advertise<serp::Sensors>("send_sensors", 1);
 
     // Initialize variable(s)
     must_publish_camera_data = true;
@@ -29,23 +37,35 @@ int main(int argc, char** argv)
     // Create ROS Servers
     ros::ServiceServer srv_camera = n_public.advertiseService("set_camera", cb_camera_control);
 
-    cv::VideoCapture cap("/dev/video0");
-    if(!cap.isOpened()) {
-        ROS_ERROR("Can't open Raspberry Pi camera!");
+    raspicam::RaspiCam_Cv Camera;
+    Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
+    Camera.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
+    Camera.set(CV_CAP_PROP_FRAME_WIDTH, 1600);
+    Camera.set(CV_CAP_PROP_FRAME_HEIGHT, 1200);
+
+    std::cout << "Opening Camera..." << std::endl;
+    if (!Camera.open())
+    {
+        std::cerr << "Error opening the camera" << std::endl;
         return -1;
     }
+    ros::Duration(1.0).sleep();
     cv::Mat frame;
-    while(ros::ok())
+
+    while (ros::ok())
     {
         // Get new frame
-        if(!cap.read(frame)) // Camera has been disconnected
-        {
-            ROS_ERROR("Can't read Raspberry Pi camera! Please check the connections...");
-            break;
-        }
-
+        Camera.grab();
+        Camera.retrieve(frame);
+        //process object detection
+        sensor_valores = frameProcessing(frame);
+        //fazer cena de nao entupir
+    
+            send_sensors.publish();
+          
         // Publish image (if needed)
-        if(must_publish_camera_data) {
+        if (must_publish_camera_data)
+        {
             // Convert OpenCV image to ROS data
             sensor_msgs::Image img_msg;
             std_msgs::Header header;
@@ -62,7 +82,7 @@ int main(int argc, char** argv)
         */
         ros::spinOnce();
     }
-    cap.release();
+    Camera.release();
     cv::destroyAllWindows();
     return 0;
 }

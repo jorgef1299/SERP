@@ -13,6 +13,8 @@ set(OpenCV_DIR /usr/share/OpenCV)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED gtk+-3.0)
 
+find_package(raspicam REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
@@ -24,6 +26,8 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   sensor_msgs
 )
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -63,6 +67,7 @@ add_message_files(
   FILES
   RobotInfo.msg
   Velocity.msg
+  Sensors.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -154,6 +159,7 @@ add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp src/logica.cpp)
 
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -168,6 +174,7 @@ add_executable(arduino_bridge_node src/arduino_bridge_node.cpp src/logica.cpp)
 target_link_libraries(rpi_camera_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${raspicam_CV_LIBS}
 )
 
 target_link_libraries(graphical_interface
@@ -178,6 +185,7 @@ target_link_libraries(graphical_interface
 target_link_libraries(arduino_bridge_node
   ${catkin_LIBRARIES}
 )
+
 
 #############
 ## Install ##
