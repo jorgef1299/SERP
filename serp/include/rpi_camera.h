@@ -4,6 +4,7 @@
 #include <cv_bridge/cv_bridge.h>
 #include <std_srvs/SetBool.h>
 #include <std_srvs/Trigger.h>
+#include <std_msgs/String.h>
 
 // Global variables
 enum state {
@@ -11,4 +12,3 @@ enum state {
     ReadProgrammingSheet,
     DetectObstacles
 } camera_state;
-

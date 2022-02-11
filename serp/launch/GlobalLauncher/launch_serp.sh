@@ -8,4 +8,5 @@ export SERP_PROJECT_PATH=~/catkin_ws/src/serp/
 . ~/catkin_ws/devel/setup.bash
 roscore &
 rosrun serp graphical_interface &
-rosrun serp rpi_camera_node
+rosrun serp rpi_camera_node & 
+rosrun serp arduino_bridge_node
