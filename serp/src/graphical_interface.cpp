@@ -170,12 +170,11 @@ void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
 
 void cb_camera_detections(const sensor_msgs::ImageConstPtr &msg) {
     if(g_mutex_trylock(&mutex_camera_detections)) {
-        exists_last_frame = true;
         // Convert ROS message to OpenCV Mat
         cv_bridge::CvImagePtr cv_ptr;
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         cv::cvtColor(cv_ptr->image, cv_ptr->image, cv::COLOR_BGR2RGB);
-        last_detected_sheet = cv_ptr->image;
+        current_detected_sheet = cv_ptr->image;
         GdkPixbuf *last_pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) cv_ptr->image.data, GDK_COLORSPACE_RGB, FALSE, 8,
                                               cv_ptr->image.cols, cv_ptr->image.rows, cv_ptr->image.step, NULL, NULL);
         dialog_image = gtk_image_new();
@@ -191,21 +190,39 @@ void gtk_update_robot_state() {
     log_message = "Estado do robô atualizado para: ";
     if(robot.state == Stopped) {
         state = "Parado";
+        gtk_widget_hide(button_global_stop);
     }
-    else if(robot.state == ManualControl) {
-        state = "Controlo Manual";
-    }
-    else if(robot.state == ReadingProgrammingSheet) {
-        state = "A ler folha de programação...";
-    }
-    else if(robot.state == Executing) {
-        state = "A executar programação efetuada...";
+    else {
+        gtk_widget_show(button_global_stop);
+        if(robot.state == ManualControl) {
+            state = "Controlo Manual";
+            gtk_widget_hide(button_global_stop);
+        }
+        else if(robot.state == ReadingProgrammingSheet) {
+            state = "A ler folha de programação...";
+        }
+        else if(robot.state == Executing) {
+            state = "A executar programação efetuada...";
+        }
     }
     robot_state_num_chars = state.length();
     gtk_label_set_label(label_robot_state, state.c_str());
-    insert_text_to_log(log_mensagens, log_buffer, log_text_iter, (log_message+state).c_str());
+    if(is_startup) {
+        insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Robô iniciado com sucesso!");
+        is_startup = false;
+    }
+    else {
+        insert_text_to_log(log_mensagens, log_buffer, log_text_iter, (log_message+state).c_str());
+    }
     // Update top label left margin
-    gtk_widget_set_margin_start(widget_robot_state, (actual_window_width-IMAGE_WIDTH)/2 + (IMAGE_WIDTH-(130+robot_state_num_chars*7.5))/2);
+    gtk_widget_set_margin_start(widget_robot_state, (actual_window_width-IMAGE_WIDTH)/2 + (IMAGE_WIDTH-(130+robot_state_num_chars*7.3))/2);
+    // Publish message to update state in the other nodes
+    std_msgs::String msg;
+    if(robot.state == Stopped) msg.data = "Stopped";
+    else if(robot.state == ManualControl) msg.data = "ManualControl";
+    else if(robot.state == ReadingProgrammingSheet) msg.data = "ReadingProgrammingSheet";
+    else if(robot.state == Executing) msg.data = "Executing";
+    pub_robot_state.publish(msg);
 }
 
 void initializeGtkInterface() {
@@ -222,6 +239,7 @@ void gtk_dialog_destroy(GtkDialog *dialog, gint response_id, gpointer user_data)
     if(response_id == GTK_RESPONSE_ACCEPT) {
         robot.state = Executing;
         gtk_update_robot_state();
+        last_detected_sheet = current_detected_sheet.clone();
     }
     else if(response_id == GTK_RESPONSE_REJECT) {
         std_srvs::Trigger srv;
@@ -248,7 +266,7 @@ void gtk_main_quit() {
 void cb_gtk_window_size(GtkWindow *window, GdkEvent *event, gpointer data) {
     actual_window_width = event->configure.width;
     gtk_widget_set_margin_start(GTK_WIDGET(camera_image_frame), (actual_window_width-IMAGE_WIDTH)/2);
-    gtk_widget_set_margin_start(widget_robot_state, (actual_window_width-IMAGE_WIDTH)/2 + (IMAGE_WIDTH-(130+robot_state_num_chars*7.5))/2);
+    gtk_widget_set_margin_start(widget_robot_state, (actual_window_width-IMAGE_WIDTH)/2 + (IMAGE_WIDTH-(130+robot_state_num_chars*7.3))/2);
 }
 
 void cb_gtk_resize_last_image(GtkWindow *window, GdkEvent *event, gpointer data) {
@@ -273,8 +291,8 @@ void cb_gtk_resize_dialog_image(GtkWindow *window, GdkEvent *event, gpointer dat
     height = event->configure.height;
 
     if(width != dialog_last_width || height != dialog_last_height) {
-        GdkPixbuf *last_pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) last_detected_sheet.data, GDK_COLORSPACE_RGB, FALSE, 8,
-                                                              last_detected_sheet.cols, last_detected_sheet.rows, last_detected_sheet.step, NULL, NULL);
+        GdkPixbuf *last_pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) current_detected_sheet.data, GDK_COLORSPACE_RGB, FALSE, 8,
+                                                              current_detected_sheet.cols, current_detected_sheet.rows, current_detected_sheet.step, NULL, NULL);
         GdkPixbuf *scaled_pixbuf = gdk_pixbuf_scale_simple(last_pixbuf_rgb, width, height, GDK_INTERP_BILINEAR);
         gtk_image_set_from_pixbuf(GTK_IMAGE(dialog_image), scaled_pixbuf);
         g_object_unref(scaled_pixbuf);
@@ -341,7 +359,8 @@ int main(int argc, char *argv[])
     // Init ROS node
     ros::init(argc, argv, "serp_interface_node");
     ros::NodeHandle n_public;
-
+    // Give some time for the other nodes start
+    ros::Duration(2.0).sleep();
     // Create ROS Clients
     client_velocity_setpoint = n_public.serviceClient<serp::VelocitySetPoint>("velocity_setpoint");
     client_battery_level = n_public.serviceClient<std_srvs::Trigger>("srv_battery_level");
@@ -353,6 +372,9 @@ int main(int argc, char *argv[])
     image_transport::Subscriber sub_camera_image = it->subscribe("camera", 1, cb_camera_img);
     // Subscribe detected programming sheets
     image_transport::Subscriber sub_detected_sheets = it->subscribe("camera/sheet_detections", 1, cb_camera_detections);
+
+    // Create ROS Publisher
+    pub_robot_state = n_public.advertise<std_msgs::String>("robot_state", 2);
 
     gtk_update_robot_state();
 
@@ -384,13 +406,14 @@ extern "C"
                 enable_interface_button(button_manual_go, true);
                 disable_interface_button(button_manual_stop, false);
                 robot.state = ManualControl;
-                // Add text to the log box
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual ativado!");
+                gtk_update_robot_state();
             }
             else {
                 insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível ativar o modo de controlo manual...", true);
             }
-
+        }
+        else {
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Para ativar o modo de controlo manual o robô tem que estar parado!", true);
         }
     }
 
@@ -406,15 +429,17 @@ extern "C"
                 disable_interface_button(button_manual_go, true);
                 enable_interface_button(button_manual_stop, false);
                 robot.state = Stopped;
+                gtk_update_robot_state();
                 // Reset Ranges
                 gtk_range_set_value(range_motor_left, 0);
                 gtk_range_set_value(range_motor_right, 0);
-                // Add text to the log box
-                insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Controlo manual desativado!");
             }
             else {
                 insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível desativar o modo de controlo manual...", true);
             }
+        }
+        else {
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: O robô não se encontra no modo de controlo manual...", true);
         }
     }
 
@@ -479,11 +504,14 @@ extern "C"
                 insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Não foi possível ativar o modo de leitura da folha...", true);
             }
         }
+        else {
+            insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Erro: Para ativar o modo de leitura da folha o robô tem que estar no modo \"Parado\"!...", true);
+        }
     }
 
     void on_button_see_last_detected_sheet_clicked(GtkButton *button) {
         if(g_mutex_trylock(&mutex_camera_detections)) {
-            if(!exists_last_frame) {
+            if(last_detected_sheet.empty()) {
                 insert_text_to_log(log_mensagens, log_buffer, log_text_iter, "Ainda não foi detetada qualquer folha de programação...", true);
             }
             else {
@@ -491,6 +519,7 @@ extern "C"
                                                                       last_detected_sheet.cols, last_detected_sheet.rows, last_detected_sheet.step, NULL, NULL);
                 dialog_image = gtk_image_new();
                 gtk_image_set_from_pixbuf(GTK_IMAGE(dialog_image), last_pixbuf_rgb);
+                g_object_unref(last_pixbuf_rgb);
                 g_idle_add ((GSourceFunc) showLastDetectedSheet, NULL);
             }
             g_mutex_unlock(&mutex_camera_detections);
