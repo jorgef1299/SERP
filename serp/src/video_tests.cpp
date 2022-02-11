@@ -1614,7 +1614,7 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
     }
 
 
-    cv::waitKey(1);
+    //cv::waitKey(1);
 
     return mc;
 }
@@ -1746,17 +1746,12 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
       line(paper, cv::Point(blocks[j].outputs.point.x,blocks[j].outputs.point.y), cv::Point(findEndPoint(blocks[j].outputs.link_end,blocks).x, findEndPoint(blocks[j].outputs.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
   }
-/*
+
   // Draw Crossings
   for( int i = 0; i<crossingPoints.size(); i++ )
   {
-<<<<<<< Updated upstream
       cv::circle(paper, crossingPoints[i], 2, cv::Scalar(0,255,0), -1, 8, 0);
   }
-=======
-      cv::circle(paper, crossingPoints[i], 10, cv::Scalar(0,255,0), -1, 8, 0);
-  }*/
->>>>>>> Stashed changes
 
 }
 
@@ -2065,7 +2060,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/ultima_folha.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
