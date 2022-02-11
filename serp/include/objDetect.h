@@ -9,7 +9,6 @@ const double pi = 3.14159265358979323846;
 using namespace std;
 using namespace cv;
 
-RNG rng(12345);
 
 //contantes para dete��o de objetos
 const int minThreshold = 140;
@@ -45,7 +44,7 @@ const int rRear = backBeginning;
 
 
 //inicializa��es vari�veis de sensores
-float N = 0, NE = 0, NW = 0, S = 0, SE = 0, SW = 0;
+uint8_t N = 0, NE = 0, NW = 0, S = 0, SE = 0, SW = 0;
 // N=Frente
 // NE=Frente Direita
 // NW=Frente Esquerda
@@ -54,16 +53,19 @@ float N = 0, NE = 0, NW = 0, S = 0, SE = 0, SW = 0;
 // SW=Tr�s Direita
 
 //fun��o que calcula o n�vel de per�go de objeto dependendo da sua dist�ncia ao robo. 0 min, 3 max
-int levelDanger(float n) {
-    if ((n <= 420) && (n > 200)) {
+int levelDanger(float n) 
+{
+    if ((n <= 420) && (n > 200)) 
         return 1;
-    }
-    else if ((n <= 200) && (n > 100)) {
+    
+    else if ((n <= 200) && (n > 100)) 
         return 2;
-    }
-    else if ((n <= 100) && (n > 0)) {
+    
+    else if ((n <= 100) && (n > 0)) 
         return 3;
-    }
+	
+return 0;
+    
 }
 
 //filtra os objetos detetados, e identifica qual o mais pr�ximo, onde calcula o seu perigo
@@ -237,15 +239,14 @@ void detectObj(Mat img, int lowThreshold, int threshMult, int kernel_size, Strin
 
 
 
-    for (size_t j = 0; j < contours.size(); j++)
+   /* for (size_t j = 0; j < contours.size(); j++)
     {
-        Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
 
         if ((int)radius[j] > minRadiusFilter) {
             rectangle(img, boundRect[j].tl(), boundRect[j].br(), color, 2);
             circle(img, centers[j], (int)radius[j], color, 2);
         }
-    }
+    }*/
 
     sortDetectedObjects(pos, img, centers, radius);
 
@@ -255,7 +256,7 @@ void detectObj(Mat img, int lowThreshold, int threshMult, int kernel_size, Strin
 
 
 //fun��o que pega em cada frame do video, aplica pre processamento, segmenta a imagem e deteta os objetos em cada segmento da imagem
-std::vector<float> frameProcessing(Mat frame) {
+std::vector<uint8_t> frameProcessing(Mat frame) {
 
 	
 
@@ -298,23 +299,23 @@ std::vector<float> frameProcessing(Mat frame) {
     detectObj(image_NE, minThreshold, threshMultiplier, kernelSize, "NE");
     detectObj(image_N, minThreshold, threshMultiplier, kernelSize, "N");
     detectObj(image_NW, minThreshold, threshMultiplier, kernelSize, "NW");
-    detectObj(image_SE, minThreshold, threshMultiplier, kernelSize, "SE");
+    //detectObj(image_SE, minThreshold, threshMultiplier, kernelSize, "SE");
     detectObj(image_S, minThreshold, threshMultiplier, kernelSize, "S");
-    detectObj(image_SW, minThreshold, threshMultiplier, kernelSize, "SW");
+    //detectObj(image_SW, minThreshold, threshMultiplier, kernelSize, "SW");
    
 
 
     //imprimir o valor dos sensores. 
-    cout << "FD: " << NE << endl;
-    cout << "FE: " << NW << endl;
-    cout << "TD: " << SE << endl;
-    cout << "TE: " << SW << endl;
-    cout << "F: " << N << endl;
-    cout << "T: " << S << endl;
-    cout << "__________________________________________________________" << endl;
+  //  cout << "FD: " << NE << endl;
+  //  cout << "FE: " << NW << endl;
+  //  cout << "TD: " << SE << endl;
+  //  cout << "TE: " << SW << endl;
+  // cout << "F: " << N << endl;
+  //  cout << "T: " << S << endl;
+  //  cout << "__________________________________________________________" << endl;
 
 	//vetor para retornar valores dos sensores
-	std::vector<float> retorna_valores{NE , N , S, NW};
-    return retorna_valores;
+	std::vector<uint8_t> retorna_valores{NE , N , S, NW};
+        return retorna_valores;
 
 }

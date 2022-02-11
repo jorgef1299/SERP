@@ -1,7 +1,7 @@
 #include "rpi_camera.h"
 #include "objDetect.h"
 
-std::vector<float> sensor_valores;
+std::vector<uint8_t> sensor_valores;
 
 bool cb_camera_control(std_srvs::SetBoolRequest &req, std_srvs::SetBoolResponse &res)
 {
@@ -59,9 +59,13 @@ int main(int argc, char **argv)
         Camera.retrieve(frame);
         //process object detection
         sensor_valores = frameProcessing(frame);
+	
         //fazer cena de nao entupir
-    
-            send_sensors.publish();
+    	sensors_data.right=sensor_valores[0];
+    	sensors_data.front=sensor_valores[1];
+    	sensors_data.back=sensor_valores[2];
+    	sensors_data.left=sensor_valores[3];
+            send_sensors.publish(sensors_data);
           
         // Publish image (if needed)
         if (must_publish_camera_data)

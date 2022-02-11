@@ -1,5 +1,4 @@
-int8 left
-int8 right
-int8 back
-int8 front
-
+uint8 left
+uint8 right
+uint8 back
+uint8 front
