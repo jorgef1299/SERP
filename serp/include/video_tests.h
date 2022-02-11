@@ -42,7 +42,7 @@ struct coordinates {
 struct links {
   coordinates point;
   int order;
-  bool linked;
+  bool linked=false;
   int link_end;
 };
 
@@ -61,6 +61,12 @@ struct block {
     links condition;
 };
 
+struct combination{
+  float number;
+  int matrix_pos;
+  int dest;
+};
+
 //global variables
 int size_detect=0;
 int pos_list;
@@ -73,6 +79,9 @@ bool vertical = false;
 std::vector<int> detections(35, 0); // 40 values equal to 0
 int count_stable_frames = 0;
 int count_total_arucos = 0;
+
+//combinations of Ks
+int num_combinations=0;
 
 //sensor values
 int sensor_value_se;

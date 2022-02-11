@@ -447,6 +447,13 @@ void validatePicture(std::vector<int> ids)
     {
         ROS_WARN_STREAM("ArUco count=" << count_total_arucos << " VS detected="<< total << "\n");
 
+        for(int i=0; i<ids.size(); i++)
+        {
+            ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
+
+
+        }
+
         count_total_arucos = total;
         count_stable_frames = 0;
     }
@@ -465,7 +472,7 @@ void validatePicture(std::vector<int> ids)
                 ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
 
                 // To account for detections with unwanted ids
-                if(ids[i] > 35) return;
+                if(ids[i] > 35 && ids[i]<0) return;
             }
 
             pictureValidated = true;
@@ -579,8 +586,9 @@ int check_occurences(int id, std::vector<block> vect)
 {
   int count=0;
 
-  for (int j = 0; j < vect.size(); j++)
+  for (int j = 0; j < vect.size()-1; j++)
   {
+
       if(vect[j].id == id) count++;
   }
 
@@ -607,6 +615,8 @@ std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::
 {
   if ((id != 28) && (id != 29) && (id != 30) && (id<31))
   {
+
+
       block_i.push_back(block());
 
       block_i[pos].count=check_occurences(id,block_i)+1;
@@ -805,10 +815,45 @@ void DebugBlocks(std::vector<block> block_in_order)
     }
 }
 
+void Debugcombs(std::vector<combination> comb)
+{
+    for (int j = 0; j < comb.size(); j++)
+    {
+        ROS_WARN_STREAM("COMB " << j << ": (number --> " << comb[j].number <<  " / " << "matrix_pos --> " << comb[j].matrix_pos << " / " << "dest --> " << comb[j].dest << ")\n");
+    }
+
+}
+
+void Debugmatrixlinks(std::vector<std::vector<int>> matrix)
+{
+  for (int j = 0; j < matrix.size() ; j++) {
+    std::cout << "row:" << j << " ";
+    for (int i= 0; i < matrix.size() ; i++) {
+  std::cout << matrix[j][i]<< " ";
+    }
+    std::cout << "\n";
+}
+
+}
+
+void Debugmatrixvalues(std::vector<std::vector<float>> matrix)
+{
+  for (int j = 0; j < matrix.size() ; j++) {
+    std::cout << "row:" << j << " ";
+    for (int i= 0; i < matrix.size() ; i++) {
+  std::cout << matrix[j][i]<< " ";
+    }
+    std::cout << "\n";
+}
+
+}
+
 
 
 // ---------- LINE DETECTION ---------- (add to separate library)
 
+
+//position of I/Os in matrix
 int position_matrix_input1(int id, int count){
   if(id==0){
     if(count==1){
@@ -1181,39 +1226,27 @@ int position_matrix_output(int id, int count){
   }
 
   else if(id==9){
-    if(count==1){
+
       return 2;
-    }
-    else if(count==2){
-      return 106;
-    }
+
   }
 
   else if(id==10){
-    if(count==1){
+
       return 4;
-    }
-    else if(count==2){
-      return -1;
-    }
+
   }
 
   else if(id==11){
-    if(count==1){
+
       return 3;
-    }
-    else if(count==2){
-      return -1;
-    }
+
   }
 
   else if(id==12){
-    if(count==1){
+
       return 35;
-    }
-    else if(count==2){
-      return -1;
-    }
+
   }
 
   else if(id==13){
@@ -1592,7 +1625,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     cv::Mat image;
     cv::cvtColor(paper, image, cv::COLOR_BGR2GRAY);
 
-//    imshow("Input Image", image);
+   //imshow("Input Image", image);
 
 
     // Mask To Eliminate ArUcos
@@ -1607,31 +1640,31 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
         }
     }
 
-//    imshow("Take Off Arucos", image);
+   //cv::imshow("Take Off Arucos", image);
 
 
     // Threshold to eliminate white background
-    image = image < 200;
-//    imshow("Mask I < 200 ", image);
+    image = image < 100;
+   //cv::imshow("Mask I < 100 ", image);
 
 
     // Keep only paper area
     rectangle(image, cv::Rect(0, 0, image.cols, image.rows), cv::Scalar(255));
     floodFill(image, cv::Point(0, 0), cv::Scalar(0));
 
-//    imshow("Flood Fill After Rect", image);
+    //cv::imshow("Flood Fill After Rect", image);
 
 
     // Line dilation
-    cv::Mat kernel=cv::Mat(cv::Size(5,5),CV_8UC1,cv::Scalar(255));
+    cv::Mat kernel=cv::Mat(cv::Size(3,3),CV_8UC1,cv::Scalar(255));
     morphologyEx(image,image,cv::MORPH_DILATE,kernel);
 
-//    imshow("Dilation", image);
+   //cv::imshow("Dilation", image);
 
 
     // Detect Crossings
-    crossingPoints.clear();
-    crossingPoints = detectCrossings(image);
+    //crossingPoints.clear();
+    //crossingPoints = detectCrossings(image);
 
 
     // Detect Lines
@@ -1645,9 +1678,9 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     for(size_t k=0; k<contours.size(); k++)
     {
 //        // See each countour being detected
-//        cv::drawContours(paperCopy, contours, (int)k, cv::Scalar(0, 255, 0), 2, cv::LINE_8, cv::noArray(), 0);
-//        cv::imshow("countours", paperCopy);
-//        cv::waitKey(0);
+       //cv::drawContours(paperCopy, contours, (int)k, cv::Scalar(0, 255, 0), 2, cv::LINE_8, cv::noArray(), 0);
+       //cv::imshow("countours", paperCopy);
+       //cv::waitKey(0);
 
         auto val=minmax_element(contours[k].begin(), contours[k].end(), [](cv::Point const& a, cv::Point const& b)
         {
@@ -1680,7 +1713,7 @@ std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> b
     {
         cv::Vec4i l = linesP[i];
 
-        blocks = check_lines(l,i,15,blocks);
+        blocks = check_lines(l,i,18,blocks);
 
     }
     return blocks;
@@ -1713,56 +1746,191 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
       line(paper, cv::Point(blocks[j].outputs.point.x,blocks[j].outputs.point.y), cv::Point(findEndPoint(blocks[j].outputs.link_end,blocks).x, findEndPoint(blocks[j].outputs.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
   }
-
+/*
   // Draw Crossings
   for( int i = 0; i<crossingPoints.size(); i++ )
   {
+<<<<<<< Updated upstream
       cv::circle(paper, crossingPoints[i], 2, cv::Scalar(0,255,0), -1, 8, 0);
   }
+=======
+      cv::circle(paper, crossingPoints[i], 10, cv::Scalar(0,255,0), -1, 8, 0);
+  }*/
+>>>>>>> Stashed changes
 
 }
 
-std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block){
+std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block,std::vector<combination> comb){
   for (int j = 0; j < block.size(); j++) {
-
+    if(block[j].id<14 || block[j].id>24){
     if(block[j].outputs.linked==true){
        m_links[block[j].outputs.order][block[j].outputs.link_end]=1;
        m_links[block[j].outputs.link_end][block[j].outputs.order]=1;
     }
+    }
 
   }
+  for (int j = 0; j < comb.size(); j++) {
+    m_links[comb[j].matrix_pos][comb[j].dest]=1;
+    m_links[comb[j].dest][comb[j].matrix_pos]=1;
+  }
+
   return m_links;
 
 }
 
+int get_k(int id){
 
-std::vector<std::vector<int>> drawMatrixValues(std::vector<std::vector<int>> m_values, std::vector<block> block, int se, int sd, int sf, int st){
-  for (int j = 0; j < block.size(); j++) {
+  if(id == 14) return 0;
+  else if (id == 15) return 1;
+  else if (id == 16) return 2;
+  else if (id == 17) return 3;
+  else if (id == 18) return 4;
+  else if (id == 19) return 5;
+  else if (id == 20) return 6;
+  else if (id == 21) return 7;
+  else if (id == 22) return 8;
+  else if (id == 23) return 9;
+  else if (id == 24) return -1;
 
-    if(block[j].outputs.linked==true){
-       if(block[j].id==9){
-         m_values[block[j].outputs.order][block[j].outputs.link_end]=se;
-         m_values[block[j].outputs.link_end][block[j].outputs.order]=se;
-       }
-       else if(block[j].id==10){
-         m_values[block[j].outputs.order][block[j].outputs.link_end]=sd;
-         m_values[block[j].outputs.link_end][block[j].outputs.order]=sd;
-       }
-       else if(block[j].id==11){
-         m_values[block[j].outputs.order][block[j].outputs.link_end]=sf;
-         m_values[block[j].outputs.link_end][block[j].outputs.order]=sf;
-       }
-       else if(block[j].id==12){
-         m_values[block[j].outputs.order][block[j].outputs.link_end]=st;
-         m_values[block[j].outputs.link_end][block[j].outputs.order]=st;
-       }
-    }
+}
 
+std::vector<std::vector<float>> drawMatrixValues(std::vector<std::vector<float>> m_values, std::vector<block> block, std::vector<combination> comb){
+
+  for (int j = 0; j < comb.size(); j++) {
+    m_values[comb[j].matrix_pos][comb[j].dest]=comb[j].number;
+    m_values[comb[j].dest][comb[j].matrix_pos]=comb[j].number;
   }
+
   return m_values;
 
 }
 
+std::vector<combination> getCombinations(std::vector<block> blocks, std::vector<combination> comb){
+  int count=0;
+  for (int j = 0; j < blocks.size(); j++) {
+    if(blocks[j].id<14 || blocks[j].id>24){
+      if(blocks[j].input1.link_end>61 && blocks[j].input1.link_end<106){
+        count=count+1;
+        comb.push_back(combination());
+        comb[count-1].matrix_pos=62+count;
+      }
+      if(blocks[j].input2.link_end>61 && blocks[j].input2.link_end<106){
+        count=count+1;
+        comb.push_back(combination());
+        comb[count-1].matrix_pos=62+count;
+      }
+    }
+  }
+  num_combinations=count;
+  return comb;
+}
+
+std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector<combination> comb){
+  int comb_pos=0;
+  bool found;
+  int endpoint;
+
+
+  for (int j = 0; j < blocks.size(); j++) {
+    int combo_number=0;
+    std::vector<int> numbers;
+    int save_index;
+    int divisor=0;
+
+    if(blocks[j].id<14 || blocks[j].id>24){
+
+          //INPUT1
+          if(blocks[j].input1.link_end>61 && blocks[j].input1.link_end<106){
+
+            found=blocks[j].input1.linked;
+            endpoint=blocks[j].input1.link_end;
+
+            do{
+                      for (int k = 0; k < blocks.size(); k++) {
+                        if(endpoint==blocks[k].outputs.order){
+                        numbers.push_back(get_k(blocks[k].id));
+                        save_index=k;
+
+                        }
+                      }
+                      endpoint=blocks[save_index].input1.link_end;
+                      found=blocks[save_index].input1.linked;
+            }
+            while(found==1);
+
+
+            for (int k = 0; k < numbers.size(); k++) {
+              if(numbers[k]==-1){
+                divisor=k;
+                numbers.erase(numbers.begin()+k);
+              }
+            }
+
+            int N=numbers.size();
+            for (int k = 0; k < numbers.size(); k++) {
+              combo_number += numbers[k]*pow(10, k);
+            }
+
+            //std::cout << "POW:" << pow(10,divisor) << "\n";
+            comb[comb_pos].number=combo_number/pow(10,divisor);
+            //std::cout << "NUM:" << comb[comb_pos].number << "\n";
+            comb[comb_pos].dest=blocks[j].input1.order;
+            comb_pos=comb_pos+1;
+            combo_number=0;
+            divisor=0;
+            numbers.clear();
+          }
+
+
+          //INPUT2
+          if(blocks[j].input2.link_end>61 && blocks[j].input2.link_end<106){
+
+            found=blocks[j].input2.linked;
+            endpoint=blocks[j].input2.link_end;
+
+            do{
+                      for (int k = 0; k < blocks.size(); k++) {
+                        if(endpoint==blocks[k].outputs.order){
+
+                          numbers.push_back(get_k(blocks[k].id));
+                          save_index=k;
+
+                        }
+                      }
+                      endpoint=blocks[save_index].input1.link_end;
+                      found=blocks[save_index].input1.linked;
+            }
+            while(found==1);
+
+            for (int k = 0; k < numbers.size(); k++) {
+              if(numbers[k]==-1){
+                divisor=k;
+                numbers.erase(numbers.begin()+k);
+              }
+            }
+
+            int N=numbers.size();
+            for (int k = 0; k < numbers.size(); k++) {
+              combo_number += numbers[k]*pow(10, k);
+            }
+
+            comb[comb_pos].number=combo_number/(pow(10,divisor));
+            comb[comb_pos].dest=blocks[j].input2.order;
+            comb_pos=comb_pos+1;
+            combo_number=0;
+            divisor=0;
+            numbers.clear();
+
+          }
+
+
+    }
+
+
+  }
+  return comb;
+}
 
 // ---------- LINE DETECTION LOGIC ----------
 void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> dict)
@@ -1779,6 +1947,8 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     // -4 to account for loss of cropped orientation blocks
     if(ids.size() != (count_total_arucos - 4)) return;
 
+    count_total_arucos=0;
+
 
     // Block Formation
 
@@ -1791,7 +1961,7 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     std::vector<block> block_in_order = put_arucos_order(block_i);
 
-//    DebugBlocks(block_in_order);
+    DebugBlocks(block_in_order);
 
 
     // Line Detection
@@ -1803,14 +1973,24 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     drawLines(paperDrawn,block_in_order);
 
 
+    std::vector<combination> combs;
+    combs=getCombinations(block_in_order,combs);
+    //combs = makeCombinations(block_in_order, combs);
+     combs=makeCombinations(block_in_order,combs);
+    Debugcombs(combs);
+    std::cout << "Num of combinations " << num_combinations << "\n";
     // Create Link and Value Matrices
 
-    std::vector<std::vector<int>>  matrix_links(107, std::vector<int> (107, 0));
-    std::vector<std::vector<int>>  matrix_values(107, std::vector<int> (107, 0));
+    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
+    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
      //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
-    matrix_links = drawMatrixLinks(matrix_links,block_in_order);
-    matrix_values = drawMatrixValues(matrix_values,block_in_order,sensor_value_se,sensor_value_sd,sensor_value_sf,sensor_value_st);
+    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
+    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
+
+    Debugmatrixlinks(matrix_links);
+    Debugmatrixvalues(matrix_values);
+
 
 
     cv::imshow("Paper Drawn", paperDrawn);
@@ -1885,7 +2065,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/ultima_folha.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
