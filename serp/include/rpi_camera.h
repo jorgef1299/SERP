@@ -3,6 +3,12 @@
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <std_srvs/SetBool.h>
+#include <std_srvs/Trigger.h>
 
 // Global variables
+enum state {
+    NormalOperation,
+    ReadProgrammingSheet,
+    DetectObstacles
+} camera_state;
 
