@@ -414,8 +414,45 @@ cv::Mat perspective_correction(cv::Mat original, std::vector<cv::Point2f> new_po
 }
 
 
-void validatePicture(std::vector<int> ids)
+void validatePicture(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, cv::Mat frame)
 {
+    cv::Mat frameCopy = frame.clone();
+
+    // Limit to discard points not in the front
+
+    int x_limit = frameCopy.cols/2-150;
+
+//    // Vizualize x limit
+//    cv::Point limit(x_limit, frameCopy.rows/2);
+//    cv::circle(frameCopy, limit, 15, cv::Scalar(0,255,0), -1, 8, 0);
+//    cv::imshow("input", frameCopy);
+//    cv::waitKey(0);
+
+
+    // Conditions to skip count
+
+    if(!orientation_check) return;
+
+    for(int i=0; i<ids.size(); i++)
+    {
+        // To account for detections with unwanted ids
+        if(ids[i]<0 && ids[i] > 35)
+        {
+            ROS_WARN_STREAM("-------------- Invalid id="<<ids[i]);
+            return;
+        }
+
+        // To account for detections not in front
+        if(corners[i][0].x > x_limit || corners[i][1].x > x_limit || corners[i][2].x > x_limit || corners[i][3].x > x_limit)
+        {
+            ROS_WARN_STREAM("-------------- id="<<ids[i] << " NOT IN FRONT");
+            return;
+        }
+    }
+
+
+    // Picture Validation
+
     pictureValidated = false;
 
     sort(ids.begin(), ids.end());
@@ -442,6 +479,7 @@ void validatePicture(std::vector<int> ids)
     {
         // If total hasn't changed, increase count of stable frames
         count_stable_frames++;
+        ROS_WARN_STREAM("Stable frame n=" << count_stable_frames);
     }
     else if(count_total_arucos < total)
     {
@@ -450,29 +488,27 @@ void validatePicture(std::vector<int> ids)
         for(int i=0; i<ids.size(); i++)
         {
             ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
-
-
         }
 
         count_total_arucos = total;
         count_stable_frames = 0;
     }
 
+
+    // Signal Picture To Be Chosen
+
     if(count_stable_frames == n_stable)
     {
-        ROS_WARN_STREAM("Final total = " << count_total_arucos << "\n");
-
         // Get a frame where number of detections is equal to expected total
         if(ids.size() == count_total_arucos)
         {
+            ROS_WARN_STREAM("Final total = " << count_total_arucos);
+
             ROS_WARN_STREAM("Detected " << ids.size() << " ArUcos");
 
             for(int i=0; i<ids.size(); i++)
             {
                 ROS_WARN_STREAM(i+1 << ") Id=" << ids[i]);
-
-                // To account for detections with unwanted ids
-                if(ids[i] > 35 && ids[i]<0) return;
             }
 
             pictureValidated = true;
@@ -1956,7 +1992,7 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     std::vector<block> block_in_order = put_arucos_order(block_i);
 
-    DebugBlocks(block_in_order);
+//    DebugBlocks(block_in_order);
 
 
     // Line Detection
@@ -1968,12 +2004,14 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     drawLines(paperDrawn,block_in_order);
 
 
+    // Get combinations
     std::vector<combination> combs;
     combs=getCombinations(block_in_order,combs);
-    //combs = makeCombinations(block_in_order, combs);
-     combs=makeCombinations(block_in_order,combs);
-    Debugcombs(combs);
-    std::cout << "Num of combinations " << num_combinations << "\n";
+    combs=makeCombinations(block_in_order,combs);
+//    Debugcombs(combs);
+//    std::cout << "Num of combinations " << num_combinations << "\n";
+
+
     // Create Link and Value Matrices
 
     std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
@@ -1983,8 +2021,8 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
     matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
-    Debugmatrixlinks(matrix_links);
-    Debugmatrixvalues(matrix_values);
+//    Debugmatrixlinks(matrix_links);
+//    Debugmatrixvalues(matrix_values);
 
 
 
@@ -2033,7 +2071,7 @@ void detectAndInterpret_Paper(cv::Mat frame, cv::Ptr<cv::aruco::Dictionary> dict
 
 
     // Frame Validation
-    validatePicture(ids);
+    validatePicture(corners, ids, frame);
 
 
     // Perspective correction
