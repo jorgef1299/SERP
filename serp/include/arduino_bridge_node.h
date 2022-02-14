@@ -4,12 +4,17 @@
 #include "ros/ros.h"
 #include "serp/VelocitySetPoint.h"
 #include "std_srvs/Trigger.h"
+#include <std_msgs/String.h>
+#include "serp/Matrix1d.h"
+#include "serp/Matrix2d.h"
 
 // Global Variables
-enum mode {
-    FixedVelocity,
-    Stopped
-} operation_mode;
+enum RobotState {
+    Stopped,
+    ManualControl,
+    Executing
+} robot_state;
+
 
 struct Robot {
     int8_t motor_left_velocity;

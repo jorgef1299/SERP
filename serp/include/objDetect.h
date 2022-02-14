@@ -55,16 +55,16 @@ uint8_t N = 0, NE = 0, NW = 0, S = 0, SE = 0, SW = 0;
 //fun��o que calcula o n�vel de per�go de objeto dependendo da sua dist�ncia ao robo. 0 min, 3 max
 int levelDanger(float n) 
 {
-    if ((n <= 420) && (n > 200)) 
+    if ((n <= 420) && (n > 200))
         return 1;
     
-    else if ((n <= 200) && (n > 100)) 
+    else if ((n <= 200) && (n > 100))
         return 2;
     
-    else if ((n <= 100) && (n > 0)) 
+    else if ((n <= 100) && (n > 0))
         return 3;
-	
-return 0;
+
+    return 0;
     
 }
 
@@ -179,8 +179,8 @@ bool inRadious(Point2f centerOrigin, Point2f center2, int r) {
 
     if (distBetweenCenters <= r)
         return true;
-    else 
-        return false; 
+    else
+        return false;
 }
 
 
@@ -228,7 +228,7 @@ void detectObj(Mat img, int lowThreshold, int threshMult, int kernel_size, Strin
                     sumY += centers[j].y;
                     sumR += radius[j];
                     radius[j] = 0;
-                    num += 1; 
+                    num += 1;
                 }
                 
             }
@@ -239,7 +239,7 @@ void detectObj(Mat img, int lowThreshold, int threshMult, int kernel_size, Strin
 
 
 
-   /* for (size_t j = 0; j < contours.size(); j++)
+    /* for (size_t j = 0; j < contours.size(); j++)
     {
 
         if ((int)radius[j] > minRadiusFilter) {
@@ -258,7 +258,7 @@ void detectObj(Mat img, int lowThreshold, int threshMult, int kernel_size, Strin
 //fun��o que pega em cada frame do video, aplica pre processamento, segmenta a imagem e deteta os objetos em cada segmento da imagem
 std::vector<uint8_t> frameProcessing(Mat frame) {
 
-	
+
 
     N = 0;
     NW = 0;
@@ -302,20 +302,9 @@ std::vector<uint8_t> frameProcessing(Mat frame) {
     //detectObj(image_SE, minThreshold, threshMultiplier, kernelSize, "SE");
     detectObj(image_S, minThreshold, threshMultiplier, kernelSize, "S");
     //detectObj(image_SW, minThreshold, threshMultiplier, kernelSize, "SW");
-   
 
-
-    //imprimir o valor dos sensores. 
-  //  cout << "FD: " << NE << endl;
-  //  cout << "FE: " << NW << endl;
-  //  cout << "TD: " << SE << endl;
-  //  cout << "TE: " << SW << endl;
-  // cout << "F: " << N << endl;
-  //  cout << "T: " << S << endl;
-  //  cout << "__________________________________________________________" << endl;
-
-	//vetor para retornar valores dos sensores
-	std::vector<uint8_t> retorna_valores{NE , N , S, NW};
-        return retorna_valores;
+    //vetor para retornar valores dos sensores
+    std::vector<uint8_t> retorna_valores{NE , N , S, NW};
+    return retorna_valores;
 
 }
