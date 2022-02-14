@@ -176,7 +176,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
         if (ligacoes[8][i] == 1)
         {
             entradaSoma11 = true;
-            //printf("entrei11");
+            ROS_INFO("ENTRADA1 CONFIRMADA");
         }
         i = i + 1;
     }
@@ -186,7 +186,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
         if (ligacoes[32][i] == 1)
         {
             entradaSoma12 = true;
-            //printf("entrei12");
+            ROS_INFO("ENTRADA2 CONFIRMADA");
         }
         i = i + 1;
     }
@@ -644,11 +644,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][6] == 1) || (ligacoes[30][6] == 1) ||
                     (ligacoes[35][6] == 1) || (ligacoes[36][6] == 1) ||
                     (ligacoes[37][6] == 1) || (ligacoes[63][6] == 1) ||
-                    (ligacoes[65][6] == 1) || (ligacoes[67][6] == 1) ||
-                    (ligacoes[69][6] == 1) || (ligacoes[71][6] == 1) ||
-                    (ligacoes[73][6] == 1) || (ligacoes[75][6] == 1) ||
-                    (ligacoes[77][6] == 1) || (ligacoes[79][6] == 1) ||
-                    (ligacoes[81][6] == 1))
+                    (ligacoes[64][6] == 1) || (ligacoes[65][6] == 1) ||
+                    (ligacoes[66][6] == 1) || (ligacoes[67][6] == 1) ||
+                    (ligacoes[68][6] == 1) || (ligacoes[69][6] == 1) ||
+                    (ligacoes[70][6] == 1) || (ligacoes[71][6] == 1) ||
+                    (ligacoes[72][6] == 1) || (ligacoes[73][6] == 1) ||
+                    (ligacoes[74][6] == 1) || (ligacoes[75][6] == 1) ||
+                    (ligacoes[76][6] == 1) || (ligacoes[77][6] == 1) ||
+                    (ligacoes[78][6] == 1) || (ligacoes[79][6] == 1) ||
+                    (ligacoes[79][6] == 1) || (ligacoes[80][6] == 1) ||
+                    (ligacoes[81][6] == 1) || (ligacoes[82][6] == 1) ||
+                    (ligacoes[83][6] == 1))
             {
                 i = 1;
                 while (i < rc + 1)
@@ -983,11 +989,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][15] == 1) || (ligacoes[30][15] == 1) ||
                     (ligacoes[35][15] == 1) || (ligacoes[36][15] == 1) ||
                     (ligacoes[37][15] == 1) || (ligacoes[63][15] == 1) ||
-                    (ligacoes[65][15] == 1) || (ligacoes[67][15] == 1) ||
-                    (ligacoes[69][15] == 1) || (ligacoes[71][15] == 1) ||
-                    (ligacoes[73][15] == 1) || (ligacoes[75][15] == 1) ||
-                    (ligacoes[77][15] == 1) || (ligacoes[79][15] == 1) ||
-                    (ligacoes[81][15] == 1))
+                    (ligacoes[64][15] == 1) || (ligacoes[65][15] == 1) ||
+                    (ligacoes[66][15] == 1) || (ligacoes[67][15] == 1) ||
+                    (ligacoes[68][15] == 1) || (ligacoes[69][15] == 1) ||
+                    (ligacoes[70][15] == 1) || (ligacoes[71][15] == 1) ||
+                    (ligacoes[72][15] == 1) || (ligacoes[73][15] == 1) ||
+                    (ligacoes[74][15] == 1) || (ligacoes[75][15] == 1) ||
+                    (ligacoes[76][15] == 1) || (ligacoes[77][15] == 1) ||
+                    (ligacoes[78][15] == 1) || (ligacoes[79][15] == 1) ||
+                    (ligacoes[79][15] == 1) || (ligacoes[80][15] == 1) ||
+                    (ligacoes[81][15] == 1) || (ligacoes[82][15] == 1) ||
+                    (ligacoes[83][15]==1))
             {
                 i = 1;
                 while (i < rc + 1)
@@ -1335,11 +1347,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][20] == 1) || (ligacoes[30][20] == 1) ||
                     (ligacoes[35][20] == 1) || (ligacoes[36][20] == 1) ||
                     (ligacoes[37][20] == 1) || (ligacoes[63][20] == 1) ||
-                    (ligacoes[65][20] == 1) || (ligacoes[67][20] == 1) ||
-                    (ligacoes[69][20] == 1) || (ligacoes[71][20] == 1) ||
-                    (ligacoes[73][20] == 1) || (ligacoes[75][20] == 1) ||
-                    (ligacoes[77][20] == 1) || (ligacoes[79][20] == 1) ||
-                    (ligacoes[81][20] == 1))
+                    (ligacoes[64][20] == 1) || (ligacoes[65][20] == 1) ||
+                    (ligacoes[66][20] == 1) || (ligacoes[67][20] == 1) ||
+                    (ligacoes[68][20] == 1) || (ligacoes[69][20] == 1) ||
+                    (ligacoes[70][20] == 1) || (ligacoes[71][20] == 1) ||
+                    (ligacoes[72][20] == 1) || (ligacoes[73][20] == 1) ||
+                    (ligacoes[74][20] == 1) || (ligacoes[75][20] == 1) ||
+                    (ligacoes[76][20] == 1) || (ligacoes[77][20] == 1) ||
+                    (ligacoes[78][20] == 1) || (ligacoes[79][20] == 1) ||
+                    (ligacoes[79][20] == 1) || (ligacoes[80][20] == 1) ||
+                    (ligacoes[81][20] == 1) || (ligacoes[82][20] == 1) ||
+                    (ligacoes[83][20] == 1))
             {
                 //printf("1");
                 entradaProd1 = false;
@@ -1525,11 +1543,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][38] == 1) || (ligacoes[30][38] == 1) ||
                     (ligacoes[35][38] == 1) || (ligacoes[36][38] == 1) ||
                     (ligacoes[37][38] == 1) || (ligacoes[63][38] == 1) ||
-                    (ligacoes[65][38] == 1) || (ligacoes[67][38] == 1) ||
-                    (ligacoes[69][38] == 1) || (ligacoes[71][38] == 1) ||
-                    (ligacoes[73][38] == 1) || (ligacoes[75][38] == 1) ||
-                    (ligacoes[77][38] == 1) || (ligacoes[79][38] == 1) ||
-                    (ligacoes[81][38] == 1))
+                    (ligacoes[64][38] == 1) || (ligacoes[65][38] == 1) ||
+                    (ligacoes[66][38] == 1) || (ligacoes[67][38] == 1) ||
+                    (ligacoes[68][38] == 1) || (ligacoes[69][38] == 1) ||
+                    (ligacoes[70][38] == 1) || (ligacoes[71][38] == 1) ||
+                    (ligacoes[72][38] == 1) || (ligacoes[73][38] == 1) ||
+                    (ligacoes[74][38] == 1) || (ligacoes[75][38] == 1) ||
+                    (ligacoes[76][38] == 1) || (ligacoes[77][38] == 1) ||
+                    (ligacoes[78][38] == 1) || (ligacoes[79][38] == 1) ||
+                    (ligacoes[79][38] == 1) || (ligacoes[80][38] == 1) ||
+                    (ligacoes[81][38] == 1) || (ligacoes[82][38] == 1) ||
+                    (ligacoes[83][38] == 1))
             {
                 //printf("2");
                 entradaProd2 = false;
@@ -1770,14 +1794,20 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][8] == 1) || (ligacoes[30][8] == 1) ||
                     (ligacoes[35][8] == 1) || (ligacoes[36][8] == 1) ||
                     (ligacoes[37][8] == 1) || (ligacoes[63][8] == 1) ||
-                    (ligacoes[65][8] == 1) || (ligacoes[67][8] == 1) ||
-                    (ligacoes[69][8] == 1) || (ligacoes[71][8] == 1) ||
-                    (ligacoes[73][8] == 1) || (ligacoes[75][8] == 1) ||
-                    (ligacoes[77][8] == 1) || (ligacoes[79][8] == 1) ||
-                    (ligacoes[81][8] == 1))
+                    (ligacoes[64][8] == 1) || (ligacoes[65][8] == 1) ||
+                    (ligacoes[66][8] == 1) || (ligacoes[67][8] == 1) ||
+                    (ligacoes[68][8] == 1) || (ligacoes[69][8] == 1) ||
+                    (ligacoes[70][8] == 1) || (ligacoes[71][8] == 1) ||
+                    (ligacoes[72][8] == 1) || (ligacoes[73][8] == 1) ||
+                    (ligacoes[74][8] == 1) || (ligacoes[75][8] == 1) ||
+                    (ligacoes[76][8] == 1) || (ligacoes[77][8] == 1) ||
+                    (ligacoes[78][8] == 1) || (ligacoes[79][8] == 1) ||
+                    (ligacoes[79][8] == 1) || (ligacoes[80][8] == 1) ||
+                    (ligacoes[81][8] == 1) || (ligacoes[82][8] == 1) ||
+                    (ligacoes[83][8] == 1))
             {
                 entradaSoma11 = false;
-                //printf("entreiiii");
+                ROS_INFO("ENTRADA1");
             }
 
             //Caso em que vem da saida da inv1
@@ -1952,14 +1982,20 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][9] == 1) || (ligacoes[30][9] == 1) ||
                     (ligacoes[35][9] == 1) || (ligacoes[36][9] == 1) ||
                     (ligacoes[37][9] == 1) || (ligacoes[63][9] == 1) ||
-                    (ligacoes[65][9] == 1) || (ligacoes[67][9] == 1) ||
-                    (ligacoes[69][9] == 1) || (ligacoes[71][9] == 1) ||
-                    (ligacoes[73][9] == 1) || (ligacoes[75][9] == 1) ||
-                    (ligacoes[77][9] == 1) || (ligacoes[79][9] == 1) ||
-                    (ligacoes[81][9] == 1))
+                    (ligacoes[64][9] == 1) || (ligacoes[65][9] == 1) ||
+                    (ligacoes[66][9] == 1) || (ligacoes[67][9] == 1) ||
+                    (ligacoes[68][9] == 1) || (ligacoes[69][9] == 1) ||
+                    (ligacoes[70][9] == 1) || (ligacoes[71][9] == 1) ||
+                    (ligacoes[72][9] == 1) || (ligacoes[73][9] == 1) ||
+                    (ligacoes[74][9] == 1) || (ligacoes[75][9] == 1) ||
+                    (ligacoes[76][9] == 1) || (ligacoes[77][9] == 1) ||
+                    (ligacoes[78][9] == 1) || (ligacoes[79][9] == 1) ||
+                    (ligacoes[79][9] == 1) || (ligacoes[80][9] == 1) ||
+                    (ligacoes[81][9] == 1) || (ligacoes[82][9] == 1) ||
+                    (ligacoes[83][9] == 1))
             {
                 entradaSoma12 = false;
-                //printf("entreiiii");
+                ROS_INFO("ENTRADA2");
             }
 
             //Caso em que vem da saida da inv1
@@ -2152,7 +2188,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                                 {
                                     if (ligacoes[aux][10] == 1)
                                     {
-                                        //printf("soma");
+                                        ROS_INFO("HELLO");
                                         matrixValores[aux][10] = matrixValores[i][8] + matrixValores[j][9];
                                         matrixValores[10][aux] = matrixValores[i][8] + matrixValores[j][9];
                                         if (matrixValores[aux][10] > 100)
@@ -2197,11 +2233,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][11] == 1) || (ligacoes[30][11] == 1) ||
                     (ligacoes[35][11] == 1) || (ligacoes[36][11] == 1) ||
                     (ligacoes[37][11] == 1) || (ligacoes[63][11] == 1) ||
-                    (ligacoes[65][11] == 1) || (ligacoes[67][11] == 1) ||
-                    (ligacoes[69][11] == 1) || (ligacoes[71][11] == 1) ||
-                    (ligacoes[73][11] == 1) || (ligacoes[75][11] == 1) ||
-                    (ligacoes[77][11] == 1) || (ligacoes[79][11] == 1) ||
-                    (ligacoes[81][11] == 1))
+                    (ligacoes[64][11] == 1) || (ligacoes[65][11] == 1) ||
+                    (ligacoes[66][11] == 1) || (ligacoes[67][11] == 1) ||
+                    (ligacoes[68][11] == 1) || (ligacoes[69][11] == 1) ||
+                    (ligacoes[70][11] == 1) || (ligacoes[71][11] == 1) ||
+                    (ligacoes[72][11] == 1) || (ligacoes[73][11] == 1) ||
+                    (ligacoes[74][11] == 1) || (ligacoes[75][11] == 1) ||
+                    (ligacoes[76][11] == 1) || (ligacoes[77][11] == 1) ||
+                    (ligacoes[78][11] == 1) || (ligacoes[79][11] == 1) ||
+                    (ligacoes[79][11] == 1) || (ligacoes[80][11] == 1) ||
+                    (ligacoes[81][11] == 1) || (ligacoes[82][11] == 1) ||
+                    (ligacoes[83][11] == 1))
             {
                 entradaSoma21 = false;
             }
@@ -2379,11 +2421,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][12] == 1) || (ligacoes[30][12] == 1) ||
                     (ligacoes[35][12] == 1) || (ligacoes[36][12] == 1) ||
                     (ligacoes[37][12] == 1) || (ligacoes[63][12] == 1) ||
-                    (ligacoes[65][12] == 1) || (ligacoes[67][12] == 1) ||
-                    (ligacoes[69][12] == 1) || (ligacoes[71][12] == 1) ||
-                    (ligacoes[73][12] == 1) || (ligacoes[75][12] == 1) ||
-                    (ligacoes[77][12] == 1) || (ligacoes[79][12] == 1) ||
-                    (ligacoes[81][12] == 1))
+                    (ligacoes[64][12] == 1) || (ligacoes[65][12] == 1) ||
+                    (ligacoes[66][12] == 1) || (ligacoes[67][12] == 1) ||
+                    (ligacoes[68][12] == 1) || (ligacoes[69][12] == 1) ||
+                    (ligacoes[70][12] == 1) || (ligacoes[71][12] == 1) ||
+                    (ligacoes[72][12] == 1) || (ligacoes[73][12] == 1) ||
+                    (ligacoes[74][12] == 1) || (ligacoes[75][12] == 1) ||
+                    (ligacoes[76][12] == 1) || (ligacoes[77][12] == 1) ||
+                    (ligacoes[78][12] == 1) || (ligacoes[79][12] == 1) ||
+                    (ligacoes[79][12] == 1) || (ligacoes[80][12] == 1) ||
+                    (ligacoes[81][12] == 1) || (ligacoes[82][12] == 1) ||
+                    (ligacoes[83][12] == 1))
             {
                 entradaSoma22 = false;
             }
@@ -2797,11 +2845,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][27] == 1) || (ligacoes[30][27] == 1) ||
                     (ligacoes[35][27] == 1) || (ligacoes[36][27] == 1) ||
                     (ligacoes[37][27] == 1) || (ligacoes[63][27] == 1) ||
-                    (ligacoes[65][27] == 1) || (ligacoes[67][27] == 1) ||
-                    (ligacoes[69][27] == 1) || (ligacoes[71][27] == 1) ||
-                    (ligacoes[73][27] == 1) || (ligacoes[75][27] == 1) ||
-                    (ligacoes[77][27] == 1) || (ligacoes[79][27] == 1) ||
-                    (ligacoes[81][27] == 1))
+                    (ligacoes[64][27] == 1) || (ligacoes[65][27] == 1) ||
+                    (ligacoes[66][27] == 1) || (ligacoes[67][27] == 1) ||
+                    (ligacoes[68][27] == 1) || (ligacoes[69][27] == 1) ||
+                    (ligacoes[70][27] == 1) || (ligacoes[71][27] == 1) ||
+                    (ligacoes[72][27] == 1) || (ligacoes[73][27] == 1) ||
+                    (ligacoes[74][27] == 1) || (ligacoes[75][27] == 1) ||
+                    (ligacoes[76][27] == 1) || (ligacoes[77][27] == 1) ||
+                    (ligacoes[78][27] == 1) || (ligacoes[79][27] == 1) ||
+                    (ligacoes[79][27] == 1) || (ligacoes[80][27] == 1) ||
+                    (ligacoes[81][27] == 1) || (ligacoes[82][27] == 1) ||
+                    (ligacoes[83][27] == 1))
             {
                 entradaMux12 = false;
             }
@@ -2979,11 +3033,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][28] == 1) || (ligacoes[30][28] == 1) ||
                     (ligacoes[35][28] == 1) || (ligacoes[36][28] == 1) ||
                     (ligacoes[37][28] == 1) || (ligacoes[63][28] == 1) ||
-                    (ligacoes[65][28] == 1) || (ligacoes[67][28] == 1) ||
-                    (ligacoes[69][28] == 1) || (ligacoes[71][28] == 1) ||
-                    (ligacoes[73][28] == 1) || (ligacoes[75][28] == 1) ||
-                    (ligacoes[77][28] == 1) || (ligacoes[79][28] == 1) ||
-                    (ligacoes[81][28] == 1))
+                    (ligacoes[64][28] == 1) || (ligacoes[65][28] == 1) ||
+                    (ligacoes[66][28] == 1) || (ligacoes[67][28] == 1) ||
+                    (ligacoes[68][28] == 1) || (ligacoes[69][28] == 1) ||
+                    (ligacoes[70][28] == 1) || (ligacoes[71][28] == 1) ||
+                    (ligacoes[72][28] == 1) || (ligacoes[73][28] == 1) ||
+                    (ligacoes[74][28] == 1) || (ligacoes[75][28] == 1) ||
+                    (ligacoes[76][28] == 1) || (ligacoes[77][28] == 1) ||
+                    (ligacoes[78][28] == 1) || (ligacoes[79][28] == 1) ||
+                    (ligacoes[79][28] == 1) || (ligacoes[80][28] == 1) ||
+                    (ligacoes[81][28] == 1) || (ligacoes[82][28] == 1) ||
+                    (ligacoes[83][28] == 1))
             {
                 entradaDec1 = false;
             }
@@ -3244,11 +3304,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][31] == 1) || (ligacoes[30][31] == 1) ||
                     (ligacoes[35][31] == 1) || (ligacoes[36][31] == 1) ||
                     (ligacoes[37][31] == 1) || (ligacoes[63][31] == 1) ||
-                    (ligacoes[65][31] == 1) || (ligacoes[67][31] == 1) ||
-                    (ligacoes[69][31] == 1) || (ligacoes[71][31] == 1) ||
-                    (ligacoes[73][31] == 1) || (ligacoes[75][31] == 1) ||
-                    (ligacoes[77][31] == 1) || (ligacoes[79][31] == 1) ||
-                    (ligacoes[81][31] == 1))
+                    (ligacoes[64][31] == 1) || (ligacoes[65][31] == 1) ||
+                    (ligacoes[66][31] == 1) || (ligacoes[67][31] == 1) ||
+                    (ligacoes[68][31] == 1) || (ligacoes[69][31] == 1) ||
+                    (ligacoes[70][31] == 1) || (ligacoes[71][31] == 1) ||
+                    (ligacoes[72][31] == 1) || (ligacoes[73][31] == 1) ||
+                    (ligacoes[74][31] == 1) || (ligacoes[75][31] == 1) ||
+                    (ligacoes[76][31] == 1) || (ligacoes[77][31] == 1) ||
+                    (ligacoes[78][31] == 1) || (ligacoes[79][31] == 1) ||
+                    (ligacoes[79][31] == 1) || (ligacoes[80][31] == 1) ||
+                    (ligacoes[81][31] == 1) || (ligacoes[82][31] == 1) ||
+                    (ligacoes[83][31] == 1))
             {
                 entradaMux21 = false;
             }
@@ -3427,11 +3493,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][32] == 1) || (ligacoes[30][32] == 1) ||
                     (ligacoes[35][32] == 1) || (ligacoes[36][32] == 1) ||
                     (ligacoes[37][32] == 1) || (ligacoes[63][32] == 1) ||
-                    (ligacoes[65][32] == 1) || (ligacoes[67][32] == 1) ||
-                    (ligacoes[69][32] == 1) || (ligacoes[71][32] == 1) ||
-                    (ligacoes[73][32] == 1) || (ligacoes[75][32] == 1) ||
-                    (ligacoes[77][32] == 1) || (ligacoes[79][32] == 1) ||
-                    (ligacoes[81][32] == 1))
+                    (ligacoes[64][32] == 1) || (ligacoes[65][32] == 1) ||
+                    (ligacoes[66][32] == 1) || (ligacoes[67][32] == 1) ||
+                    (ligacoes[68][32] == 1) || (ligacoes[69][32] == 1) ||
+                    (ligacoes[70][32] == 1) || (ligacoes[71][32] == 1) ||
+                    (ligacoes[72][32] == 1) || (ligacoes[73][32] == 1) ||
+                    (ligacoes[74][32] == 1) || (ligacoes[75][32] == 1) ||
+                    (ligacoes[76][32] == 1) || (ligacoes[77][32] == 1) ||
+                    (ligacoes[78][32] == 1) || (ligacoes[79][32] == 1) ||
+                    (ligacoes[79][32] == 1) || (ligacoes[80][32] == 1) ||
+                    (ligacoes[81][32] == 1) || (ligacoes[82][32] == 1) ||
+                    (ligacoes[83][32] == 1))
             {
                 entradaMux22 = false;
             }
@@ -3610,11 +3682,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][33] == 1) || (ligacoes[30][33] == 1) ||
                     (ligacoes[35][33] == 1) || (ligacoes[36][33] == 1) ||
                     (ligacoes[37][33] == 1) || (ligacoes[63][33] == 1) ||
-                    (ligacoes[65][33] == 1) || (ligacoes[67][33] == 1) ||
-                    (ligacoes[69][33] == 1) || (ligacoes[71][33] == 1) ||
-                    (ligacoes[73][33] == 1) || (ligacoes[75][33] == 1) ||
-                    (ligacoes[77][33] == 1) || (ligacoes[79][33] == 1) ||
-                    (ligacoes[81][33] == 1))
+                    (ligacoes[64][33] == 1) || (ligacoes[65][33] == 1) ||
+                    (ligacoes[66][33] == 1) || (ligacoes[67][33] == 1) ||
+                    (ligacoes[68][33] == 1) || (ligacoes[69][33] == 1) ||
+                    (ligacoes[70][33] == 1) || (ligacoes[71][33] == 1) ||
+                    (ligacoes[72][33] == 1) || (ligacoes[73][33] == 1) ||
+                    (ligacoes[74][33] == 1) || (ligacoes[75][33] == 1) ||
+                    (ligacoes[76][33] == 1) || (ligacoes[77][33] == 1) ||
+                    (ligacoes[78][33] == 1) || (ligacoes[79][33] == 1) ||
+                    (ligacoes[79][33] == 1) || (ligacoes[80][33] == 1) ||
+                    (ligacoes[81][33] == 1) || (ligacoes[82][33] == 1) ||
+                    (ligacoes[83][33] == 1))
             {
                 entradaDec2 = false;
             }
@@ -3873,11 +3951,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][39] == 1) || (ligacoes[30][39] == 1) ||
                     (ligacoes[35][39] == 1) || (ligacoes[36][39] == 1) ||
                     (ligacoes[37][39] == 1) || (ligacoes[63][39] == 1) ||
-                    (ligacoes[65][39] == 1) || (ligacoes[67][39] == 1) ||
-                    (ligacoes[69][39] == 1) || (ligacoes[71][39] == 1) ||
-                    (ligacoes[73][39] == 1) || (ligacoes[75][39] == 1) ||
-                    (ligacoes[77][39] == 1) || (ligacoes[79][39] == 1) ||
-                    (ligacoes[81][39] == 1))
+                    (ligacoes[64][39] == 1) || (ligacoes[65][39] == 1) ||
+                    (ligacoes[66][39] == 1) || (ligacoes[67][39] == 1) ||
+                    (ligacoes[68][39] == 1) || (ligacoes[69][39] == 1) ||
+                    (ligacoes[70][39] == 1) || (ligacoes[71][39] == 1) ||
+                    (ligacoes[72][39] == 1) || (ligacoes[73][39] == 1) ||
+                    (ligacoes[74][39] == 1) || (ligacoes[75][39] == 1) ||
+                    (ligacoes[76][39] == 1) || (ligacoes[77][39] == 1) ||
+                    (ligacoes[78][39] == 1) || (ligacoes[79][39] == 1) ||
+                    (ligacoes[79][39] == 1) || (ligacoes[80][39] == 1) ||
+                    (ligacoes[81][39] == 1) || (ligacoes[82][39] == 1) ||
+                    (ligacoes[83][39] == 1))
             {
                 entradaIf1 = false;
                 //printf("2\n");
@@ -4054,11 +4138,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][40] == 1) || (ligacoes[30][40] == 1) ||
                     (ligacoes[35][40] == 1) || (ligacoes[36][40] == 1) ||
                     (ligacoes[37][40] == 1)|| (ligacoes[63][40] == 1) ||
-                    (ligacoes[65][40] == 1) || (ligacoes[67][40] == 1) ||
-                    (ligacoes[69][40] == 1) || (ligacoes[71][40] == 1) ||
-                    (ligacoes[73][40] == 1) || (ligacoes[75][40] == 1) ||
-                    (ligacoes[77][40] == 1) || (ligacoes[79][40] == 1) ||
-                    (ligacoes[81][40] == 1))
+                    (ligacoes[64][40] == 1) || (ligacoes[65][40] == 1) ||
+                    (ligacoes[66][40] == 1) || (ligacoes[67][40] == 1) ||
+                    (ligacoes[68][40] == 1) || (ligacoes[69][40] == 1) ||
+                    (ligacoes[70][40] == 1) || (ligacoes[71][40] == 1) ||
+                    (ligacoes[72][40] == 1) || (ligacoes[73][40] == 1) ||
+                    (ligacoes[74][40] == 1) || (ligacoes[75][40] == 1) ||
+                    (ligacoes[76][40] == 1) || (ligacoes[77][40] == 1) ||
+                    (ligacoes[78][40] == 1) || (ligacoes[79][40] == 1) ||
+                    (ligacoes[79][40] == 1) || (ligacoes[80][40] == 1) ||
+                    (ligacoes[81][40] == 1) || (ligacoes[82][40] == 1) ||
+                    (ligacoes[83][40] == 1))
             {
                 entradaIf2 = false;
                 //printf("3\n");
@@ -4285,11 +4375,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][42] == 1) || (ligacoes[30][42] == 1) ||
                     (ligacoes[35][42] == 1) || (ligacoes[36][42] == 1) ||
                     (ligacoes[37][42] == 1) || (ligacoes[63][42] == 1) ||
-                    (ligacoes[65][42] == 1) || (ligacoes[67][42] == 1) ||
-                    (ligacoes[69][42] == 1) || (ligacoes[71][42] == 1) ||
-                    (ligacoes[73][42] == 1) || (ligacoes[75][42] == 1) ||
-                    (ligacoes[77][42] == 1) || (ligacoes[79][42] == 1) ||
-                    (ligacoes[81][42] == 1))
+                    (ligacoes[64][42] == 1) || (ligacoes[65][42] == 1) ||
+                    (ligacoes[66][42] == 1) || (ligacoes[67][42] == 1) ||
+                    (ligacoes[68][42] == 1) || (ligacoes[69][42] == 1) ||
+                    (ligacoes[70][42] == 1) || (ligacoes[71][42] == 1) ||
+                    (ligacoes[72][42] == 1) || (ligacoes[73][42] == 1) ||
+                    (ligacoes[74][42] == 1) || (ligacoes[75][42] == 1) ||
+                    (ligacoes[76][42] == 1) || (ligacoes[77][42] == 1) ||
+                    (ligacoes[78][42] == 1) || (ligacoes[79][42] == 1) ||
+                    (ligacoes[79][42] == 1) || (ligacoes[80][42] == 1) ||
+                    (ligacoes[81][42] == 1) || (ligacoes[82][42] == 1) ||
+                    (ligacoes[83][42] == 1))
             {
                 entradaElseA = false;
                 //printf("1\n");
@@ -4468,11 +4564,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][43] == 1) || (ligacoes[30][43] == 1) ||
                     (ligacoes[35][43] == 1) || (ligacoes[36][43] == 1) ||
                     (ligacoes[37][43] == 1) || (ligacoes[63][43] == 1) ||
-                    (ligacoes[65][43] == 1) || (ligacoes[67][43] == 1) ||
-                    (ligacoes[69][43] == 1) || (ligacoes[71][43] == 1) ||
-                    (ligacoes[73][43] == 1) || (ligacoes[75][43] == 1) ||
-                    (ligacoes[77][43] == 1) || (ligacoes[79][43] == 1) ||
-                    (ligacoes[81][43] == 1))
+                    (ligacoes[64][43] == 1) || (ligacoes[65][43] == 1) ||
+                    (ligacoes[66][43] == 1) || (ligacoes[67][43] == 1) ||
+                    (ligacoes[68][43] == 1) || (ligacoes[69][43] == 1) ||
+                    (ligacoes[70][43] == 1) || (ligacoes[71][43] == 1) ||
+                    (ligacoes[72][43] == 1) || (ligacoes[73][43] == 1) ||
+                    (ligacoes[74][43] == 1) || (ligacoes[75][43] == 1) ||
+                    (ligacoes[76][43] == 1) || (ligacoes[77][43] == 1) ||
+                    (ligacoes[78][43] == 1) || (ligacoes[79][43] == 1) ||
+                    (ligacoes[79][43] == 1) || (ligacoes[80][43] == 1) ||
+                    (ligacoes[81][43] == 1) || (ligacoes[82][43] == 1) ||
+                    (ligacoes[83][43] == 1))
             {
                 entradaElseB = false;
                 //printf("3\n");
@@ -4651,11 +4753,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][44] == 1) || (ligacoes[30][44] == 1) ||
                     (ligacoes[35][44] == 1) || (ligacoes[36][44] == 1) ||
                     (ligacoes[37][44] == 1) || (ligacoes[63][44] == 1) ||
-                    (ligacoes[65][44] == 1) || (ligacoes[67][44] == 1) ||
-                    (ligacoes[69][44] == 1) || (ligacoes[71][44] == 1) ||
-                    (ligacoes[73][44] == 1) || (ligacoes[75][44] == 1) ||
-                    (ligacoes[77][44] == 1) || (ligacoes[79][44] == 1) ||
-                    (ligacoes[81][44] == 1))
+                    (ligacoes[64][44] == 1) || (ligacoes[65][44] == 1) ||
+                    (ligacoes[66][44] == 1) || (ligacoes[67][44] == 1) ||
+                    (ligacoes[68][44] == 1) || (ligacoes[69][44] == 1) ||
+                    (ligacoes[70][44] == 1) || (ligacoes[71][44] == 1) ||
+                    (ligacoes[72][44] == 1) || (ligacoes[73][44] == 1) ||
+                    (ligacoes[74][44] == 1) || (ligacoes[75][44] == 1) ||
+                    (ligacoes[76][44] == 1) || (ligacoes[77][44] == 1) ||
+                    (ligacoes[78][44] == 1) || (ligacoes[79][44] == 1) ||
+                    (ligacoes[79][44] == 1) || (ligacoes[80][44] == 1) ||
+                    (ligacoes[81][44] == 1) || (ligacoes[82][44] == 1) ||
+                    (ligacoes[83][44] == 1))
             {
                 entradaElseC = false;
             }
@@ -4833,11 +4941,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][45] == 1) || (ligacoes[30][45] == 1) ||
                     (ligacoes[35][45] == 1) || (ligacoes[36][45] == 1) ||
                     (ligacoes[37][45] == 1) || (ligacoes[63][45] == 1) ||
-                    (ligacoes[65][45] == 1) || (ligacoes[67][45] == 1) ||
-                    (ligacoes[69][45] == 1) || (ligacoes[71][45] == 1) ||
-                    (ligacoes[73][45] == 1) || (ligacoes[75][45] == 1) ||
-                    (ligacoes[77][45] == 1) || (ligacoes[79][45] == 1) ||
-                    (ligacoes[81][45] == 1))
+                    (ligacoes[64][45] == 1) || (ligacoes[65][45] == 1) ||
+                    (ligacoes[66][45] == 1) || (ligacoes[67][45] == 1) ||
+                    (ligacoes[68][45] == 1) || (ligacoes[69][45] == 1) ||
+                    (ligacoes[70][45] == 1) || (ligacoes[71][45] == 1) ||
+                    (ligacoes[72][45] == 1) || (ligacoes[73][45] == 1) ||
+                    (ligacoes[74][45] == 1) || (ligacoes[75][45] == 1) ||
+                    (ligacoes[76][45] == 1) || (ligacoes[77][45] == 1) ||
+                    (ligacoes[78][45] == 1) || (ligacoes[79][45] == 1) ||
+                    (ligacoes[79][45] == 1) || (ligacoes[80][45] == 1) ||
+                    (ligacoes[81][45] == 1) || (ligacoes[82][45] == 1) ||
+                    (ligacoes[83][45] == 1))
             {
                 entradaElseD = false;
                 //printf("3\n");
@@ -5086,11 +5200,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][47] == 1) || (ligacoes[30][47] == 1) ||
                     (ligacoes[35][47] == 1) || (ligacoes[36][47] == 1) ||
                     (ligacoes[37][47] == 1) || (ligacoes[63][47] == 1) ||
-                    (ligacoes[65][47] == 1) || (ligacoes[67][47] == 1) ||
-                    (ligacoes[69][47] == 1) || (ligacoes[71][47] == 1) ||
-                    (ligacoes[73][47] == 1) || (ligacoes[75][47] == 1) ||
-                    (ligacoes[77][47] == 1) || (ligacoes[79][47] == 1) ||
-                    (ligacoes[81][47] == 1))
+                    (ligacoes[64][47] == 1) || (ligacoes[65][47] == 1) ||
+                    (ligacoes[66][47] == 1) || (ligacoes[67][47] == 1) ||
+                    (ligacoes[68][47] == 1) || (ligacoes[69][47] == 1) ||
+                    (ligacoes[70][47] == 1) || (ligacoes[71][47] == 1) ||
+                    (ligacoes[72][47] == 1) || (ligacoes[73][47] == 1) ||
+                    (ligacoes[74][47] == 1) || (ligacoes[75][47] == 1) ||
+                    (ligacoes[76][47] == 1) || (ligacoes[77][47] == 1) ||
+                    (ligacoes[78][47] == 1) || (ligacoes[79][47] == 1) ||
+                    (ligacoes[79][47] == 1) || (ligacoes[80][47] == 1) ||
+                    (ligacoes[81][47] == 1) || (ligacoes[82][47] == 1) ||
+                    (ligacoes[83][47] == 1))
             {
                 entradaAnd1 = false;
                 //printf("2\n");
@@ -5267,11 +5387,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][48] == 1) || (ligacoes[30][48] == 1) ||
                     (ligacoes[35][48] == 1) || (ligacoes[36][48] == 1) ||
                     (ligacoes[37][48] == 1) || (ligacoes[63][48] == 1) ||
-                    (ligacoes[65][48] == 1) || (ligacoes[67][48] == 1) ||
-                    (ligacoes[69][48] == 1) || (ligacoes[71][48] == 1) ||
-                    (ligacoes[73][48] == 1) || (ligacoes[75][48] == 1) ||
-                    (ligacoes[77][48] == 1) || (ligacoes[79][48] == 1) ||
-                    (ligacoes[81][48] == 1))
+                    (ligacoes[64][48] == 1) || (ligacoes[65][48] == 1) ||
+                    (ligacoes[66][48] == 1) || (ligacoes[67][48] == 1) ||
+                    (ligacoes[68][48] == 1) || (ligacoes[69][48] == 1) ||
+                    (ligacoes[70][48] == 1) || (ligacoes[71][48] == 1) ||
+                    (ligacoes[72][48] == 1) || (ligacoes[73][48] == 1) ||
+                    (ligacoes[74][48] == 1) || (ligacoes[75][48] == 1) ||
+                    (ligacoes[76][48] == 1) || (ligacoes[77][48] == 1) ||
+                    (ligacoes[78][48] == 1) || (ligacoes[79][48] == 1) ||
+                    (ligacoes[79][48] == 1) || (ligacoes[80][48] == 1) ||
+                    (ligacoes[81][48] == 1) || (ligacoes[82][48] == 1) ||
+                    (ligacoes[83][48] == 1))
             {
                 entradaAnd2 = false;
                 //printf("3\n");
@@ -5497,11 +5623,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][50] == 1) || (ligacoes[30][50] == 1) ||
                     (ligacoes[35][50] == 1) || (ligacoes[36][50] == 1) ||
                     (ligacoes[37][50] == 1) || (ligacoes[63][50] == 1) ||
-                    (ligacoes[65][50] == 1) || (ligacoes[67][50] == 1) ||
-                    (ligacoes[69][50] == 1) || (ligacoes[71][50] == 1) ||
-                    (ligacoes[73][50] == 1) || (ligacoes[75][50] == 1) ||
-                    (ligacoes[77][50] == 1) || (ligacoes[79][50] == 1) ||
-                    (ligacoes[81][50] == 1))
+                    (ligacoes[64][50] == 1) || (ligacoes[65][50] == 1) ||
+                    (ligacoes[66][50] == 1) || (ligacoes[67][50] == 1) ||
+                    (ligacoes[68][50] == 1) || (ligacoes[69][50] == 1) ||
+                    (ligacoes[70][50] == 1) || (ligacoes[71][50] == 1) ||
+                    (ligacoes[72][50] == 1) || (ligacoes[73][50] == 1) ||
+                    (ligacoes[74][50] == 1) || (ligacoes[75][50] == 1) ||
+                    (ligacoes[76][50] == 1) || (ligacoes[77][50] == 1) ||
+                    (ligacoes[78][50] == 1) || (ligacoes[79][50] == 1) ||
+                    (ligacoes[79][50] == 1) || (ligacoes[80][50] == 1) ||
+                    (ligacoes[81][50] == 1) || (ligacoes[82][50] == 1) ||
+                    (ligacoes[83][50] == 1))
             {
                 entradaOr1 = false;
                 //printf("2\n");
@@ -5678,11 +5810,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][51] == 1) || (ligacoes[30][51] == 1) ||
                     (ligacoes[35][51] == 1) || (ligacoes[36][51] == 1) ||
                     (ligacoes[37][51] == 1) || (ligacoes[63][51] == 1) ||
-                    (ligacoes[65][51] == 1) || (ligacoes[67][51] == 1) ||
-                    (ligacoes[69][51] == 1) || (ligacoes[71][51] == 1) ||
-                    (ligacoes[73][51] == 1) || (ligacoes[75][51] == 1) ||
-                    (ligacoes[77][51] == 1) || (ligacoes[79][51] == 1) ||
-                    (ligacoes[81][51] == 1))
+                    (ligacoes[64][51] == 1) || (ligacoes[65][51] == 1) ||
+                    (ligacoes[66][51] == 1) || (ligacoes[67][51] == 1) ||
+                    (ligacoes[68][51] == 1) || (ligacoes[69][51] == 1) ||
+                    (ligacoes[70][51] == 1) || (ligacoes[71][51] == 1) ||
+                    (ligacoes[72][51] == 1) || (ligacoes[73][51] == 1) ||
+                    (ligacoes[74][51] == 1) || (ligacoes[75][51] == 1) ||
+                    (ligacoes[76][51] == 1) || (ligacoes[77][51] == 1) ||
+                    (ligacoes[78][51] == 1) || (ligacoes[79][51] == 1) ||
+                    (ligacoes[79][51] == 1) || (ligacoes[80][51] == 1) ||
+                    (ligacoes[81][51] == 1) || (ligacoes[82][51] == 1) ||
+                    (ligacoes[83][51] == 1))
             {
                 entradaOr2 = false;
                 //printf("3\n");
@@ -5909,11 +6047,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][53] == 1) || (ligacoes[30][53] == 1) ||
                     (ligacoes[35][53] == 1) || (ligacoes[36][53] == 1) ||
                     (ligacoes[37][53] == 1) || (ligacoes[63][53] == 1) ||
-                    (ligacoes[65][53] == 1) || (ligacoes[67][53] == 1) ||
-                    (ligacoes[69][53] == 1) || (ligacoes[71][53] == 1) ||
-                    (ligacoes[73][53] == 1) || (ligacoes[75][53] == 1) ||
-                    (ligacoes[77][53] == 1) || (ligacoes[79][53] == 1) ||
-                    (ligacoes[81][53] == 1))
+                    (ligacoes[64][53] == 1) || (ligacoes[65][53] == 1) ||
+                    (ligacoes[66][53] == 1) || (ligacoes[67][53] == 1) ||
+                    (ligacoes[68][53] == 1) || (ligacoes[69][53] == 1) ||
+                    (ligacoes[70][53] == 1) || (ligacoes[71][53] == 1) ||
+                    (ligacoes[72][53] == 1) || (ligacoes[73][53] == 1) ||
+                    (ligacoes[74][53] == 1) || (ligacoes[75][53] == 1) ||
+                    (ligacoes[76][53] == 1) || (ligacoes[77][53] == 1) ||
+                    (ligacoes[78][53] == 1) || (ligacoes[79][53] == 1) ||
+                    (ligacoes[79][53] == 1) || (ligacoes[80][53] == 1) ||
+                    (ligacoes[81][53] == 1) || (ligacoes[82][53] == 1) ||
+                    (ligacoes[83][53] == 1))
             {
                 entradaMaior1 = false;
                 //printf("2\n");
@@ -6090,11 +6234,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][54] == 1) || (ligacoes[30][54] == 1) ||
                     (ligacoes[35][54] == 1) || (ligacoes[36][54] == 1) ||
                     (ligacoes[37][54] == 1) || (ligacoes[63][54] == 1) ||
-                    (ligacoes[65][54] == 1) || (ligacoes[67][54] == 1) ||
-                    (ligacoes[69][54] == 1) || (ligacoes[71][54] == 1) ||
-                    (ligacoes[73][54] == 1) || (ligacoes[75][54] == 1) ||
-                    (ligacoes[77][54] == 1) || (ligacoes[79][54] == 1) ||
-                    (ligacoes[81][54] == 1))
+                    (ligacoes[64][54] == 1) || (ligacoes[65][54] == 1) ||
+                    (ligacoes[66][54] == 1) || (ligacoes[67][54] == 1) ||
+                    (ligacoes[68][54] == 1) || (ligacoes[69][54] == 1) ||
+                    (ligacoes[70][54] == 1) || (ligacoes[71][54] == 1) ||
+                    (ligacoes[72][54] == 1) || (ligacoes[73][54] == 1) ||
+                    (ligacoes[74][54] == 1) || (ligacoes[75][54] == 1) ||
+                    (ligacoes[76][54] == 1) || (ligacoes[77][54] == 1) ||
+                    (ligacoes[78][54] == 1) || (ligacoes[79][54] == 1) ||
+                    (ligacoes[79][54] == 1) || (ligacoes[80][54] == 1) ||
+                    (ligacoes[81][54] == 1) || (ligacoes[82][54] == 1) ||
+                    (ligacoes[83][54] == 1))
             {
                 entradaMaior2 = false;
                 //printf("3\n");
@@ -6328,11 +6478,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][56] == 1) || (ligacoes[30][56] == 1) ||
                     (ligacoes[35][56] == 1) || (ligacoes[36][56] == 1) ||
                     (ligacoes[37][56] == 1) || (ligacoes[63][56] == 1) ||
-                    (ligacoes[65][56] == 1) || (ligacoes[67][56] == 1) ||
-                    (ligacoes[69][56] == 1) || (ligacoes[71][56] == 1) ||
-                    (ligacoes[73][56] == 1) || (ligacoes[75][56] == 1) ||
-                    (ligacoes[77][56] == 1) || (ligacoes[79][56] == 1) ||
-                    (ligacoes[81][56] == 1))
+                    (ligacoes[64][56] == 1) || (ligacoes[65][56] == 1) ||
+                    (ligacoes[66][56] == 1) || (ligacoes[67][56] == 1) ||
+                    (ligacoes[68][56] == 1) || (ligacoes[69][56] == 1) ||
+                    (ligacoes[70][56] == 1) || (ligacoes[71][56] == 1) ||
+                    (ligacoes[72][56] == 1) || (ligacoes[73][56] == 1) ||
+                    (ligacoes[74][56] == 1) || (ligacoes[75][56] == 1) ||
+                    (ligacoes[76][56] == 1) || (ligacoes[77][56] == 1) ||
+                    (ligacoes[78][56] == 1) || (ligacoes[79][56] == 1) ||
+                    (ligacoes[79][56] == 1) || (ligacoes[80][56] == 1) ||
+                    (ligacoes[81][56] == 1) || (ligacoes[82][56] == 1) ||
+                    (ligacoes[83][56] == 1))
             {
                 entradaMenor1 = false;
                 //printf("2\n");
@@ -6509,11 +6665,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][57] == 1) || (ligacoes[30][57] == 1) ||
                     (ligacoes[35][57] == 1) || (ligacoes[36][57] == 1) ||
                     (ligacoes[37][57] == 1) || (ligacoes[63][57] == 1) ||
-                    (ligacoes[65][57] == 1) || (ligacoes[67][57] == 1) ||
-                    (ligacoes[69][57] == 1) || (ligacoes[71][57] == 1) ||
-                    (ligacoes[73][57] == 1) || (ligacoes[75][57] == 1) ||
-                    (ligacoes[77][57] == 1) || (ligacoes[79][57] == 1) ||
-                    (ligacoes[81][57] == 1))
+                    (ligacoes[64][57] == 1) || (ligacoes[65][57] == 1) ||
+                    (ligacoes[66][57] == 1) || (ligacoes[67][57] == 1) ||
+                    (ligacoes[68][57] == 1) || (ligacoes[69][57] == 1) ||
+                    (ligacoes[70][57] == 1) || (ligacoes[71][57] == 1) ||
+                    (ligacoes[72][57] == 1) || (ligacoes[73][57] == 1) ||
+                    (ligacoes[74][57] == 1) || (ligacoes[75][57] == 1) ||
+                    (ligacoes[76][57] == 1) || (ligacoes[77][57] == 1) ||
+                    (ligacoes[78][57] == 1) || (ligacoes[79][57] == 1) ||
+                    (ligacoes[79][57] == 1) || (ligacoes[80][57] == 1) ||
+                    (ligacoes[81][57] == 1) || (ligacoes[82][57] == 1) ||
+                    (ligacoes[83][57] == 1))
             {
                 entradaMenor2 = false;
                 //printf("3\n");
@@ -6750,11 +6912,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][59] == 1) || (ligacoes[30][59] == 1) ||
                     (ligacoes[35][59] == 1) || (ligacoes[36][59] == 1) ||
                     (ligacoes[37][59] == 1) || (ligacoes[63][59] == 1) ||
-                    (ligacoes[65][59] == 1) || (ligacoes[67][59] == 1) ||
-                    (ligacoes[69][59] == 1) || (ligacoes[71][59] == 1) ||
-                    (ligacoes[73][59] == 1) || (ligacoes[75][59] == 1) ||
-                    (ligacoes[77][59] == 1) || (ligacoes[79][59] == 1) ||
-                    (ligacoes[81][59] == 1))
+                    (ligacoes[64][59] == 1) || (ligacoes[65][59] == 1) ||
+                    (ligacoes[66][59] == 1) || (ligacoes[67][59] == 1) ||
+                    (ligacoes[68][59] == 1) || (ligacoes[69][59] == 1) ||
+                    (ligacoes[70][59] == 1) || (ligacoes[71][59] == 1) ||
+                    (ligacoes[72][59] == 1) || (ligacoes[73][59] == 1) ||
+                    (ligacoes[74][59] == 1) || (ligacoes[75][59] == 1) ||
+                    (ligacoes[76][59] == 1) || (ligacoes[77][59] == 1) ||
+                    (ligacoes[78][59] == 1) || (ligacoes[79][59] == 1) ||
+                    (ligacoes[79][59] == 1) || (ligacoes[80][59] == 1) ||
+                    (ligacoes[81][59] == 1) || (ligacoes[82][59] == 1) ||
+                    (ligacoes[83][59] == 1))
             {
                 entradaIgual1 = false;
                 //printf("2\n");
@@ -6931,11 +7099,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][60] == 1) || (ligacoes[30][60] == 1) ||
                     (ligacoes[35][60] == 1) || (ligacoes[36][60] == 1) ||
                     (ligacoes[37][60] == 1) || (ligacoes[63][60] == 1) ||
-                    (ligacoes[65][60] == 1) || (ligacoes[67][60] == 1) ||
-                    (ligacoes[69][60] == 1) || (ligacoes[71][60] == 1) ||
-                    (ligacoes[73][60] == 1) || (ligacoes[75][60] == 1) ||
-                    (ligacoes[77][60] == 1) || (ligacoes[79][60] == 1) ||
-                    (ligacoes[81][60] == 1))
+                    (ligacoes[64][60] == 1) || (ligacoes[65][60] == 1) ||
+                    (ligacoes[66][60] == 1) || (ligacoes[67][60] == 1) ||
+                    (ligacoes[68][60] == 1) || (ligacoes[69][60] == 1) ||
+                    (ligacoes[70][60] == 1) || (ligacoes[71][60] == 1) ||
+                    (ligacoes[72][60] == 1) || (ligacoes[73][60] == 1) ||
+                    (ligacoes[74][60] == 1) || (ligacoes[75][60] == 1) ||
+                    (ligacoes[76][60] == 1) || (ligacoes[77][60] == 1) ||
+                    (ligacoes[78][60] == 1) || (ligacoes[79][60] == 1) ||
+                    (ligacoes[79][60] == 1) || (ligacoes[80][60] == 1) ||
+                    (ligacoes[81][60] == 1) || (ligacoes[82][60] == 1) ||
+                    (ligacoes[83][60] == 1))
             {
                 entradaIgual2 = false;
                 //printf("3\n");
@@ -7170,11 +7344,17 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[25][62] == 1) || (ligacoes[30][62] == 1) ||
                     (ligacoes[35][62] == 1) || (ligacoes[36][62] == 1) ||
                     (ligacoes[37][62] == 1) || (ligacoes[63][62] == 1) ||
-                    (ligacoes[65][62] == 1) || (ligacoes[67][62] == 1) ||
-                    (ligacoes[69][62] == 1) || (ligacoes[71][62] == 1) ||
-                    (ligacoes[73][62] == 1) || (ligacoes[75][62] == 1) ||
-                    (ligacoes[77][62] == 1) || (ligacoes[79][62] == 1) ||
-                    (ligacoes[81][62] == 1))
+                    (ligacoes[64][62] == 1) || (ligacoes[65][62] == 1) ||
+                    (ligacoes[66][62] == 1) || (ligacoes[67][62] == 1) ||
+                    (ligacoes[68][62] == 1) || (ligacoes[69][62] == 1) ||
+                    (ligacoes[70][62] == 1) || (ligacoes[71][62] == 1) ||
+                    (ligacoes[72][62] == 1) || (ligacoes[73][62] == 1) ||
+                    (ligacoes[74][62] == 1) || (ligacoes[75][62] == 1) ||
+                    (ligacoes[76][62] == 1) || (ligacoes[77][62] == 1) ||
+                    (ligacoes[78][62] == 1) || (ligacoes[79][62] == 1) ||
+                    (ligacoes[79][62] == 1) || (ligacoes[80][62] == 1) ||
+                    (ligacoes[81][62] == 1) || (ligacoes[82][62] == 1) ||
+                    (ligacoes[83][62] == 1))
             {
                 entradaTrans1 = false;
                 //printf("2\n");
@@ -7382,6 +7562,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
     {
         if (ligacoes[i][17] == 1)
         {
+            ROS_INFO("ATUALIZA VALOR MOTOR");
             motorEsq = matrixValores[i][17];
         }
         i = i + 1;

@@ -2081,12 +2081,8 @@ int detectAndInterpret_Paper(cv::Mat& frame, cv::Ptr<cv::aruco::Dictionary> dict
     {
         frame = perspective_correction(frame, new_points);
 
-        detectAndInterpret_Lines(frame, dict, matrix_links, matrix_values, ready);
+        detectAndInterpret_Lines(frame, dict, m_links, m_values, ready);
     }
-
-    //get variables
-    m_values=matrix_values;
-    m_links=matrix_links;
 
     return ready;
 

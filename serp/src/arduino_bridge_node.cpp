@@ -1,13 +1,4 @@
 #include "arduino_bridge_node.h"
-#include <serp/RobotInfo.h>
-#include <serp/Velocity.h>
-#include <serp/Sensors.h>
-#include "logica.h"
-
-serp::RobotInfo robotget;
-serp::Sensors sensors_info;
-float matrixValores[100][100]={0};
-int ligacoes[100][100]={0};
 
 
 bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPointResponse &res)
@@ -29,7 +20,6 @@ bool VelocitySetPoint(serp::VelocitySetPointRequest &req, serp::VelocitySetPoint
     else {
         res.success = false;
     }
-    ROS_INFO("Received request to set the following velocity values: ML=%d%%\tMR=%d%%", robot.motor_left_velocity, robot.motor_right_velocity);
     return res.success;
 }
 
@@ -44,18 +34,6 @@ void getInfo(const serp::RobotInfo &msg)
     robotget.battery_level=msg.battery_level;
     robotget.vel_linear=msg.vel_linear;
     robotget.vel_angular=msg.vel_angular;
-    ROS_INFO("batt: %d%%", robotget.battery_level);
-    ROS_INFO("left speed: %0.1f right speed: %0.1f", robotget.vel_linear, robotget.vel_angular);
-}
-
-
-void getSensors(const serp::Sensors &msg)
-{
-    sensors_info.left=msg.left;
-    sensors_info.right=msg.right;
-    sensors_info.back=msg.back;
-    sensors_info.front=msg.front;
-    //falta inserir na matriz valores
 }
 
 void cb_robot_state(const std_msgs::StringConstPtr &state) {
@@ -64,14 +42,14 @@ void cb_robot_state(const std_msgs::StringConstPtr &state) {
     else if(state->data == "Executing") robot_state = Executing;
 }
 
-void cb_matrix(const serp::Matrix2d &msg)
+void cb_matrix(const serp::Matrix &msg)
 {
     for (int i=0; i < 100; i++)
     {
         for (int j=0 ; j < 100 ; j++)
         {
-            matrixValores[i][j]=msg.finalmatrix[i].matrix_values[j];
-            ligacoes[i][j]=msg.finalmatrix[i].matrix_links[j];
+            matrixValores[i][j]=msg.matrix_values[100*i+j];
+            ligacoes[i][j]=msg.matrix_links[100*i+j];
         }
     }
 }
@@ -115,7 +93,6 @@ int main(int argc, char** argv)
 
     ros::Publisher send_velocities = n_public.advertise<serp::Velocity>("motors_vel", 2);
     ros::Subscriber receive_info = n_public.subscribe("hardware_info", 2, getInfo);
-    ros::Subscriber get_sensors = n_public.subscribe("get_sensors", 2, getSensors);
 
     // Subscriber for Robot State
     ros::Subscriber sub_robot_state = n_public.subscribe("robot_state", 2, cb_robot_state);
@@ -124,7 +101,6 @@ int main(int argc, char** argv)
     ros::Subscriber sub_matrixes = n_public.subscribe("send_matrix", 1, cb_matrix);
 
 
-    //ROS_INFO("vel: %f%%", velocidades[1]);
     while (ros::ok())
     {
         ros::Duration(0.1).sleep();
@@ -156,15 +132,22 @@ int main(int argc, char** argv)
         else if(robot_state == Executing)
         {
             //processing cycle
-
+            for (int j = 0; j < 100 ; j++) {
+                std::cout << "row:" << j << " ";
+                for (int i= 0; i < 100 ; i++) {
+                    std::cout << ligacoes[j][i]<< " ";
+                }
+                std::cout << "\n";
+            }
             //updates motor speeds according to code from sheet
             verificarBlocos(ligacoes, matrixValores, velocidades);
             robot.motor_left_velocity=velocidades[2];
             robot.motor_right_velocity=velocidades[1];
+            //ROS_INFO("commands: right: %f  left: %f", velocidades[2], velocidades[1]);
             pvel_l=vel_cmd.vel_motor_left;
             pvel_r=vel_cmd.vel_motor_right;
-            vel_cmd.vel_motor_left=robot.motor_left_velocity;
-            vel_cmd.vel_motor_right=robot.motor_right_velocity;
+            vel_cmd.vel_motor_left=velocidades[2];
+            vel_cmd.vel_motor_right=velocidades[1];
             //updates motor speeds only if they have changed
             if(pvel_l!=vel_cmd.vel_motor_left || pvel_r!=vel_cmd.vel_motor_right)
             {

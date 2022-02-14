@@ -69,6 +69,7 @@ add_message_files(
   RobotInfo.msg
   Velocity.msg
   Sensors.msg
+  Matrix.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -156,7 +157,7 @@ add_definitions(${GTK_CFLAGS_OTHER})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(rpi_camera_node src/rpi_camera.cpp)
+add_executable(rpi_camera_node src/rpi_camera.cpp src/video_tests.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp src/logica.cpp)
 

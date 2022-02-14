@@ -5,8 +5,10 @@
 #include "serp/VelocitySetPoint.h"
 #include "std_srvs/Trigger.h"
 #include <std_msgs/String.h>
-#include "serp/Matrix1d.h"
-#include "serp/Matrix2d.h"
+#include "serp/Matrix.h"
+#include <serp/RobotInfo.h>
+#include <serp/Velocity.h>
+#include "logica.h"
 
 // Global Variables
 enum RobotState {
@@ -21,5 +23,12 @@ struct Robot {
     int8_t motor_right_velocity;
     int8_t battery_level;
 } robot;
+
+
+serp::RobotInfo robotget;
+float matrixValores[100][100]={0};
+int ligacoes[100][100]={0};
+
+
 
 #endif //SRC_ARDUINO_BRIDGE_NODE_H
