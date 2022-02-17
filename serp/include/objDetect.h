@@ -275,7 +275,7 @@ std::vector<uint8_t> frameProcessing(Mat frame) {
     cvtColor(frame, img_grey, COLOR_BGR2GRAY);
     blur(img_grey, detected_edges, Size(3, 3));
 
-    //segmenta��o dos frames
+    //segmentacao dos frames
     //ROI(pixelHorizontalInicio, PixelVerticalInicio, QuantidadePixeisHorizontal, QuantidadePixeisVertical)
     Rect ROI_NE(frontBeginning, 1, leftPilar, 400);
     Mat image_NE = img_grey(ROI_NE);
@@ -305,6 +305,15 @@ std::vector<uint8_t> frameProcessing(Mat frame) {
 
     //vetor para retornar valores dos sensores
     std::vector<uint8_t> retorna_valores{NE , N , S, NW};
+
+
+    /*ROS_INFO("direta: %d", retorna_valores[0]);
+    ROS_INFO("frente: %d", retorna_valores[1]);
+    ROS_INFO("tras: %d", retorna_valores[2]);
+    ROS_INFO("esquerda: %d", retorna_valores[3]);
+    ROS_INFO("----------------------");*/
+
+
     return retorna_valores;
 
 }

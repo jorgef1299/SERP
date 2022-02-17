@@ -102,7 +102,6 @@ void* cb_ros_spin(gpointer data) {
 
 gboolean setImage(gpointer data) {
     GdkPixbuf* buf = (GdkPixbuf*)data;
-    buf = gdk_pixbuf_rotate_simple(buf, GDK_PIXBUF_ROTATE_CLOCKWISE);
     gtk_image_set_from_pixbuf(camera_image_frame, buf);
     g_object_unref(buf);
     g_mutex_unlock(&mutex_camera);
@@ -166,7 +165,7 @@ void cb_camera_img(const sensor_msgs::ImageConstPtr &msg) {
 
         GdkPixbuf *pixbuf_rgb;
         pixbuf_rgb = gdk_pixbuf_new_from_data((guint8*) current_frame.data, GDK_COLORSPACE_RGB,FALSE, 8,
-                                              current_frame.cols, current_frame.rows, current_frame.step, destroy_pixbuf, NULL);
+                                                     current_frame.cols, current_frame.rows, current_frame.step, 0, NULL);
         g_idle_add ((GSourceFunc) setImage, pixbuf_rgb);
     }
 }

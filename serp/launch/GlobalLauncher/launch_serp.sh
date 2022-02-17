@@ -8,7 +8,7 @@ export SERP_PROJECT_PATH=~/catkin_ws/src/serp/
 . ~/catkin_ws/devel/setup.bash
 
 roscore &
-sleep 2 
+sleep 3
 rosrun serp rpi_camera_node &
 rosrun serp arduino_bridge_node &
 rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=57600 &

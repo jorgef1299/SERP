@@ -132,13 +132,16 @@ int main(int argc, char** argv)
         else if(robot_state == Executing)
         {
             //processing cycle
+            /*
             for (int j = 0; j < 100 ; j++) {
                 std::cout << "row:" << j << " ";
                 for (int i= 0; i < 100 ; i++) {
-                    std::cout << ligacoes[j][i]<< " ";
+                    std::cout << matrixValores[j][i]<< " ";
                 }
                 std::cout << "\n";
             }
+            */
+
             //updates motor speeds according to code from sheet
             verificarBlocos(ligacoes, matrixValores, velocidades);
             robot.motor_left_velocity=velocidades[2];

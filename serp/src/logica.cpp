@@ -2188,7 +2188,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                                 {
                                     if (ligacoes[aux][10] == 1)
                                     {
-                                        ROS_INFO("HELLO");
+                                        ROS_INFO("realiza soma");
                                         matrixValores[aux][10] = matrixValores[i][8] + matrixValores[j][9];
                                         matrixValores[10][aux] = matrixValores[i][8] + matrixValores[j][9];
                                         if (matrixValores[aux][10] > 100)

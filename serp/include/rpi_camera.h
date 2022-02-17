@@ -15,6 +15,8 @@
 #include "video_tests.h"
 #include "serp/Matrix.h"
 #include <vector>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 
 

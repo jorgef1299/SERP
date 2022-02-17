@@ -1,6 +1,9 @@
 #include "rpi_camera.h"
+using std::string;
+
 int ready;
 cv::Mat final;
+cv::Mat frame_sensors;
 
 
 
@@ -19,6 +22,112 @@ void cb_robot_state(const std_msgs::StringConstPtr &state) {
     else if(state->data == "Executing") camera_state = DetectObstacles;
 }
 
+string find_sensorIMG_path(char sensor , int valor_sensor){
+    string path = "/home/pi/catkin_ws/src/serp/include/images/";
+
+    switch (sensor)
+    {
+    case 'f': //frente
+        path.append("frente");
+        break;
+
+    case 't': //trás
+        path.append("tras");
+        break;
+
+    case 'd': //direita
+        path.append("direita");
+        break;
+
+    case 'e': //esquerda
+        path.append("esquerda");
+        break;
+    }
+
+    switch (valor_sensor)
+    {
+    case 1:
+        path.append("1.png");
+        break;
+    case 2:
+        path.append("2.png");
+        break;
+    case 3:
+        path.append("3.png");
+        break;
+    case 4:
+        path.append("4.png");
+        break;
+
+    }
+    //ROS_INFO_STREAM("file_path: " << path);
+    return path;
+}
+
+
+cv::Mat place_sensor(cv::Mat frame, cv::Mat sensor, int position_x, int position_y){
+
+    cv::Mat mask;
+    cv::Mat rgbLayer[4];
+    cv::split(sensor,rgbLayer);
+
+    if(sensor.channels() == 4)
+    {
+        split(sensor,rgbLayer);         // seperate channels
+        cv::Mat cs[3] = { rgbLayer[0],rgbLayer[1],rgbLayer[2] };
+        merge(cs,3,sensor);  // glue together again
+        mask = rgbLayer[3];       // png's alpha channel used as mask
+    }
+
+    // Get the destination ROI (and make sure it is within the image)
+    cv::Rect dstRC = cv::Rect(position_x, position_y, sensor.size().width, sensor.size().height);
+    cv::Mat dstROI = frame(dstRC);
+    // Copy the pixels from src to dst.
+    sensor.copyTo(dstROI,mask);
+
+    return frame;
+}
+
+cv::Mat process_frame(cv::Mat frame, std::vector<uint8_t> sensor_valores)
+{
+
+    for(;;)
+    {
+
+        // Import sensor images
+        cv::Mat sensor_front = cv::imread(find_sensorIMG_path('f',sensor_valores[1]+1), cv::IMREAD_UNCHANGED);
+        cv::Mat sensor_back = cv::imread(find_sensorIMG_path('t',sensor_valores[2]+1), cv::IMREAD_UNCHANGED);
+        cv::Mat sensor_left = cv::imread(find_sensorIMG_path('e',sensor_valores[3]+1), cv::IMREAD_UNCHANGED);
+        cv::Mat sensor_right = cv::imread(find_sensorIMG_path('d',sensor_valores[0]+1), cv::IMREAD_UNCHANGED);
+
+
+        //Resize sensor images
+        cv::resize(sensor_front,sensor_front,cv::Size(60,37));
+        cv::resize(sensor_back,sensor_back,cv::Size(60,37));
+        cv::resize(sensor_left,sensor_left,cv::Size(60,71));
+        cv::resize(sensor_right,sensor_right,cv::Size(60,71));
+
+
+        int cx = (frame.cols - sensor_front.size().width) / 2;
+        if (!sensor_front.empty()) {
+            frame = place_sensor(frame, sensor_front, cx, frame.rows/7);
+        }
+        if (!sensor_back.empty()) {
+            frame = place_sensor(frame, sensor_back, cx, 5.2*frame.rows/7);
+
+        }
+        if (!sensor_left.empty()) {
+            frame = place_sensor(frame, sensor_left, 7*cx/12, frame.rows/6);
+        }
+        if (!sensor_right.empty()) {
+            frame = place_sensor(frame, sensor_right, 17*cx/12, frame.rows/6);
+        }
+        return frame;
+    }
+
+}
+
+
 int main(int argc, char **argv)
 {
 
@@ -27,7 +136,6 @@ int main(int argc, char **argv)
     int count=0, j=0;
     ros::init(argc, argv, "rpi_camera_node");
     ros::NodeHandle n_public;
-
 
 
     // Subscriber for Robot State
@@ -40,6 +148,7 @@ int main(int argc, char **argv)
     //aruco dictionary
     cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
 
+    int angle=90;
     uint8_t pleft;
     uint8_t pright;
     uint8_t pback;
@@ -83,31 +192,45 @@ int main(int argc, char **argv)
         // Get new frame
         Camera.grab();
         Camera.retrieve(frame);
-        //process object detection
 
         cv::Mat cropped_image = frame(cv::Rect(100, 0, 1300, 1200));
 
-        //        // Resize image to 800x450 (to publish to the GUI)
+        // Resize image to 800x450 (to publish to the GUI)
         cv::Mat resized_frame;
         cv::resize(cropped_image, resized_frame, cv::Size(500, 462));
 
 
-        // Publish image (if needed)
-        if(count == 0)
-        {
-            // Convert OpenCV image to ROS data
-            sensor_msgs::Image img_msg;
-            std_msgs::Header header;
-            header.stamp = ros::Time::now();
-            img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::BGR8, resized_frame);
-            img_bridge.toImageMsg(img_msg);
-            pub_img.publish(img_msg);
-        }
+        //Rotate frame 90º
+
+        cv::rotate(resized_frame, resized_frame, cv::ROTATE_90_CLOCKWISE);
 
         if(camera_state == DetectObstacles)
         {
-
+            //get sensor values
             sensor_valores = frameProcessing(frame);
+            if(count==1)
+            {
+                //publish image
+                // Convert OpenCV image to ROS data
+                sensor_msgs::Image img_msg;
+                std_msgs::Header header;
+                header.stamp = ros::Time::now();
+
+                //overlay sensors
+                resized_frame=process_frame(resized_frame, sensor_valores);
+
+
+                img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::BGR8, resized_frame);
+                img_bridge.toImageMsg(img_msg);
+
+                pub_img.publish(img_msg);
+            }
+            /*ROS_INFO("LEFT: %f", sensor_valores[3]);
+            ROS_INFO("RIGHT: %f", sensor_valores[0]);
+            ROS_INFO("FRONT: %f", sensor_valores[1]);
+            ROS_INFO("BACK: %f", sensor_valores[2]);
+            ROS_INFO("--------------------------");*/
+
 
             //fill matrix_values with sensor values
             for(int i=0; i < matrix_size; i++)
@@ -151,11 +274,33 @@ int main(int argc, char **argv)
                 }
             }
 
+            /*
+            //debug matrix
+            for (int j = 0; j < 100 ; j++) {
+                std::cout << "row:" << j << " ";
+                for (int i= 0; i < 100 ; i++) {
+                    std::cout << matrix_values[j][i]<< " ";
+                }
+                std::cout << "\n";
+            }
+            */
+
             send_matrix.publish(data);
-            //falta sobrepor imagem com sensores (parte da Ana)
         }
         else if(camera_state == ReadProgrammingSheet)
         {
+            if(count==1)
+            {
+                //publish image
+                // Convert OpenCV image to ROS data
+                sensor_msgs::Image img_msg;
+                std_msgs::Header header;
+                header.stamp = ros::Time::now();
+                img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::BGR8, resized_frame);
+                img_bridge.toImageMsg(img_msg);
+
+                pub_img.publish(img_msg);
+            }
             ready=detectAndInterpret_Paper(frame, dictionary, matrix_links, matrix_values, ready);
             if(ready == 1)
             {
@@ -172,6 +317,20 @@ int main(int argc, char **argv)
                 camera_state = NormalOperation;
                 ready=0;
 
+            }
+        }
+        else {
+            if(count==1)
+            {
+                //publish image
+                // Convert OpenCV image to ROS data
+                sensor_msgs::Image img_msg;
+                std_msgs::Header header;
+                header.stamp = ros::Time::now();
+                img_bridge = cv_bridge::CvImage(header, sensor_msgs::image_encodings::BGR8, resized_frame);
+                img_bridge.toImageMsg(img_msg);
+
+                pub_img.publish(img_msg);
             }
         }
 
