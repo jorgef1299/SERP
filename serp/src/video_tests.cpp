@@ -576,6 +576,9 @@ void draw_check_function(int id, int x, int y, cv::InputOutputArray image) {
 //draw inputs and outputs of blocks
 void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, cv::InputOutputArray image)
 {
+    int y_low, y_up;
+
+
     if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26) {
         //2 inputs, 1 output
         circle(image, cv::Point(sup_esq.x, sup_esq.y+((inf_esq.y-sup_esq.y)*(0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
@@ -600,15 +603,24 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_dir.y), 9, CV_RGB(0, 0, 255), 1.5); //condition
+
+        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
+        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
+        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, y_low), 9, CV_RGB(0, 0, 255), 1.5); //condition
     }
     else if (id == 32) {
         //2 inputs, 1 output, 2 conditions
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
-        circle(image, cv::Point(((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x, sup_esq.y), 9, CV_RGB(0, 0, 255), 1.5); //condition above
-        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_esq.y), 9, CV_RGB(0, 0, 255), 1.5); //condition below
+
+        if(sup_esq.y > sup_dir.y) y_up = (sup_esq.y - sup_dir.y)*0.5 + sup_dir.y;
+        else y_up = (sup_dir.y - sup_esq.y)*0.5 + sup_esq.y;
+        circle(image, cv::Point(((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x, y_up), 9, CV_RGB(0, 0, 255), 1.5); //condition above
+
+        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
+        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
+        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, y_low), 9, CV_RGB(0, 0, 255), 1.5); //condition below
     }
     else if (id == 33) {
         //1 input, 2 outputs
@@ -720,6 +732,7 @@ std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::
 // Saves Block Inputs and Outputs
 std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id, std::vector <block> block_i)
 {
+    int y_low, y_up;
 
     masks.push_back(cv::Vec4i());
     //min_x max_x min_y max_y
@@ -777,8 +790,11 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
         block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
         block_i[pos_list].input2.point.x = sup_esq.x;
         block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+
+        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
+        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
         block_i[pos_list].condition1.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition1.point.y = inf_dir.y;
+        block_i[pos_list].condition1.point.y = y_low;
     }
     else if (id == 32)
     {
@@ -794,11 +810,15 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
         block_i[pos_list].input2.point.x = sup_esq.x;
         block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
 
+        if(sup_esq.y > sup_dir.y) y_up = (sup_esq.y - sup_dir.y)*0.5 + sup_dir.y;
+        else y_up = (sup_dir.y - sup_esq.y)*0.5 + sup_esq.y;
         block_i[pos_list].condition1.point.x = ((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x;
-        block_i[pos_list].condition1.point.y = sup_esq.y;
+        block_i[pos_list].condition1.point.y = y_up;
 
+        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
+        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
         block_i[pos_list].condition2.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition2.point.y = inf_esq.y;
+        block_i[pos_list].condition2.point.y = y_low;
     }
     else if (id == 33)
     {
