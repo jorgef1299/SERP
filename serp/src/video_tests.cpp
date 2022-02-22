@@ -1436,6 +1436,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
                     vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
 
 
                 }
@@ -1452,6 +1455,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
                 }
                 else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[2], lin[3])==1))
                 {
@@ -1465,6 +1471,8 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
                     vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
 
                 }
 //                else ROS_WARN_STREAM("WRONG lINK\n");
@@ -1488,6 +1496,8 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
 
                 }
                 else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[0], lin[1])==1))
@@ -1502,6 +1512,8 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
                     vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
 
                 }
                 else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[0], lin[1])==1))
@@ -1516,13 +1528,14 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                     vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
                     vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
 
                 }
 //                else ROS_WARN_STREAM("WRONG lINK\n");
             }
         }
     }
-
 
     return vec;
 }
@@ -1619,6 +1632,94 @@ std::vector<cv::Point2f> detectCrossings(cv::Mat image)
     return mc;
 }
 
+std::vector<cv::Point2f> filterCrossingPointsBBox(std::vector<cv::Point2f> cp, std::vector<cv::Rect> rect)
+{
+    std::vector<cv::Point2f> out;
+    for (size_t i = 0; i < cp.size(); i++)
+    {
+      for(int j = 0; j < rect.size(); j++){
+
+          if( rect[j].x < cp[i].x && cp[i].x < rect[j].x+rect[j].width && rect[j].y < cp[i].y && cp[i].y < rect[j].y + rect[j].height && (rect[j].width>50 || rect[j].height>50) ){
+
+            std::cout << rect[j].x << " < " <<  cp[i].x << " < " << rect[j].x+rect[j].width << " && " << rect[j].y <<  " < " << cp[i].y << " < "  << rect[j].y + rect[j].height << "\n";
+            cv::Point2f cpc(cp[i].x,cp[i].y);
+            out.push_back(cpc);
+          }
+
+      }
+    }
+     crossingPoints.clear();
+    return out;
+}
+
+std::vector<cv::Point2f> filterCrossingPointsContours(std::vector<cv::Point2f> cp, std::vector<cv::Vec4i> cc)
+{
+    std::vector<cv::Point2f> out;
+    for (size_t i = 0; i < cp.size(); i++)
+    {
+
+        for(int k = 0; k < cc.size(); k++){
+          if((std::min(cc[k][0],cc[k][2])<cp[i].x && cp[i].x<std::max(cc[k][0],cc[k][2])) && (std::min(cc[k][1],cc[k][3])<cp[i].y && cp[i].y<std::max(cc[k][1],cc[k][3]))){
+            cv::Point2f cpc(cp[i].x,cp[i].y);
+            out.push_back(cpc);
+          }
+        }
+
+    }
+//    std::cout << "OUT: ";
+//    for (size_t i = 0; i < out.size(); i++){
+//      std::cout << out[i].x << "|" << out[i].y << "\n";
+//    }
+    crossingPoints.clear();
+
+    return out;
+}
+
+std::vector<cv::Point2f> filterCrossingPointsBinaryImg(std::vector<cv::Point2f> cp, cv::Mat image)
+{
+    std::vector<cv::Point2f> out;
+    for (size_t i = 0; i < cp.size(); i++)
+    {
+          if(image.at<int>(cp[i].x,cp[i].y)==0){
+            cv::Point2f cpc(cp[i].x,cp[i].y);
+            out.push_back(cpc);
+          }
+
+    }
+
+    crossingPoints.clear();
+
+    return out;
+}
+
+std::vector<cv::Point2f> filterCrossingPointsInOut(std::vector<cv::Point2f> cp, std::vector<block> blocks)
+{
+  std::cout << "I enter\n";
+  int radius=15;
+  int count;
+    std::vector<cv::Point2f> out;
+    for (size_t i = 0; i < cp.size(); i++)
+    {
+        count=0;
+        for(int k = 0; k < blocks.size(); k++){
+
+          count=count+isInside(blocks[k].input1.point.x, blocks[k].input1.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].input2.point.x, blocks[k].input2.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].outputs.point.x, blocks[k].outputs.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].condition.point.x, blocks[k].condition.point.y,radius,cp[i].x, cp[i].y);
+          std::cout << "COUNT:" << count << "\n";
+
+        }
+
+        if(count==0){
+          cv::Point2f cpc(cp[i].x,cp[i].y);
+          out.push_back(cpc);
+        }
+
+    }
+
+    crossingPoints.clear();
+    std::cout << "I leave\n";
+    return out;
+
+}
 
 std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 {
@@ -1644,40 +1745,61 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 
 
     // Threshold to eliminate white background
-    image = image < 100;
-   //cv::imshow("Mask I < 100 ", image);
+    image = image < 150;
+   cv::imshow("Mask I < 100 ", image);
 
 
     // Keep only paper area
     rectangle(image, cv::Rect(0, 0, image.cols, image.rows), cv::Scalar(255));
     floodFill(image, cv::Point(0, 0), cv::Scalar(0));
 
-    //cv::imshow("Flood Fill After Rect", image);
+    cv::imshow("Flood Fill After Rect", image);
 
+    binaryFinalImage = image.clone();
 
     // Line dilation
     cv::Mat kernel=cv::Mat(cv::Size(3,3),CV_8UC1,cv::Scalar(255));
     morphologyEx(image,image,cv::MORPH_DILATE,kernel);
 
-   //cv::imshow("Dilation", image);
-
-
-    // Detect Crossings
-    //crossingPoints.clear();
-    //crossingPoints = detectCrossings(image);
+    cv::imshow("Dilation", image);
 
 
     // Detect Lines
     std::vector<std::vector<cv::Point> > contours;
     findContours(image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 
+    // Detect Crossings
+    crossingPoints.clear();
+    crossingPoints = detectCrossings(image);
+
+    std::cout << "CP process 0: ";
+    for( int i = 0; i<crossingPoints.size(); i++ )
+    {
+        std::cout << crossingPoints[i].x << " | " << crossingPoints[i].y <<"\n";
+    }
+
     std::vector<cv::Vec4i> linesP;
 
     cv::Mat paperCopy = paper.clone();
 
+    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
+    std::vector<cv::Rect> boundRect( contours.size() );
+    std::vector<cv::Point2f>centers( contours.size() );
+    std::vector<float>radius( contours.size() );
+
     for(size_t k=0; k<contours.size(); k++)
     {
-//        // See each countour being detected
+
+        approxPolyDP( contours[k], contours_poly[k], 3, true );
+        boundRect[k] = boundingRect( contours_poly[k] );
+
+
+        cv::drawContours( paperCopy, contours_poly, (int)k, cv::Scalar(0, 255, 0) );
+        cv::rectangle( paperCopy, boundRect[k].tl(), boundRect[k].br(), cv::Scalar(0, 255, 0), 2 );
+        cv::imshow("countours", paperCopy);
+        cv::waitKey(0);
+
+//     // See each countour being detected
        //cv::drawContours(paperCopy, contours, (int)k, cv::Scalar(0, 255, 0), 2, cv::LINE_8, cv::noArray(), 0);
        //cv::imshow("countours", paperCopy);
        //cv::waitKey(0);
@@ -1698,16 +1820,21 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
 //        ROS_WARN_STREAM(" leftMost [ " << val.first->x << ", " << val.first->y << " ]");
 //        ROS_WARN_STREAM(" RightMost [ " << val.second->x << ", " << val.second->y << " ]");
     }
-
-//    cv::imshow("countours", paperCopy);
+    crossingPoints=filterCrossingPointsBBox(crossingPoints,boundRect);
+//  cv::imshow("countours", paperCopy);
 //    cv::waitKey(1);
 
     return linesP;
 }
 
+int getMin(int a){
 
+}
 std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> blocks)
 {
+    crossingContours.clear();
+    crossingPoints=filterCrossingPointsInOut(crossingPoints,blocks);
+    crossingPoints=filterCrossingPointsBinaryImg(crossingPoints,binaryFinalImage);
     // Draw Lines
     for (size_t i = 0; i < linesP.size(); i++)
     {
@@ -1716,8 +1843,12 @@ std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> b
         blocks = check_lines(l,i,18,blocks);
 
     }
+
+    //crossingPoints=filterCrossingPointsContours(crossingPoints,crossingContours);
     return blocks;
 }
+
+
 
 coordinates findEndPoint(int begin, std::vector<block> blocks){
    for (int j = 0; j < blocks.size(); j++) {
@@ -1959,21 +2090,36 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     DebugBlocks(block_in_order);
 
 
+
+
     // Line Detection
 
     std::vector<cv::Vec4i> linesP = detectLines(paper);
 
+    std::cout << "CP process 1: \n";
+    for( int i = 0; i<crossingPoints.size(); i++ )
+    {
+        std::cout << crossingPoints[i].x << " | " << crossingPoints[i].y <<"\n";
+    }
+
     block_in_order=saveLines(linesP, block_in_order);
+
+    std::cout << "CP process 2: \n";
+    for( int i = 0; i<crossingPoints.size(); i++ )
+    {
+        std::cout << crossingPoints[i].x << " | " << crossingPoints[i].y <<"\n";
+    }
 
     drawLines(paperDrawn,block_in_order);
 
+    cv::imshow("final_binary",binaryFinalImage);
 
     std::vector<combination> combs;
     combs=getCombinations(block_in_order,combs);
-    //combs = makeCombinations(block_in_order, combs);
-     combs=makeCombinations(block_in_order,combs);
-    Debugcombs(combs);
-    std::cout << "Num of combinations " << num_combinations << "\n";
+
+    combs=makeCombinations(block_in_order,combs);
+    //Debugcombs(combs);
+
     // Create Link and Value Matrices
 
     std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
@@ -1983,8 +2129,8 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
     matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
-    Debugmatrixlinks(matrix_links);
-    Debugmatrixvalues(matrix_values);
+//    Debugmatrixlinks(matrix_links);
+//    Debugmatrixvalues(matrix_values);
 
 
 
@@ -2060,7 +2206,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())

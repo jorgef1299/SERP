@@ -104,3 +104,5 @@ struct orientation_block {
 
 std::vector<cv::Vec4i> masks;
 std::vector<cv::Point2f> crossingPoints;
+std::vector<cv::Vec4i> crossingContours;
+cv::Mat binaryFinalImage;
