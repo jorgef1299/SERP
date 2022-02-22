@@ -2000,8 +2000,6 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     block_i = saving_coordinates(paper, corners, ids, block_i);
 
-    drawing_functions(paperDrawn, corners, ids, block_i);
-
     std::vector<block> block_in_order = put_arucos_order(block_i);
 
 //    DebugBlocks(block_in_order);
@@ -2013,7 +2011,12 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     block_in_order=saveLines(linesP, block_in_order);
 
-    drawLines(paperDrawn,block_in_order);
+
+    // Draw detections
+
+    drawing_functions(paperDrawn, corners, ids, block_i);
+
+    drawLines(paperDrawn, block_in_order);
 
 
     // Get combinations
@@ -2110,7 +2113,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/bubbles.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/transporte.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
