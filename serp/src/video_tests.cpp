@@ -1693,7 +1693,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     // Threshold to eliminate white background
     cv::threshold(image, image, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
 
-    cv::imshow("Otsu Threshold ", image);
+//    cv::imshow("Otsu Threshold ", image);
 
 
     // Keep only paper area
@@ -2110,7 +2110,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/16_fev.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/bubbles.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
