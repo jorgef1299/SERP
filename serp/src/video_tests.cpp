@@ -1676,12 +1676,13 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
         }
     }
 
-   //cv::imshow("Take Off Arucos", image);
+//   cv::imshow("Take Off Arucos", image);
 
 
     // Threshold to eliminate white background
-    image = image < 100;
-   //cv::imshow("Mask I < 100 ", image);
+    cv::threshold(image, image, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
+
+    cv::imshow("Otsu Threshold ", image);
 
 
     // Keep only paper area
