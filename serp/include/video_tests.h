@@ -78,7 +78,7 @@ int current_ids_size=0;
 bool orientation_check = false;
 bool pictureValidated = false;
 bool vertical = false;
-std::vector<int> detections(35, 0); // 40 values equal to 0
+std::vector<int> detections(36, 0); // 36 values equal to 0
 int count_stable_frames = 0;
 int count_total_arucos = 0;
 

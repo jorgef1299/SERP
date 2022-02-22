@@ -466,6 +466,8 @@ void validatePicture(std::vector<std::vector<cv::Point2f>> corners, std::vector<
 
     pictureValidated = false;
 
+    std::fill(detections.begin(), detections.end(), 0);
+
     sort(ids.begin(), ids.end());
 
     for(auto id = std::cbegin(ids); id != std::cend(ids); )
@@ -2196,7 +2198,11 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     // Number of detections after Homography has to be equal to the number of detections before
     // -4 to account for loss of cropped orientation blocks
-    if(ids.size() != (count_total_arucos - 4)) return;
+    if(ids.size() != (count_total_arucos - 4))
+    {
+        ROS_WARN_STREAM("Detected="<<ids.size()<<" VS Expected="<<(count_total_arucos - 4));
+        return;
+    }
 
     count_total_arucos=0;
 
@@ -2208,22 +2214,22 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     block_i = saving_coordinates(paper, corners, ids, block_i);
 
-    std::vector<block> block_in_order = put_arucos_order(block_i);
+//    std::vector<block> block_in_order = put_arucos_order(block_i);
 
 //    DebugBlocks(block_in_order);
 
-    // Line Detection
+//    // Line Detection
 
-    std::vector<cv::Vec4i> linesP = detectLines(paper);
+//    std::vector<cv::Vec4i> linesP = detectLines(paper);
 
-    block_in_order=saveLines(linesP, block_in_order);
+//    block_in_order=saveLines(linesP, block_in_order);
 
 
     // Draw detections
 
     drawing_functions(paperDrawn, corners, ids, block_i);
 
-    drawLines(paperDrawn, block_in_order);
+//    drawLines(paperDrawn, block_in_order);
 
 
 //    // Get combinations
@@ -2318,7 +2324,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/transporte.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
