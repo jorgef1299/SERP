@@ -57,8 +57,10 @@ struct block {
     coordinates b_inf_right;
     links input1;
     links input2;
-    links outputs;
-    links condition;
+    links output1;
+    links output2;
+    links condition1;
+    links condition2;
 };
 
 struct combination{

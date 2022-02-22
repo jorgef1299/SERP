@@ -564,37 +564,65 @@ void draw_check_function(int id, int x, int y, cv::InputOutputArray image) {
     else if (id == 25) putText(image, "AND", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
     else if (id == 26) putText(image, "OR", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
     else if (id == 27) putText(image, "mux", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 32) putText(image, "ELSE IF", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 33) putText(image, "extensor", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 34) putText(image, "TE", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
+    else if (id == 35) putText(image, "TD", cv::Point(x, y), cv::FONT_HERSHEY_DUPLEX, 0.5, CV_RGB(0, 0, 255), 1.5);
 }
 
 
-//draw inputs and outputs of blocks (to-do: mux-->condition circle not working)
+//draw inputs and outputs of blocks
 void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, cv::InputOutputArray image)
 {
     if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26) {
-        //2 inputs 1 output
+        //2 inputs, 1 output
         circle(image, cv::Point(sup_esq.x, sup_esq.y+((inf_esq.y-sup_esq.y)*(0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
   }
     else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24) {
-        //1 input 1 output
+        //1 input, 1 output
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
     }
     else if (id == 7 || id == 8) {
         //1 input
-        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input middle
     }
     else if (id == 9 || id == 10 || id == 11 || id == 12) {
         //1 output
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
     }
     else if (id == 27) {
-        //2 inputs 1 output 1 condition
+        //2 inputs, 1 output, 1 condition
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
         circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_dir.y), 9, CV_RGB(0, 0, 255), 1.5); //condition
+    }
+    else if (id == 32) {
+        //2 inputs, 1 output, 2 conditions
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
+        circle(image, cv::Point(((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x, sup_esq.y), 9, CV_RGB(0, 0, 255), 1.5); //condition above
+        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, inf_esq.y), 9, CV_RGB(0, 0, 255), 1.5); //condition below
+    }
+    else if (id == 33) {
+        //1 input, 2 outputs
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5))), 9, CV_RGB(0, 0, 255), 1.5); //input middle
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.25)), 9, CV_RGB(0, 0, 255), 1.5); //output top
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.75)), 9, CV_RGB(0, 0, 255), 1.5); //output bottom
+    }
+    else if (id == 34) {
+        //2 inputs
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
+        circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
+    }
+    else if (id == 35) {
+        //2 outputs
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.25)), 9, CV_RGB(0, 0, 255), 1.5); //output top
+        circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.75)), 9, CV_RGB(0, 0, 255), 1.5); //output bottom
     }
 }
 
@@ -660,16 +688,13 @@ int get_topblock(int size_aruco) {
 // Saves corners of the Block
 std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corners, std::vector <block> block_i)
 {
-  if ((id != 28) && (id != 29) && (id != 30) && (id<31))
+  if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
   {
-
-
       block_i.push_back(block());
 
       block_i[pos].count=check_occurences(id,block_i)+1;
 
       block_i[pos].id=id;
-
 
 
       block_i[pos].size_aruco = corners[pos][1].x - corners[pos][0].x;
@@ -703,11 +728,11 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
 
     if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26)
     {
-        //2 inputs 1 output
+        //2 inputs, 1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.point.x = sup_dir.x;
-        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
         block_i[pos_list].input1.point.x = sup_esq.x;
         block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
         block_i[pos_list].input2.point.x = sup_esq.x;
@@ -715,11 +740,11 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
     }
     else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
     {
-        //1 input 1 output
+        //1 input, 1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.point.x = sup_dir.x;
-        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
         block_i[pos_list].input1.point.x = sup_esq.x;
         block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
     }
@@ -736,23 +761,80 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
         //1 output
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.point.x = sup_dir.x;
-        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
     }
     else if (id == 27)
     {
-        //2 inputs 1 output 1 condition
+        //2 inputs, 1 output, 1 condition
 
         block_i[pos_list].id = id;
-        block_i[pos_list].outputs.point.x = sup_dir.x;
-        block_i[pos_list].outputs.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
         block_i[pos_list].input1.point.x = sup_esq.x;
         block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
         block_i[pos_list].input2.point.x = sup_esq.x;
         block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
-        block_i[pos_list].condition.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition.point.y = inf_dir.y;
+        block_i[pos_list].condition1.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
+        block_i[pos_list].condition1.point.y = inf_dir.y;
     }
+    else if (id == 32)
+    {
+        //2 inputs, 1 output, 2 conditions
+        block_i[pos_list].id = id;
+
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+
+        block_i[pos_list].input2.point.x = sup_esq.x;
+        block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+
+        block_i[pos_list].condition1.point.x = ((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x;
+        block_i[pos_list].condition1.point.y = sup_esq.y;
+
+        block_i[pos_list].condition2.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
+        block_i[pos_list].condition2.point.y = inf_esq.y;
+    }
+    else if (id == 33)
+    {
+        //1 input, 2 outputs
+        block_i[pos_list].id = id;
+
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.25);
+
+        block_i[pos_list].output2.point.x = sup_dir.x;
+        block_i[pos_list].output2.point.y =  sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.75);
+
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.5));
+    }
+    else if (id == 34)
+    {
+        //2 inputs
+        block_i[pos_list].id = id;
+
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+
+        block_i[pos_list].input2.point.x = sup_esq.x;
+        block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+    }
+    else if (id == 35)
+    {
+        //2 outputs
+        block_i[pos_list].id = id;
+
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.25);
+
+        block_i[pos_list].output2.point.x = sup_dir.x;
+        block_i[pos_list].output2.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.75);
+    }
+
 
     return block_i;
 }
@@ -808,6 +890,10 @@ std::string check_function(int id)
     else if (id == 25) return "Aruco AND";
     else if (id == 26) return "Aruco OR";
     else if (id == 27) return "Aruco MUX";
+    else if (id == 32) return "ELSE IF";
+    else if (id == 33) return "extensor";
+    else if (id == 34) return "TE";
+    else if (id == 35) return "TD";
 }
 
 
@@ -854,7 +940,7 @@ void DebugBlocks(std::vector<block> block_in_order)
 {
     for (int j = 0; j < block_in_order.size(); j++)
     {
-        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].outputs.point.x << "  " << block_in_order[j].outputs.point.y << "  " << "\n");
+        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].output1.point.x << "  " << block_in_order[j].output1.point.y << "  " << "\n");
         ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_in_order[j].input1.point.x << "  " << block_in_order[j].input1.point.y << "  " << "\n");
         ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_in_order[j].input2.point.x << "  " << block_in_order[j].input2.point.y << "  " << "\n");
         ROS_WARN_STREAM("MASK    minx " << masks[j][0] << "    maxx " << masks[j][1] << "    miny " << masks[j][2] << "    maxy " << masks[j][3] << "\n");
@@ -1464,7 +1550,7 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
     for(int k=0;k<vec.size();k++)
     {
         // output points
-        if(isInside(vec[k].outputs.point.x, vec[k].outputs.point.y,radius,lin[0], lin[1])==1)
+        if(isInside(vec[k].output1.point.x, vec[k].output1.point.y,radius,lin[0], lin[1])==1)
         {
 //            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
 
@@ -1475,9 +1561,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                 {
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
 
                     vec[j].input1.linked=true;
                     vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
@@ -1490,9 +1576,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                 {
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
 
                     vec[j].input2.linked=true;
                     vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
@@ -1500,24 +1586,24 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 
 
                 }
-                else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[2], lin[3])==1))
+                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[2], lin[3])==1))
                 {
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition(vec[j].id,vec[j].count);
 
-                    vec[j].condition.linked=true;
-                    vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
-                    vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
 
                 }
 //                else ROS_WARN_STREAM("WRONG lINK\n");
             }
         }
-        else if(isInside(vec[k].outputs.point.x, vec[k].outputs.point.y,radius,lin[2], lin[3])==1)
+        else if(isInside(vec[k].output1.point.x, vec[k].output1.point.y,radius,lin[2], lin[3])==1)
         {
             //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
             for(int j=0;j<vec.size();j++)
@@ -1526,9 +1612,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                 {
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
 
                     vec[j].input1.linked=true;
                     vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
@@ -1541,9 +1627,9 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
                 {
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
 
                     vec[j].input2.linked=true;
                     vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
@@ -1551,17 +1637,17 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 
 
                 }
-                else if((isInside(vec[j].condition.point.x, vec[j].condition.point.y,radius,lin[0], lin[1])==1))
+                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[0], lin[1])==1))
                 {
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
-                    vec[k].outputs.linked=true;
-                    vec[k].outputs.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].outputs.link_end=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition(vec[j].id,vec[j].count);
 
-                    vec[j].condition.linked=true;
-                    vec[j].condition.order=position_matrix_condition(vec[j].id,vec[j].count);
-                    vec[j].condition.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output(vec[k].id,vec[k].count);
 
 
                 }
@@ -1775,8 +1861,8 @@ coordinates findEndPoint(int begin, std::vector<block> blocks){
      else if(blocks[j].input2.order==begin){
        return blocks[j].input2.point;
      }
-     else if(blocks[j].condition.order==begin){
-       return blocks[j].condition.point;
+     else if(blocks[j].condition1.order==begin){
+       return blocks[j].condition1.point;
      }
 
    }
@@ -1789,9 +1875,9 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
   // Draw Lines
   for (int j = 0; j < blocks.size(); j++)
   {
-    if(blocks[j].outputs.linked==true)
+    if(blocks[j].output1.linked==true)
     {
-      line(paper, cv::Point(blocks[j].outputs.point.x,blocks[j].outputs.point.y), cv::Point(findEndPoint(blocks[j].outputs.link_end,blocks).x, findEndPoint(blocks[j].outputs.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
+      line(paper, cv::Point(blocks[j].output1.point.x,blocks[j].output1.point.y), cv::Point(findEndPoint(blocks[j].output1.link_end,blocks).x, findEndPoint(blocks[j].output1.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
   }
 
@@ -1806,9 +1892,9 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
 std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block,std::vector<combination> comb){
   for (int j = 0; j < block.size(); j++) {
     if(block[j].id<14 || block[j].id>24){
-    if(block[j].outputs.linked==true){
-       m_links[block[j].outputs.order][block[j].outputs.link_end]=1;
-       m_links[block[j].outputs.link_end][block[j].outputs.order]=1;
+    if(block[j].output1.linked==true){
+       m_links[block[j].output1.order][block[j].output1.link_end]=1;
+       m_links[block[j].output1.link_end][block[j].output1.order]=1;
     }
     }
 
@@ -1891,7 +1977,7 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 
             do{
                       for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].outputs.order){
+                        if(endpoint==blocks[k].output1.order){
                         numbers.push_back(get_k(blocks[k].id));
                         save_index=k;
 
@@ -1934,7 +2020,7 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 
             do{
                       for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].outputs.order){
+                        if(endpoint==blocks[k].output1.order){
 
                           numbers.push_back(get_k(blocks[k].id));
                           save_index=k;
@@ -2005,36 +2091,36 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 //    DebugBlocks(block_in_order);
 
 
-    // Line Detection
+//    // Line Detection
 
-    std::vector<cv::Vec4i> linesP = detectLines(paper);
+//    std::vector<cv::Vec4i> linesP = detectLines(paper);
 
-    block_in_order=saveLines(linesP, block_in_order);
+//    block_in_order=saveLines(linesP, block_in_order);
 
 
     // Draw detections
 
     drawing_functions(paperDrawn, corners, ids, block_i);
 
-    drawLines(paperDrawn, block_in_order);
+//    drawLines(paperDrawn, block_in_order);
 
 
-    // Get combinations
-    std::vector<combination> combs;
-    combs=getCombinations(block_in_order,combs);
-    combs=makeCombinations(block_in_order,combs);
+//    // Get combinations
+//    std::vector<combination> combs;
+//    combs=getCombinations(block_in_order,combs);
+//    combs=makeCombinations(block_in_order,combs);
 //    Debugcombs(combs);
 //    std::cout << "Num of combinations " << num_combinations << "\n";
 
 
-    // Create Link and Value Matrices
+//    // Create Link and Value Matrices
 
-    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
-    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+//    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
+//    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
+//     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
-    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
-    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
+//    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
+//    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
 //    Debugmatrixlinks(matrix_links);
 //    Debugmatrixvalues(matrix_values);
