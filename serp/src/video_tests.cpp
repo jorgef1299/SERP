@@ -65,7 +65,7 @@ void camera_parameters(int type)
       }
 
 //      cv::imshow("Image",frame);
-//      cv::waitKey(1);
+//      cv::waitKey(0);
     }
 
 //    ROS_WARN_STREAM("3D->"<<objpoints.size()<<" 2D->"<<imgpoints.size());
@@ -80,9 +80,16 @@ void camera_parameters(int type)
     if(type==0) cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
     else if(type==1) cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC | cv::fisheye::CALIB_CHECK_COND |cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
 
+//    ROS_WARN_STREAM("Camera Matrix");
 //    ROS_WARN_STREAM(cam_info.cameraMatrix);
+
+//    ROS_WARN_STREAM("Distortion Coefficients");
 //    ROS_WARN_STREAM(cam_info.distCoeffs);
+
+//    ROS_WARN_STREAM("Rotation Matrix");
 //    ROS_WARN_STREAM(cam_info.R);
+
+//    ROS_WARN_STREAM("Translation Matrix");
 //    ROS_WARN_STREAM(cam_info.T);
 }
 
@@ -174,6 +181,10 @@ cv::Mat correctImage(cv::Mat frame, int type)
 
 //        cv::imshow("Panoramic Image", panoramicImage);
 //        cv::waitKey(0);
+
+        undist_img = panoramicImage;
+
+        cv::imwrite("../catkin_ws/src/SERP/serp/include/tests/panorama.jpg", panoramicImage);
     }
 
     return undist_img;
@@ -2094,12 +2105,12 @@ int main(int argc, char** argv)
     ros::NodeHandle n_public;
 
 
-    //    // Get Camera Calibration Parameters
-    //    camera_parameters(1);
+//    // Get Camera Calibration Parameters
+//    camera_parameters(1);
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/16_fev.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
@@ -2117,14 +2128,15 @@ int main(int argc, char** argv)
         // If the frame is empty, break immediately
         if (frame.empty()) break;
 
-        // Display the resulting frame
+//        // Display the resulting frame
+//        frame = cv::imread("../catkin_ws/src/SERP/serp/include/tests/random5.jpg");
 //        cv::imshow("Original Frame", frame);
 //        cv::waitKey(1);
 
 //        // Correct Frame Distortion
-//        cv::Mat undist_frame = correctImage(frame, 1);
+//        cv::Mat undist_frame = correctImage(frame, 2);
 //        cv::imshow("Fixed Frame", undist_frame);
-//        cv::waitKey(1);
+//        cv::waitKey(0);
 
         // ArUco Identification
         detectAndInterpret_Paper(frame, dictionary);
@@ -2133,7 +2145,7 @@ int main(int argc, char** argv)
     }
 
     // When everything done, release the video capture object
-    cap.release();
+//    cap.release();
 
     // Closes all the frames
     cv::destroyAllWindows();
