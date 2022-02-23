@@ -609,7 +609,7 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
         circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, y_low), 9, CV_RGB(0, 0, 255), 1.5); //condition
     }
     else if (id == 32) {
-        //2 inputs, 1 output, 2 conditions
+        //2 inputs, 1 output, 1 condition
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25))), 9, CV_RGB(0, 0, 255), 1.5); //input top
         circle(image, cv::Point(sup_esq.x, sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75))), 9, CV_RGB(0, 0, 255), 1.5);//input bottom
         circle(image, cv::Point(sup_dir.x, sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5)), 9, CV_RGB(0, 0, 255), 1.5); //output
@@ -617,10 +617,6 @@ void draw_points(int id, coordinates sup_esq, coordinates sup_dir, coordinates i
         if(sup_esq.y > sup_dir.y) y_up = (sup_esq.y - sup_dir.y)*0.5 + sup_dir.y;
         else y_up = (sup_dir.y - sup_esq.y)*0.5 + sup_esq.y;
         circle(image, cv::Point(((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x, y_up), 9, CV_RGB(0, 0, 255), 1.5); //condition above
-
-        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
-        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
-        circle(image, cv::Point(((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x, y_low), 9, CV_RGB(0, 0, 255), 1.5); //condition below
     }
     else if (id == 33) {
         //1 input, 2 outputs
@@ -741,7 +737,7 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
     masks[pos_list][2]=sup_esq.y;
     masks[pos_list][3]=inf_dir.y;
 
-    if (id == 0 || id == 1 || id == 3 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26)
+    if (id == 0 || id == 1 || id == 4 || id == 5 || id == 6 || id == 13 || id == 25 || id == 26)
     {
         //2 inputs, 1 output
 
@@ -752,6 +748,18 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
         block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
         block_i[pos_list].input2.point.x = sup_esq.x;
         block_i[pos_list].input2.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
+    }
+    else if(id == 3)
+    {
+        //1 input, 1 condition, 1 output
+
+        block_i[pos_list].id = id;
+        block_i[pos_list].output1.point.x = sup_dir.x;
+        block_i[pos_list].output1.point.y = sup_dir.y + ((inf_dir.y - sup_dir.y) * 0.5);
+        block_i[pos_list].input1.point.x = sup_esq.x;
+        block_i[pos_list].input1.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.25));
+        block_i[pos_list].condition.point.x = sup_esq.x;
+        block_i[pos_list].condition.point.y = sup_esq.y + ((inf_esq.y - sup_esq.y) * (0.75));
     }
     else if (id == 2 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18 || id == 19 || id == 20 || id == 21 || id == 22 || id == 23 || id == 24)
     {
@@ -793,8 +801,8 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
 
         if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
         else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
-        block_i[pos_list].condition1.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition1.point.y = y_low;
+        block_i[pos_list].condition.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
+        block_i[pos_list].condition.point.y = y_low;
     }
     else if (id == 32)
     {
@@ -812,13 +820,8 @@ std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq,
 
         if(sup_esq.y > sup_dir.y) y_up = (sup_esq.y - sup_dir.y)*0.5 + sup_dir.y;
         else y_up = (sup_dir.y - sup_esq.y)*0.5 + sup_esq.y;
-        block_i[pos_list].condition1.point.x = ((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x;
-        block_i[pos_list].condition1.point.y = y_up;
-
-        if(inf_esq.y > inf_dir.y) y_low = (inf_esq.y - inf_dir.y)*0.5 + inf_dir.y;
-        else y_low = (inf_dir.y - inf_esq.y)*0.5 + inf_esq.y;
-        block_i[pos_list].condition2.point.x = ((inf_dir.x-inf_esq.x)*0.5)+inf_esq.x;
-        block_i[pos_list].condition2.point.y = y_low;
+        block_i[pos_list].condition.point.x = ((sup_dir.x-sup_esq.x)*0.5)+sup_esq.x;
+        block_i[pos_list].condition.point.y = y_up;
     }
     else if (id == 33)
     {
@@ -919,53 +922,16 @@ std::string check_function(int id)
 }
 
 
-std::vector<block> put_arucos_order(std::vector<block> blocks )
+void DebugBlocks(std::vector<block> block_i)
 {
-  std::vector<block> new_order_block;
-
-  //copy.assign(blocks.begin(),blocks.end());
-
-  int min;
-  int index_min;
-
-
-  while(blocks.size()>0)
-  {
-    //cout  << "Iteration: " << blocks.size() << "\n";
-
-    min=blocks[0].b_sup_left.x;
-    index_min=0;
-    for(int i=0; i<blocks.size(); i++)
+    for (int j = 0; j < block_i.size(); j++)
     {
-      //cout << blocks[i].id << "  " << check_function(blocks[i].id) << "\n";
-
-      if(blocks[i].b_sup_left.x < min)
-      {
-        min = blocks[i].b_sup_left.x;
-        index_min=i;
-      }
-    }
-    //cout << min << "  IMHERE\n";
-
-    new_order_block.push_back(blocks[index_min]);
-
-    std::vector<block>::iterator it;
-    it= blocks.begin()+index_min;
-    blocks.erase(it);
-  }
-
-  return new_order_block;
-}
-
-
-void DebugBlocks(std::vector<block> block_in_order)
-{
-    for (int j = 0; j < block_in_order.size(); j++)
-    {
-        ROS_WARN_STREAM("ARUCO OF ID " <<  block_in_order[j].id << "(" << block_in_order[j].count << ") --> " << check_function(block_in_order[j].id) << " : Outputs-->" << block_in_order[j].output1.point.x << "  " << block_in_order[j].output1.point.y << "  " << "\n");
-        ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_in_order[j].input1.point.x << "  " << block_in_order[j].input1.point.y << "  " << "\n");
-        ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_in_order[j].input2.point.x << "  " << block_in_order[j].input2.point.y << "  " << "\n");
-        ROS_WARN_STREAM("MASK    minx " << masks[j][0] << "    maxx " << masks[j][1] << "    miny " << masks[j][2] << "    maxy " << masks[j][3] << "\n");
+        ROS_WARN_STREAM("ARUCO OF ID " <<  block_i[j].id << "(" << block_i[j].count << ") --> " << check_function(block_i[j].id));
+        ROS_WARN_STREAM("                                    "  << " : Input1-->" << block_i[j].input1.point.x << "  " << block_i[j].input1.point.y);
+        ROS_WARN_STREAM("                                    "  << " : Input2-->" << block_i[j].input2.point.x << "  " << block_i[j].input2.point.y);
+        ROS_WARN_STREAM("                                    "  << " : Output1-->" << block_i[j].output1.point.x << "  " << block_i[j].output1.point.y);
+        ROS_WARN_STREAM("                                    "  << " : Output2-->" << block_i[j].output2.point.x << "  " << block_i[j].output2.point.y);
+        ROS_WARN_STREAM("                                    "  << " : Condition-->" << block_i[j].condition.point.x << "  " << block_i[j].condition.point.y);
         ROS_WARN_STREAM("-----------------------------------------------------------------------------------------\n");
     }
 }
@@ -1552,7 +1518,7 @@ int position_matrix_output2(int id, int count){
 }
 
 //falta casos das ids 32
-int position_matrix_condition1(int id, int count){
+int position_matrix_condition(int id, int count){
   if(id==27){
     if(count==1){
       return 28;
@@ -1561,511 +1527,6 @@ int position_matrix_condition1(int id, int count){
       return 33;
     }
   }
-}
-
-//falta casos das ids 32
-int position_matrix_condition2(int id, int count){
-
-}
-
-bool isInside(int circle_x, int circle_y, int rad, int x, int y)
-{
-    // Compare radius of circle with distance
-    // of its center from given point
-    if ((x - circle_x) * (x - circle_x) +
-        (y - circle_y) * (y - circle_y) <= rad * rad)
-        return true;
-    else
-        return false;
-}
-
-
-std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<block> vec)
-{
-    for(int k=0;k<vec.size();k++)
-    {
-        // output points
-        if(isInside(vec[k].output1.point.x, vec[k].output1.point.y,radius,lin[0], lin[1])==1)
-        {
-//            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
-
-            for(int j=0;j<vec.size();j++)
-            {
-
-                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
-
-                    vec[j].input1.linked=true;
-                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-
-
-                }
-                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
-
-                    vec[j].input2.linked=true;
-                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-        else if(isInside(vec[k].output1.point.x, vec[k].output1.point.y,radius,lin[2], lin[3])==1)
-        {
-            //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
-
-                    vec[j].input1.linked=true;
-                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
-
-                    vec[j].input2.linked=true;
-                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-
-        else if(isInside(vec[k].output2.point.x, vec[k].output2.point.y,radius,lin[0], lin[1])==1)
-        {
-//            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
-
-            for(int j=0;j<vec.size();j++)
-            {
-
-                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_input1(vec[j].id,vec[j].count);
-
-                    vec[j].input1.linked=true;
-                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-
-
-                }
-                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_input2(vec[j].id,vec[j].count);
-
-                    vec[j].input2.linked=true;
-                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[2], lin[3])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-        else if(isInside(vec[k].output2.point.x, vec[k].output2.point.y,radius,lin[2], lin[3])==1)
-        {
-            //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
-            for(int j=0;j<vec.size();j++)
-            {
-                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_input1(vec[j].id,vec[j].count);
-
-                    vec[j].input1.linked=true;
-                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_input2(vec[j].id,vec[j].count);
-
-                    vec[j].input2.linked=true;
-                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[0], lin[1])==1))
-                {
-//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
-
-                    vec[k].output2.linked=true;
-                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
-                    vec[k].output2.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
-
-                    vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
-
-                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
-                    crossingContours.push_back(cc);
-
-                }
-//                else ROS_WARN_STREAM("WRONG lINK\n");
-            }
-        }
-    }
-
-    return vec;
-}
-
-
-std::vector<cv::Point2f> detectCrossings(cv::Mat image)
-{
-    // Skeleton
-
-//    cv::imshow("input", image);
-
-    cv::Mat img = image.clone();
-    cv::Mat skel(img.size(), CV_8UC1, cv::Scalar(0));
-    cv::Mat temp;
-    cv::Mat eroded;
-
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
-
-    bool done;
-    do
-    {
-      cv::erode(img, eroded, element);
-      cv::dilate(eroded, temp, element); // temp = open(img)
-      cv::subtract(img, temp, temp);
-      cv::bitwise_or(skel, temp, skel);
-      eroded.copyTo(img);
-
-      done = (cv::countNonZero(img) == 0);
-    } while (!done);
-
-//    cv::imshow("Skeleton", skel);
-
-
-    // Pre-Process Skeleton
-
-    cv::morphologyEx(skel, skel, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)));
-//    cv::imshow("Close", skel);
-
-
-    // Detecting corners
-
-    cv::Mat dst, dst_norm, dst_norm_scaled;
-
-    dst = cv::Mat::zeros(skel.size(), CV_32FC1);
-    cornerHarris(skel, dst, 10, 5, 0.05, cv::BORDER_DEFAULT);
-//    cv::imshow("dst", dst);
-
-
-    // Normalizing
-
-    normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat());
-//    cv::imshow("dst_norm", dst_norm);how to draw cross in opnecv
-
-    convertScaleAbs(dst_norm, dst_norm_scaled);
-//    cv::imshow("dst_norm_scaled", dst_norm_scaled);
-
-
-    // Filtering
-
-    cv::Mat crossingPoints;
-
-    cv::threshold(dst_norm_scaled, crossingPoints, 120, 255, CV_THRESH_BINARY);
-//    cv::imshow("crossMask", crossingPoints);
-
-    cv::dilate(crossingPoints, crossingPoints, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7)));
-//    cv::imshow("Dilate After Thresh", crossingPoints);
-
-
-    // Save corner points
-
-    std::vector<std::vector<cv::Point> > contours;
-    std::vector<cv::Vec4i> hierarchy;
-
-    // find contours
-    cv::findContours( crossingPoints, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
-
-    // get the moments
-    std::vector<cv::Moments> mu(contours.size());
-    for( int i = 0; i<contours.size(); i++ )
-    {
-        mu[i] = cv::moments( contours[i], false );
-    }
-
-    // get the centroid of figures.
-    std::vector<cv::Point2f> mc(contours.size());
-    for( int i = 0; i<contours.size(); i++)
-    {
-        mc[i] = cv::Point2f( mu[i].m10/mu[i].m00 , mu[i].m01/mu[i].m00 );
-    }
-
-
-    //cv::waitKey(1);
-
-    return mc;
-}
-
-std::vector<cv::Point2f> filterCrossingPointsBBox(std::vector<cv::Point2f> cp, std::vector<cv::Rect> rect)
-{
-    std::vector<cv::Point2f> out;
-    for (size_t i = 0; i < cp.size(); i++)
-    {
-      for(int j = 0; j < rect.size(); j++){
-
-          if( rect[j].x < cp[i].x && cp[i].x < rect[j].x+rect[j].width && rect[j].y < cp[i].y && cp[i].y < rect[j].y + rect[j].height && (rect[j].width>50 || rect[j].height>50) ){
-
-            cv::Point2f cpc(cp[i].x,cp[i].y);
-            out.push_back(cpc);
-          }
-
-      }
-    }
-     crossingPoints.clear();
-    return out;
-}
-
-std::vector<cv::Point2f> filterCrossingPointsContours(std::vector<cv::Point2f> cp, std::vector<cv::Vec4i> cc)
-{
-    std::vector<cv::Point2f> out;
-    for (size_t i = 0; i < cp.size(); i++)
-    {
-
-        for(int k = 0; k < cc.size(); k++){
-          if((std::min(cc[k][0],cc[k][2])<cp[i].x && cp[i].x<std::max(cc[k][0],cc[k][2])) && (std::min(cc[k][1],cc[k][3])<cp[i].y && cp[i].y<std::max(cc[k][1],cc[k][3]))){
-            cv::Point2f cpc(cp[i].x,cp[i].y);
-            out.push_back(cpc);
-          }
-        }
-
-    }
-
-    crossingPoints.clear();
-
-    return out;
-}
-
-std::vector<cv::Point2f> filterCrossingPointsBinaryImg(std::vector<cv::Point2f> cp, cv::Mat image)
-{
-    std::vector<cv::Point2f> out;
-    for (size_t i = 0; i < cp.size(); i++)
-    {
-          if(image.at<int>(cp[i].x,cp[i].y)==0){
-            cv::Point2f cpc(cp[i].x,cp[i].y);
-            out.push_back(cpc);
-          }
-
-    }
-
-    crossingPoints.clear();
-
-    return out;
-}
-
-std::vector<cv::Point2f> filterCrossingPointsInOut(std::vector<cv::Point2f> cp, std::vector<block> blocks)
-{
-  std::cout << "I enter\n";
-  int radius=15;
-  int count;
-    std::vector<cv::Point2f> out;
-    for (size_t i = 0; i < cp.size(); i++)
-    {
-        count=0;
-        for(int k = 0; k < blocks.size(); k++){
-
-          count=count+isInside(blocks[k].input1.point.x, blocks[k].input1.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].input2.point.x, blocks[k].input2.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].output1.point.x, blocks[k].output1.point.y,radius,cp[i].x, cp[i].y)+isInside(blocks[k].condition1.point.x, blocks[k].condition1.point.y,radius,cp[i].x, cp[i].y);
-          std::cout << "COUNT:" << count << "\n";
-
-        }
-
-        if(count==0){
-          cv::Point2f cpc(cp[i].x,cp[i].y);
-          out.push_back(cpc);
-        }
-
-    }
-
-    crossingPoints.clear();
-    std::cout << "I leave\n";
-    return out;
-
 }
 
 
@@ -2128,8 +1589,7 @@ int newDetectLines(cv::Mat paper, cv::Mat& thresh, std::vector <block> block_i)
             cv::circle(paper_drawn, cv::Point(block_i[j].output2.point.x, block_i[j].output2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
             cv::circle(paper_drawn, cv::Point(block_i[j].input1.point.x, block_i[j].input1.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
             cv::circle(paper_drawn, cv::Point(block_i[j].input2.point.x, block_i[j].input2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
-            cv::circle(paper_drawn, cv::Point(block_i[j].condition1.point.x, block_i[j].condition1.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
-            cv::circle(paper_drawn, cv::Point(block_i[j].condition2.point.x, block_i[j].condition2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].condition.point.x, block_i[j].condition.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
 
             if(pointInsideBB(tlx, tly, brx, bry, block_i[j].output1.point))
             {
@@ -2161,18 +1621,11 @@ int newDetectLines(cv::Mat paper, cv::Mat& thresh, std::vector <block> block_i)
                 original_final_points.push_back({ block_i[j].input2.point.x,  block_i[j].input2.point.y});
             }
 
-            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].condition1.point))
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].condition.point))
             {
-                x_local = block_i[j].condition1.point.x - tlx;
-                y_local = block_i[j].condition1.point.y - tly;
-                original_final_points.push_back({ block_i[j].condition1.point.x,  block_i[j].condition1.point.y});
-            }
-
-            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].condition2.point))
-            {
-                x_local = block_i[j].condition2.point.x - tlx;
-                y_local = block_i[j].condition2.point.y - tly;
-                original_final_points.push_back({ block_i[j].condition2.point.x,  block_i[j].condition2.point.y});
+                x_local = block_i[j].condition.point.x - tlx;
+                y_local = block_i[j].condition.point.y - tly;
+                original_final_points.push_back({ block_i[j].condition.point.x,  block_i[j].condition.point.y});
             }
         }
 
@@ -2290,102 +1743,13 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper, std::vector <block> block_i)
 
     std::vector<cv::Vec4i> linesP;
 
-    cv::Mat paperCopy = paper.clone();
-
-    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
-    std::vector<cv::Rect> boundRect( contours.size() );
-    std::vector<cv::Point2f>centers( contours.size() );
-    std::vector<float>radius( contours.size() );
-
-    for(size_t k=0; k<contours.size(); k++)
-    {
-
-        approxPolyDP( contours[k], contours_poly[k], 3, true );
-        boundRect[k] = boundingRect( contours_poly[k] );
-
-        auto val=minmax_element(contours[k].begin(), contours[k].end(), [](cv::Point const& a, cv::Point const& b)
-        {
-          return a.x < b.x;
-        });
-
-        //circle(image, Point(val.first->x,val.first->y), 13, Scalar(0, 255, 0), 8, LINE_AA);
-        //circle(image, Point(val.second->x,val.second->y), 13, Scalar(0, 255, 0), 8, LINE_AA);
-        linesP.push_back(cv::Vec4i());
-        linesP[k][0]=val.first->x;
-        linesP[k][1]=val.first->y;
-        linesP[k][2]=val.second->x;
-        linesP[k][3]=val.second->y;
-
-//        ROS_WARN_STREAM(" leftMost [ " << val.first->x << ", " << val.first->y << " ]");
-//        ROS_WARN_STREAM(" RightMost [ " << val.second->x << ", " << val.second->y << " ]");
-    }
-    //crossingPoints=filterCrossingPointsBBox(crossingPoints,boundRect);
-//  cv::imshow("countours", paperCopy);
-//    cv::waitKey(1);
-
     return linesP;
 }
 
 
-std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> blocks)
-{
-    //crossingContours.clear();
-//    crossingPoints=filterCrossingPointsInOut(crossingPoints,blocks);
-//    crossingPoints=filterCrossingPointsBinaryImg(crossingPoints,binaryFinalImage);
-    // Draw Lines
-    for (size_t i = 0; i < linesP.size(); i++)
-    {
-        cv::Vec4i l = linesP[i];
-
-        blocks = check_lines(l,i,18,blocks);
-
-    }
-
-    //crossingPoints=filterCrossingPointsContours(crossingPoints,crossingContours);
-    return blocks;
-}
-
-
-
-coordinates findEndPoint(int begin, std::vector<block> blocks){
-   for (int j = 0; j < blocks.size(); j++) {
-     if(blocks[j].input1.order==begin){
-       return blocks[j].input1.point;
-     }
-     else if(blocks[j].input2.order==begin){
-       return blocks[j].input2.point;
-     }
-     else if(blocks[j].condition1.order==begin){
-       return blocks[j].condition1.point;
-     }
-     else if(blocks[j].condition2.order==begin){
-       return blocks[j].condition2.point;
-     }
-   }
-
-}
-
-
-void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
+void drawLines(cv::InputOutputArray paper)
 {
   // Draw Lines
-  for (int j = 0; j < blocks.size(); j++)
-  {
-    if(blocks[j].output1.linked==true)
-    {
-      line(paper, cv::Point(blocks[j].output1.point.x,blocks[j].output1.point.y), cv::Point(findEndPoint(blocks[j].output1.link_end,blocks).x, findEndPoint(blocks[j].output1.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
-    }
-    else if(blocks[j].output2.linked==true)
-    {
-      line(paper, cv::Point(blocks[j].output2.point.x,blocks[j].output2.point.y), cv::Point(findEndPoint(blocks[j].output2.link_end,blocks).x, findEndPoint(blocks[j].output2.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
-    }
-  }
-
-  // Draw Crossings
-  for( int i = 0; i<crossingPoints.size(); i++ )
-  {
-      cv::circle(paper, crossingPoints[i], 2, cv::Scalar(0,255,0), -1, 8, 0);
-  }
 
 }
 
@@ -2453,12 +1817,7 @@ std::vector<combination> getCombinations(std::vector<block> blocks, std::vector<
         comb.push_back(combination());
         comb[count-1].matrix_pos=62+count;
       }
-      if(blocks[j].condition1.link_end>61 && blocks[j].condition1.link_end<106){
-        count=count+1;
-        comb.push_back(combination());
-        comb[count-1].matrix_pos=62+count;
-      }
-      if(blocks[j].condition2.link_end>61 && blocks[j].condition2.link_end<106){
+      if(blocks[j].condition.link_end>61 && blocks[j].condition.link_end<106){
         count=count+1;
         comb.push_back(combination());
         comb[count-1].matrix_pos=62+count;
@@ -2567,52 +1926,11 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 
           }
 
-          //CONDITION1
-          if(blocks[j].condition1.link_end>61 && blocks[j].condition1.link_end<106){
+          //condition
+          if(blocks[j].condition.link_end>61 && blocks[j].condition.link_end<106){
 
-            found=blocks[j].condition1.linked;
-            endpoint=blocks[j].condition1.link_end;
-
-            do{
-                      for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].output1.order){
-
-                          numbers.push_back(get_k(blocks[k].id));
-                          save_index=k;
-
-                        }
-                      }
-                      endpoint=blocks[save_index].input1.link_end;
-                      found=blocks[save_index].input1.linked;
-            }
-            while(found==1);
-
-            for (int k = 0; k < numbers.size(); k++) {
-              if(numbers[k]==-1){
-                divisor=k;
-                numbers.erase(numbers.begin()+k);
-              }
-            }
-
-            int N=numbers.size();
-            for (int k = 0; k < numbers.size(); k++) {
-              combo_number += numbers[k]*pow(10, k);
-            }
-
-            comb[comb_pos].number=combo_number/(pow(10,divisor));
-            comb[comb_pos].dest=blocks[j].condition1.order;
-            comb_pos=comb_pos+1;
-            combo_number=0;
-            divisor=0;
-            numbers.clear();
-
-          }
-
-          //CONDITION2
-          if(blocks[j].condition2.link_end>61 && blocks[j].condition2.link_end<106){
-
-            found=blocks[j].condition2.linked;
-            endpoint=blocks[j].condition2.link_end;
+            found=blocks[j].condition.linked;
+            endpoint=blocks[j].condition.link_end;
 
             do{
                       for (int k = 0; k < blocks.size(); k++) {
@@ -2641,15 +1959,13 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
             }
 
             comb[comb_pos].number=combo_number/(pow(10,divisor));
-            comb[comb_pos].dest=blocks[j].condition2.order;
+            comb[comb_pos].dest=blocks[j].condition.order;
             comb_pos=comb_pos+1;
             combo_number=0;
             divisor=0;
             numbers.clear();
 
           }
-
-
     }
 
 
@@ -2686,44 +2002,42 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     block_i = saving_coordinates(paper, corners, ids, block_i);
 
-    std::vector<block> block_in_order = put_arucos_order(block_i);
+    drawing_functions(paperDrawn, corners, ids, block_i);
 
-    DebugBlocks(block_in_order);
+    DebugBlocks(block_i);
+
 
     // Line Detection
-    std::vector<cv::Vec4i> linesP = detectLines(paper, block_i);
+//    std::vector<Line> Lines = detectLines(paper, block_i);
 
-
-    block_in_order=saveLines(linesP, block_in_order);
+    std::vector<Line> Lines;
 
 
     // Draw detections
 
-    drawing_functions(paperDrawn, corners, ids, block_i);
+//    drawLines(paperDrawn);
 
-    drawLines(paperDrawn, block_in_order);
+//    // Get combinations
+//    std::vector<combination> combs;
+//    combs=getCombinations(block_in_order,combs);
+//    combs=makeCombinations(block_in_order,combs);
+//    Debugcombs(combs);
+//    std::cout << "Num of combinations " << num_combinations << "\n";
 
-    // Get combinations
-    std::vector<combination> combs;
-    combs=getCombinations(block_in_order,combs);
-    combs=makeCombinations(block_in_order,combs);
-    Debugcombs(combs);
-    std::cout << "Num of combinations " << num_combinations << "\n";
+//    // Create Link and Value Matrices
 
-    // Create Link and Value Matrices
+//    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
+//    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
+//    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
-    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
-    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
-
-    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
-    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
+//    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
+//    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
 //    Debugmatrixlinks(matrix_links);
 //    Debugmatrixvalues(matrix_values);
 
     cv::imshow("Paper Drawn", paperDrawn);
-    cv::waitKey(1);
+    cv::waitKey(0);
 }
 
 
@@ -2794,7 +2108,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/transporte.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
