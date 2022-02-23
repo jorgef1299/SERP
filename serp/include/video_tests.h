@@ -64,22 +64,6 @@ struct block {
 };
 
 
-// New For Hardcoded test
-struct Point {
-    int id;
-    int sub_id;
-    uint8_t function_id; // 0->input1, 1->input2, 2->output1, 3->output2, 4->condition
-    AStar::Vec2i point_coordinates;
-};
-
-struct Line {
-    Point input;
-    Point output;
-};
-
-
-
-
 struct combination{
   float number;
   int matrix_pos;

@@ -250,6 +250,7 @@ cv::Mat create_occupancy_grid_map(cv::Mat& cropped_image, AStar::Generator& gene
 
     // Initialize occupancy grid map
     occupancy_grid_map = cv::Mat::zeros(N_TILES_Y, N_TILES_X, CV_8UC1);
+    generator.clearCollisions();
 
     // Fill map
     for(int i=0; i < cropped_image.rows;) {
@@ -278,100 +279,106 @@ cv::Mat create_occupancy_grid_map(cv::Mat& cropped_image, AStar::Generator& gene
     return occupancy_grid_map;
 }
 
-bool compare_costs(const line_connection& a, const line_connection& b)
+bool compare_costs(const Line_connection& a, const Line_connection& b)
 {
     return a.cost < b.cost;
 }
 
-int convert_coordinates_to_occupancy_map(const AStar::CoordinateList& original_input_pos, const AStar::CoordinateList& original_output_pos, AStar::CoordinateList& occupancy_initial_points, AStar::CoordinateList& occupancy_final_points, cv::Mat& cropped_image, cv::Mat& occupancy_map)
+int convert_coordinates_to_occupancy_map(const std::vector<Point>& original_input_pos, const std::vector<Point>& original_output_pos, const cv::Mat& cropped_image, const cv::Mat& occupancy_map, std::vector<Point>& occupancy_initial_points, std::vector<Point>& occupancy_final_points)
 {
     float pixels_per_tile_x = (float)cropped_image.cols / std::min(N_TILES_X, cropped_image.cols);
     float pixels_per_tile_y = (float)cropped_image.rows / std::min(N_TILES_Y, cropped_image.rows);
 
     AStar::Vec2i estimated_pos;
     bool stop;
+    Point point;
+
     // Input points
     for(uint8_t i=0; i < original_input_pos.size(); i++) {
-        estimated_pos.x = original_input_pos[i].x / pixels_per_tile_x;
-        estimated_pos.y = original_input_pos[i].y / pixels_per_tile_y;
+        estimated_pos.x = original_input_pos[i].point_coordinates.x / pixels_per_tile_x;
+        estimated_pos.y = original_input_pos[i].point_coordinates.y / pixels_per_tile_y;
+
         stop = false;
-        uint16_t c_initial = std::max(estimated_pos.x - 2, 0);
-        if(c_initial + KERNEL_SIZE > occupancy_map.cols) {
-            c_initial = occupancy_map.cols-7;
+        uint16_t c_initial = std::max(estimated_pos.x, 0);
+        if(c_initial + KERNEL_SIZE >= occupancy_map.cols) {
+            c_initial = occupancy_map.cols-KERNEL_SIZE-1;
         }
-        uint16_t r_initial = std::max(estimated_pos.y - 2, 0);
-        if(r_initial + KERNEL_SIZE > occupancy_map.rows) {
-            r_initial = occupancy_map.rows-7;
+        uint16_t r_initial = std::max(estimated_pos.y, 0);
+        if(r_initial + KERNEL_SIZE >= occupancy_map.rows) {
+            r_initial = occupancy_map.rows-KERNEL_SIZE-1;
         }
         for(uint16_t c=c_initial; c < c_initial + KERNEL_SIZE; c++) {
             if(stop) break;
             for(uint16_t r=r_initial; r < r_initial + KERNEL_SIZE; r++) {
                 if(occupancy_map.at<uint8_t>(r, c) == 255) {
                     stop = true;
-                    occupancy_initial_points.push_back({c,r});
+                    point = original_input_pos[i];
+                    point.point_coordinates = {c,r};
+                    occupancy_initial_points.push_back(point);
                     break;
                 }
             }
         }
-        if(stop == false) {
+        if(!stop) {
             return -1;
         }
     }
     // Output points
     for(uint8_t i=0; i < original_output_pos.size(); i++) {
-        estimated_pos.x = original_output_pos[i].x / pixels_per_tile_x;
-        estimated_pos.y = original_output_pos[i].y / pixels_per_tile_y;
+        estimated_pos.x = original_output_pos[i].point_coordinates.x / pixels_per_tile_x;
+        estimated_pos.y = original_output_pos[i].point_coordinates.y / pixels_per_tile_y;
         stop = false;
-        uint16_t c_initial = std::max(estimated_pos.x - 2, 0);
+        uint16_t c_initial = std::max(estimated_pos.x, 0);
         if(c_initial + KERNEL_SIZE >= occupancy_map.cols) {
-            c_initial = occupancy_map.cols-7;
+            c_initial = occupancy_map.cols-KERNEL_SIZE-1;
         }
-        uint16_t r_initial = std::max(estimated_pos.y - 2, 0);
+        uint16_t r_initial = std::max(estimated_pos.y, 0);
         if(r_initial + KERNEL_SIZE >= occupancy_map.rows) {
-            r_initial = occupancy_map.rows-7;
+            r_initial = occupancy_map.rows-KERNEL_SIZE-1;
         }
-        for(uint16_t c=c_initial + KERNEL_SIZE; c > c_initial; c--) {
+        for(uint16_t c=c_initial; c > c_initial - KERNEL_SIZE; c--) {
             if(stop) break;
             for(uint16_t r=r_initial; r < r_initial + KERNEL_SIZE; r++) {
                 if(occupancy_map.at<uint8_t>(r, c) == 255) {
                     stop = true;
-                    occupancy_final_points.push_back({c,r});
+                    point = original_output_pos[i];
+                    point.point_coordinates = {c,r};
+                    occupancy_final_points.push_back(point);
                     break;
                 }
             }
         }
-        if(stop == false) {
+        if(!stop) {
             return -1;
         }
     }
 }
 
-std::vector<line_connection> find_line_connections(AStar::Generator& generator, cv::Mat& occupancy_grid_map, std::vector<AStar::Vec2i>& initial_points, std::vector<AStar::Vec2i>& final_points)
+std::vector<Line> find_line_connections(AStar::Generator& generator, cv::Mat& occupancy_grid_map, std::vector<Point>& initial_points, std::vector<Point>& final_points)
 {
     AStar::CoordinateList path;
-    std::vector<line_connection> detected_connections;
-    std::vector<std::vector<line_connection>> all_lines_costs;
+    std::vector<Line> detected_connections;
+    std::vector<std::vector<Line_connection>> all_lines_costs;
     float cost;
 
     // Calculate the cost for each possible connection
     for(uint8_t i=0; i < initial_points.size(); i++) {
-        std::vector<line_connection> vec_line_costs;
+        std::vector<Line_connection> vec_line_costs;
         for(uint8_t j=0; j < final_points.size(); j++) {
             // Find optimal path between each initial and final point
-            path = generator.findPath(initial_points[i], final_points[j]);
+            path = generator.findPath(initial_points[i].point_coordinates, final_points[j].point_coordinates);
             if(path.size() <= 1) { // No Path found
-                std::vector<line_connection> v;
+                std::vector<Line> v;
                 return v;
             }
-            cv::Mat path_matrix = cv::Mat::zeros(occupancy_grid_map.rows, occupancy_grid_map.cols, CV_8UC3);
             // Get some points (equidistants) from the line
             AStar::CoordinateList extracted_points = extract_line_points(path);
             // Create structure to save line info
-            line_connection struct_line;
+            Line_connection struct_line;
             struct_line.cost =  calculate_line_cost(extracted_points);
-            struct_line.initial_point = initial_points[i];
-            struct_line.final_point = final_points[j];
-            struct_line.line_points = path;
+            struct_line.initial_point = initial_points[i].point_coordinates;
+            struct_line.final_point = final_points[j].point_coordinates;
+            //struct_line.line_points = path;
             // Add results to the vector
             vec_line_costs.push_back(struct_line);
         }
@@ -396,7 +403,12 @@ std::vector<line_connection> find_line_connections(AStar::Generator& generator, 
             }
         }
         if(better_match > -1) {
-            detected_connections.push_back(all_lines_costs[better_match][i]);
+            Line line;
+            line.input = initial_points[better_match];
+            line.input.point_coordinates = all_lines_costs[better_match][i].initial_point;
+            line.output = final_points[i];
+            line.output.point_coordinates = all_lines_costs[better_match][i].final_point;
+            detected_connections.push_back(line);
             all_lines_costs.erase(all_lines_costs.begin()+better_match);
             is_line_selected[i] = true;
         }
@@ -412,7 +424,12 @@ std::vector<line_connection> find_line_connections(AStar::Generator& generator, 
                     better_match = j;
                 }
             }
-            detected_connections.push_back(all_lines_costs[better_match][i]);
+            Line line;
+            line.input = initial_points[better_match];
+            line.input.point_coordinates = all_lines_costs[better_match][i].initial_point;
+            line.output = final_points[i];
+            line.output.point_coordinates = all_lines_costs[better_match][i].final_point;
+            detected_connections.push_back(line);
             all_lines_costs.erase(all_lines_costs.begin()+better_match);
         }
     }

@@ -79,7 +79,19 @@ namespace AStar
 #define POINTS_PER_LINE 10
 #define KERNEL_SIZE 9
 
-struct line_connection {
+struct Point {
+    int id;
+    int sub_id;
+    uint8_t function_id; // 0->input1, 1->input2, 2->output1, 3->output2, 4->condition
+    AStar::Vec2i point_coordinates;
+};
+
+struct Line {
+    Point input;
+    Point output;
+};
+
+struct Line_connection {
     float cost;
     AStar::CoordinateList line_points;
     AStar::Vec2i initial_point;
@@ -99,9 +111,10 @@ float calculate_line_cost(AStar::CoordinateList extracted_points);
 
 cv::Mat create_occupancy_grid_map(cv::Mat& cropped_image, AStar::Generator& generator, uint8_t n_tiles_x, uint8_t n_tiles_y);
 
-bool compare_costs(const line_connection& a, const line_connection& b);
+bool compare_costs(const Line_connection& a, const Line_connection& b);
 
-int convert_coordinates_to_occupancy_map(const AStar::CoordinateList& original_input_pos, const AStar::CoordinateList& original_output_pos, AStar::CoordinateList& occupancy_initial_points, AStar::CoordinateList& occupancy_final_points, cv::Mat& cropped_image, cv::Mat& occupancy_map);
+int convert_coordinates_to_occupancy_map(const std::vector<Point>& original_input_pos, const std::vector<Point>& original_output_pos, const cv::Mat& cropped_image, const cv::Mat& occupancy_map, std::vector<Point>& occupancy_initial_points, std::vector<Point>& occupancy_final_points);
 
-std::vector<line_connection> find_line_connections(AStar::Generator& generator, cv::Mat& occupancy_grid_map, std::vector<AStar::Vec2i>& initial_points, std::vector<AStar::Vec2i>& final_points);
+std::vector<Line> find_line_connections(AStar::Generator& generator, cv::Mat& occupancy_grid_map, std::vector<Point>& initial_points, std::vector<Point>& final_points);
+
 #endif // __ASTAR_HPP_8F637DB91972F6C878D41D63F7E7214F__
