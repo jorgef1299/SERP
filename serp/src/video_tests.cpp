@@ -702,7 +702,7 @@ int get_topblock(int size_aruco) {
 // Saves corners of the Block
 std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::Point2f>> corners, std::vector <block> block_i)
 {
-  if ((id != 28) && (id != 29) && (id != 30) && (id != 31))
+  if ((id != 28) && (id != 29) && (id != 30) && (id != 31) && (id<36))
   {
       block_i.push_back(block());
 
@@ -1009,6 +1009,7 @@ void Debugmatrixvalues(std::vector<std::vector<float>> matrix)
 
 
 //position of I/Os in matrix
+//falta casos dos ids 32 33 34
 int position_matrix_input1(int id, int count){
   if(id==0){
     if(count==1){
@@ -1229,6 +1230,7 @@ int position_matrix_input1(int id, int count){
 
 }
 
+//falta casos das ids 32 34
 int position_matrix_input2(int id,int count){
 
   if(id==0){
@@ -1316,7 +1318,8 @@ int position_matrix_input2(int id,int count){
 
 }
 
-int position_matrix_output(int id, int count){
+//falta casos das ids 32 33 35
+int position_matrix_output1(int id, int count){
   if(id==0){
     if(count==1){
       return 10;
@@ -1543,7 +1546,13 @@ int position_matrix_output(int id, int count){
 
 }
 
-int position_matrix_condition(int id, int count){
+//falta casos das ids 33 35
+int position_matrix_output2(int id, int count){
+
+}
+
+//falta casos das ids 32
+int position_matrix_condition1(int id, int count){
   if(id==27){
     if(count==1){
       return 28;
@@ -1554,6 +1563,10 @@ int position_matrix_condition(int id, int count){
   }
 }
 
+//falta casos das ids 32
+int position_matrix_condition2(int id, int count){
+
+}
 
 bool isInside(int circle_x, int circle_y, int rad, int x, int y)
 {
@@ -1584,12 +1597,12 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
                     vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
 
                     vec[j].input1.linked=true;
                     vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].input1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
                     crossingContours.push_back(cc);
@@ -1602,12 +1615,12 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
                     vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
 
                     vec[j].input2.linked=true;
                     vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].input2.link_end=position_matrix_output1(vec[k].id,vec[k].count);
 
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
@@ -1619,12 +1632,28 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
 
                     vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
                     crossingContours.push_back(cc);
@@ -1643,12 +1672,12 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
                     vec[k].output1.link_end=position_matrix_input1(vec[j].id,vec[j].count);
 
                     vec[j].input1.linked=true;
                     vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
-                    vec[j].input1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].input1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
 
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
@@ -1660,12 +1689,12 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
                     vec[k].output1.link_end=position_matrix_input2(vec[j].id,vec[j].count);
 
                     vec[j].input2.linked=true;
                     vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
-                    vec[j].input2.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].input2.link_end=position_matrix_output1(vec[k].id,vec[k].count);
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
                     crossingContours.push_back(cc);
@@ -1676,12 +1705,179 @@ std::vector<block> check_lines(cv::Vec4i lin, size_t j, int radius, std::vector<
 //                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
 
                     vec[k].output1.linked=true;
-                    vec[k].output1.order=position_matrix_output(vec[k].id,vec[k].count);
-                    vec[k].output1.link_end=position_matrix_condition(vec[j].id,vec[j].count);
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
 
                     vec[j].condition1.linked=true;
-                    vec[j].condition1.order=position_matrix_condition(vec[j].id,vec[j].count);
-                    vec[j].condition1.link_end=position_matrix_output(vec[k].id,vec[k].count);
+                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[0], lin[1])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output1.linked=true;
+                    vec[k].output1.order=position_matrix_output1(vec[k].id,vec[k].count);
+                    vec[k].output1.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output1(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+
+        else if(isInside(vec[k].output2.point.x, vec[k].output2.point.y,radius,lin[0], lin[1])==1)
+        {
+//            ROS_WARN_STREAM("It is false that the point " << lin[0] << " " << lin[1] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n");
+
+            for(int j=0;j<vec.size();j++)
+            {
+
+                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+
+                    vec[j].input1.linked=true;
+                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[j].input1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+
+
+                }
+                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+
+                    vec[j].input2.linked=true;
+                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[j].input2.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[2], lin[3])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+//                else ROS_WARN_STREAM("WRONG lINK\n");
+            }
+        }
+        else if(isInside(vec[k].output2.point.x, vec[k].output2.point.y,radius,lin[2], lin[3])==1)
+        {
+            //std::cout <<"It is false that the point " << lin[2] << " " << lin[3] << " of the line " << j << " is near the aruco " << vec[k].id << " output\n";
+            for(int j=0;j<vec.size();j++)
+            {
+                if((isInside(vec[j].input1.point.x, vec[j].input1.point.y,radius,lin[0], lin[1])==1))
+                {
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the top input of aruco " << vec[j].id << "\n\n";
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_input1(vec[j].id,vec[j].count);
+
+                    vec[j].input1.linked=true;
+                    vec[j].input1.order=position_matrix_input1(vec[j].id,vec[j].count);
+                    vec[j].input1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].input2.point.x, vec[j].input2.point.y,radius,lin[0], lin[1])==1))
+                {
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_input2(vec[j].id,vec[j].count);
+
+                    vec[j].input2.linked=true;
+                    vec[j].input2.order=position_matrix_input2(vec[j].id,vec[j].count);
+                    vec[j].input2.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition1.point.x, vec[j].condition1.point.y,radius,lin[0], lin[1])==1))
+                {
+//                    std::cout << "The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n";
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_condition1(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition1(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
+
+                    cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
+                    crossingContours.push_back(cc);
+
+                }
+                else if((isInside(vec[j].condition2.point.x, vec[j].condition2.point.y,radius,lin[0], lin[1])==1))
+                {
+//                    ROS_WARN_STREAM("The output of aruco " << vec[k].id << " is connected to the bottom input of aruco " << vec[j].id << "\n\n");
+
+                    vec[k].output2.linked=true;
+                    vec[k].output2.order=position_matrix_output2(vec[k].id,vec[k].count);
+                    vec[k].output2.link_end=position_matrix_condition2(vec[j].id,vec[j].count);
+
+                    vec[j].condition1.linked=true;
+                    vec[j].condition1.order=position_matrix_condition2(vec[j].id,vec[j].count);
+                    vec[j].condition1.link_end=position_matrix_output2(vec[k].id,vec[k].count);
 
                     cv::Vec4i cc(lin[0],lin[1],lin[2],lin[3]);
                     crossingContours.push_back(cc);
@@ -2162,7 +2358,9 @@ coordinates findEndPoint(int begin, std::vector<block> blocks){
      else if(blocks[j].condition1.order==begin){
        return blocks[j].condition1.point;
      }
-
+     else if(blocks[j].condition2.order==begin){
+       return blocks[j].condition2.point;
+     }
    }
 
 }
@@ -2177,6 +2375,10 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
     {
       line(paper, cv::Point(blocks[j].output1.point.x,blocks[j].output1.point.y), cv::Point(findEndPoint(blocks[j].output1.link_end,blocks).x, findEndPoint(blocks[j].output1.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
+    else if(blocks[j].output2.linked==true)
+    {
+      line(paper, cv::Point(blocks[j].output2.point.x,blocks[j].output2.point.y), cv::Point(findEndPoint(blocks[j].output2.link_end,blocks).x, findEndPoint(blocks[j].output2.link_end,blocks).y), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
+    }
   }
 
   // Draw Crossings
@@ -2189,10 +2391,14 @@ void drawLines(cv::InputOutputArray paper, std::vector<block> blocks)
 
 std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block,std::vector<combination> comb){
   for (int j = 0; j < block.size(); j++) {
-    if(block[j].id<14 || block[j].id>24){
+    if(block[j].id<14 || block[j].id>24 ){
     if(block[j].output1.linked==true){
        m_links[block[j].output1.order][block[j].output1.link_end]=1;
        m_links[block[j].output1.link_end][block[j].output1.order]=1;
+    }
+    if(block[j].output2.linked==true){
+       m_links[block[j].output2.order][block[j].output2.link_end]=1;
+       m_links[block[j].output2.link_end][block[j].output2.order]=1;
     }
     }
 
@@ -2243,6 +2449,16 @@ std::vector<combination> getCombinations(std::vector<block> blocks, std::vector<
         comb[count-1].matrix_pos=62+count;
       }
       if(blocks[j].input2.link_end>61 && blocks[j].input2.link_end<106){
+        count=count+1;
+        comb.push_back(combination());
+        comb[count-1].matrix_pos=62+count;
+      }
+      if(blocks[j].condition1.link_end>61 && blocks[j].condition1.link_end<106){
+        count=count+1;
+        comb.push_back(combination());
+        comb[count-1].matrix_pos=62+count;
+      }
+      if(blocks[j].condition2.link_end>61 && blocks[j].condition2.link_end<106){
         count=count+1;
         comb.push_back(combination());
         comb[count-1].matrix_pos=62+count;
@@ -2351,6 +2567,88 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 
           }
 
+          //CONDITION1
+          if(blocks[j].condition1.link_end>61 && blocks[j].condition1.link_end<106){
+
+            found=blocks[j].condition1.linked;
+            endpoint=blocks[j].condition1.link_end;
+
+            do{
+                      for (int k = 0; k < blocks.size(); k++) {
+                        if(endpoint==blocks[k].output1.order){
+
+                          numbers.push_back(get_k(blocks[k].id));
+                          save_index=k;
+
+                        }
+                      }
+                      endpoint=blocks[save_index].input1.link_end;
+                      found=blocks[save_index].input1.linked;
+            }
+            while(found==1);
+
+            for (int k = 0; k < numbers.size(); k++) {
+              if(numbers[k]==-1){
+                divisor=k;
+                numbers.erase(numbers.begin()+k);
+              }
+            }
+
+            int N=numbers.size();
+            for (int k = 0; k < numbers.size(); k++) {
+              combo_number += numbers[k]*pow(10, k);
+            }
+
+            comb[comb_pos].number=combo_number/(pow(10,divisor));
+            comb[comb_pos].dest=blocks[j].condition1.order;
+            comb_pos=comb_pos+1;
+            combo_number=0;
+            divisor=0;
+            numbers.clear();
+
+          }
+
+          //CONDITION2
+          if(blocks[j].condition2.link_end>61 && blocks[j].condition2.link_end<106){
+
+            found=blocks[j].condition2.linked;
+            endpoint=blocks[j].condition2.link_end;
+
+            do{
+                      for (int k = 0; k < blocks.size(); k++) {
+                        if(endpoint==blocks[k].output1.order){
+
+                          numbers.push_back(get_k(blocks[k].id));
+                          save_index=k;
+
+                        }
+                      }
+                      endpoint=blocks[save_index].input1.link_end;
+                      found=blocks[save_index].input1.linked;
+            }
+            while(found==1);
+
+            for (int k = 0; k < numbers.size(); k++) {
+              if(numbers[k]==-1){
+                divisor=k;
+                numbers.erase(numbers.begin()+k);
+              }
+            }
+
+            int N=numbers.size();
+            for (int k = 0; k < numbers.size(); k++) {
+              combo_number += numbers[k]*pow(10, k);
+            }
+
+            comb[comb_pos].number=combo_number/(pow(10,divisor));
+            comb[comb_pos].dest=blocks[j].condition2.order;
+            comb_pos=comb_pos+1;
+            combo_number=0;
+            divisor=0;
+            numbers.clear();
+
+          }
+
 
     }
 
@@ -2390,11 +2688,15 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     std::vector<block> block_in_order = put_arucos_order(block_i);
 
-//    DebugBlocks(block_in_order);
+    DebugBlocks(block_in_order);
 
     // Line Detection
 
+<<<<<<< Updated upstream
     std::vector<cv::Vec4i> linesP = detectLines(paper, block_i);
+=======
+    std::vector<cv::Vec4i> linesP = detectLines(paper);
+>>>>>>> Stashed changes
 
     block_in_order=saveLines(linesP, block_in_order);
 
@@ -2412,18 +2714,36 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     Debugcombs(combs);
     std::cout << "Num of combinations " << num_combinations << "\n";
 
+<<<<<<< Updated upstream
+=======
+    // Get combinations
+    std::vector<combination> combs;
+    combs=getCombinations(block_in_order,combs);
+    combs=makeCombinations(block_in_order,combs);
+    Debugcombs(combs);
+    std::cout << "Num of combinations " << num_combinations << "\n";
+>>>>>>> Stashed changes
 
+    // Create Link and Value Matrices
+
+<<<<<<< Updated upstream
+    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
+    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
+     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+
+=======
     // Create Link and Value Matrices
 
     std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
     std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
      //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
+>>>>>>> Stashed changes
     matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
     matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
-//    Debugmatrixlinks(matrix_links);
-//    Debugmatrixvalues(matrix_values);
+    Debugmatrixlinks(matrix_links);
+    Debugmatrixvalues(matrix_values);
 
     cv::imshow("Paper Drawn", paperDrawn);
     cv::waitKey(1);
@@ -2497,7 +2817,11 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
+<<<<<<< Updated upstream
     cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/blocos_novos_2.h264");
+=======
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
+>>>>>>> Stashed changes
 
     // Check if camera opened successfully
     if(!cap.isOpened())
