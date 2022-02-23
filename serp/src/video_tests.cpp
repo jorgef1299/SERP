@@ -2286,7 +2286,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper, std::vector <block> block_i)
     //crossingPoints = detectCrossings(image);
 
     // New A*
-    newDetectLines(paper, image, block_i);
+    //newDetectLines(paper, image, block_i);
 
     std::vector<cv::Vec4i> linesP;
 
@@ -2691,12 +2691,8 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     DebugBlocks(block_in_order);
 
     // Line Detection
-
-<<<<<<< Updated upstream
     std::vector<cv::Vec4i> linesP = detectLines(paper, block_i);
-=======
-    std::vector<cv::Vec4i> linesP = detectLines(paper);
->>>>>>> Stashed changes
+
 
     block_in_order=saveLines(linesP, block_in_order);
 
@@ -2714,36 +2710,17 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
     Debugcombs(combs);
     std::cout << "Num of combinations " << num_combinations << "\n";
 
-<<<<<<< Updated upstream
-=======
-    // Get combinations
-    std::vector<combination> combs;
-    combs=getCombinations(block_in_order,combs);
-    combs=makeCombinations(block_in_order,combs);
-    Debugcombs(combs);
-    std::cout << "Num of combinations " << num_combinations << "\n";
->>>>>>> Stashed changes
-
-    // Create Link and Value Matrices
-
-<<<<<<< Updated upstream
-    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
-    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
-
-=======
     // Create Link and Value Matrices
 
     std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
     std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
->>>>>>> Stashed changes
     matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
     matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
-    Debugmatrixlinks(matrix_links);
-    Debugmatrixvalues(matrix_values);
+//    Debugmatrixlinks(matrix_links);
+//    Debugmatrixvalues(matrix_values);
 
     cv::imshow("Paper Drawn", paperDrawn);
     cv::waitKey(1);
@@ -2817,11 +2794,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-<<<<<<< Updated upstream
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/blocos_novos_2.h264");
-=======
     cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/teste_arucos.h264");
->>>>>>> Stashed changes
 
     // Check if camera opened successfully
     if(!cap.isOpened())
