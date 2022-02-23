@@ -2130,9 +2130,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper, std::vector <block> block_i)
     return linesP;
 }
 
-int getMin(int a){
 
-}
 std::vector<block> saveLines(std::vector<cv::Vec4i> linesP, std::vector<block> blocks)
 {
     //crossingContours.clear();
@@ -2499,7 +2497,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/blocos_novos_2.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
