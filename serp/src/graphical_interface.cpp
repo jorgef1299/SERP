@@ -70,11 +70,13 @@ void* cb_timer10s(gpointer data) {
         std_srvs::Trigger srv;
         if(client_battery_level.call(srv) && srv.response.success) {
             robot.battery_level = (int8_t)std::stoi(srv.response.message);
+            /*
             if(robot.battery_level < 0 || robot.battery_level > 100) {
                 ROS_ERROR("Erro: Nível de bateria inválido!");
                 ros::shutdown();
                 std::exit(-1);
             }
+            */
             if(robot.battery_level != last_battery_level) {
                 // Update battery level in the interface
                 std::string color;

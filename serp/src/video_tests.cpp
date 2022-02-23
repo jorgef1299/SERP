@@ -1,7 +1,6 @@
 #include "video_tests.h"
 
 
-
 int CHECKERBOARD[2]{5,8}; // Number of corners (vertical, horizontal)
 
 camera_info cam_info;
@@ -52,6 +51,8 @@ std::vector<cv::Vec4i> masks;
 std::vector<cv::Point2f> crossingPoints;
 
 cv::Mat FinalFrame;
+
+
 
 
 
@@ -120,7 +121,7 @@ void camera_parameters(int type)
         }
 
         //      cv::imshow("Image",frame);
-        //      cv::waitKey(1);
+        //      cv::waitKey(0);
     }
 
     //    ROS_WARN_STREAM("3D->"<<objpoints.size()<<" 2D->"<<imgpoints.size());
@@ -135,9 +136,16 @@ void camera_parameters(int type)
     if(type==0) cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T);
     else if(type==1) cv::fisheye::calibrate(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cam_info.cameraMatrix, cam_info.distCoeffs, cam_info.R, cam_info.T, cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC | cv::fisheye::CALIB_CHECK_COND |cv::fisheye::CALIB_FIX_SKEW, cv::TermCriteria(cv::TermCriteria::EPS|cv::TermCriteria::MAX_ITER, 30, 1e-6));
 
+    //    ROS_WARN_STREAM("Camera Matrix");
     //    ROS_WARN_STREAM(cam_info.cameraMatrix);
+
+    //    ROS_WARN_STREAM("Distortion Coefficients");
     //    ROS_WARN_STREAM(cam_info.distCoeffs);
+
+    //    ROS_WARN_STREAM("Rotation Matrix");
     //    ROS_WARN_STREAM(cam_info.R);
+
+    //    ROS_WARN_STREAM("Translation Matrix");
     //    ROS_WARN_STREAM(cam_info.T);
 }
 
@@ -229,6 +237,10 @@ cv::Mat correctImage(cv::Mat frame, int type)
 
         //        cv::imshow("Panoramic Image", panoramicImage);
         //        cv::waitKey(0);
+
+        undist_img = panoramicImage;
+
+        cv::imwrite("../catkin_ws/src/SERP/serp/include/tests/panorama.jpg", panoramicImage);
     }
 
     return undist_img;
@@ -469,12 +481,23 @@ cv::Mat perspective_correction(cv::Mat original, std::vector<cv::Point2f> new_po
 }
 
 
-void validatePicture(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, cv::Mat& frame)
+void validatePicture(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, cv::Mat frame)
 {
+    cv::Mat frameCopy = frame.clone();
+
     // Limit to discard points not in the front
-    int x_limit = frame.cols/2-150;
+
+    int x_limit = frameCopy.cols/2-150;
+
+    //    // Vizualize x limit
+    //    cv::Point limit(x_limit, frameCopy.rows/2);
+    //    cv::circle(frameCopy, limit, 15, cv::Scalar(0,255,0), -1, 8, 0);
+    //    cv::imshow("input", frameCopy);
+    //    cv::waitKey(0);
+
 
     // Conditions to skip count
+
     if(!orientation_check) return;
 
     for(int i=0; i<ids.size(); i++)
@@ -496,6 +519,7 @@ void validatePicture(std::vector<std::vector<cv::Point2f>> corners, std::vector<
 
 
     // Picture Validation
+
     pictureValidated = false;
 
     sort(ids.begin(), ids.end());
@@ -723,7 +747,7 @@ std::vector <block> corners_blocks(int id, int pos, std::vector<std::vector<cv::
 
 
 // Saves Block Inputs and Outputs
-std::vector <block> save_in_out(coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id, std::vector <block> block_i)
+std::vector <block> save_in_out(cv::InputOutputArray image, coordinates sup_esq, coordinates sup_dir, coordinates inf_esq, coordinates inf_dir, int pos_list, int id, std::vector <block> block_i)
 {
 
     masks.push_back(cv::Vec4i());
@@ -791,18 +815,21 @@ std::vector <block> save_in_out(coordinates sup_esq, coordinates sup_dir, coordi
 
 
 // Saves every Block's Corners and I/Os
-std::vector <block> saving_coordinates(std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, std::vector <block> block_i)
+std::vector <block> saving_coordinates(cv::InputOutputArray image, std::vector<std::vector<cv::Point2f>> corners, std::vector<int> ids, std::vector <block> block_i)
 {
     if (ids.size() > 0)
     {
         current_ids_size = ids.size();
+
         //run through every detected aruco
         for (int i = 0; i < corners.size(); i++)
         {
             block_i = corners_blocks(ids[i], i, corners, block_i);
-            block_i = save_in_out(block_i[i].b_sup_left, block_i[i].b_sup_right, block_i[i].b_inf_left, block_i[i].b_inf_right, i, ids[i], block_i);
+
+            block_i = save_in_out(image, block_i[i].b_sup_left, block_i[i].b_sup_right, block_i[i].b_inf_left, block_i[i].b_inf_right, i, ids[i], block_i);
         }
     }
+
     return block_i;
 }
 
@@ -900,11 +927,11 @@ void Debugcombs(std::vector<combination> comb)
 
 }
 
-void Debugmatrixlinks(int matrix[100][100])
+void Debugmatrixlinks(std::vector<std::vector<int>> matrix)
 {
-    for (int j = 0; j < 100 ; j++) {
+    for (int j = 0; j < matrix.size() ; j++) {
         std::cout << "row:" << j << " ";
-        for (int i= 0; i < 100 ; i++) {
+        for (int i= 0; i < matrix.size() ; i++) {
             std::cout << matrix[j][i]<< " ";
         }
         std::cout << "\n";
@@ -912,11 +939,11 @@ void Debugmatrixlinks(int matrix[100][100])
 
 }
 
-void Debugmatrixvalues(float matrix[100][100])
+void Debugmatrixvalues(std::vector<std::vector<float>> matrix)
 {
-    for (int j = 0; j < 100 ; j++) {
+    for (int j = 0; j < matrix.size() ; j++) {
         std::cout << "row:" << j << " ";
-        for (int i= 0; i < 100 ; i++) {
+        for (int i= 0; i < matrix.size() ; i++) {
             std::cout << matrix[j][i]<< " ";
         }
         std::cout << "\n";
@@ -1716,12 +1743,13 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
         }
     }
 
-    //cv::imshow("Take Off Arucos", image);
+    //   cv::imshow("Take Off Arucos", image);
 
 
     // Threshold to eliminate white background
-    image = image < 100;
-    //cv::imshow("Mask I < 100 ", image);
+    cv::threshold(image, image, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
+
+    //    cv::imshow("Otsu Threshold ", image);
 
 
     // Keep only paper area
@@ -1846,6 +1874,7 @@ void drawMatrixLinks(int m_links[100][100],std::vector<block> block,std::vector<
         m_links[comb[j].dest][comb[j].matrix_pos]=1;
     }
 
+
 }
 
 int get_k(int id){
@@ -1962,6 +1991,7 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 
                             numbers.push_back(get_k(blocks[k].id));
                             save_index=k;
+
                         }
                     }
                     endpoint=blocks[save_index].input1.link_end;
@@ -2001,6 +2031,7 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
 // ---------- LINE DETECTION LOGIC ----------
 void detectAndInterpret_Lines(cv::Mat& frame, cv::Ptr<cv::aruco::Dictionary> dict, int m_links[100][100], float m_values[100][100], int& ready)
 {
+
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners;
 
@@ -2008,23 +2039,21 @@ void detectAndInterpret_Lines(cv::Mat& frame, cv::Ptr<cv::aruco::Dictionary> dic
 
     // Number of detections after Homography has to be equal to the number of detections before
     // -4 to account for loss of cropped orientation blocks
-    if(ids.size() != (count_total_arucos - 4)) {
-        return;
-    }
+    if(ids.size() != (count_total_arucos - 4)) return;
 
     count_total_arucos=0;
 
+
     // Block Formation
+
     std::vector <block> block_i;
     masks.clear(); // used to eliminate the arucos during line detection
 
-    block_i = saving_coordinates(corners, ids, block_i);
-
-    drawing_functions(frame, corners, ids, block_i);
+    block_i = saving_coordinates(frame, corners, ids, block_i);
 
     std::vector<block> block_in_order = put_arucos_order(block_i);
 
-    //    DebugBlocks(block_in_order);
+//    DebugBlocks(block_in_order);
 
 
     // Line Detection
@@ -2033,19 +2062,28 @@ void detectAndInterpret_Lines(cv::Mat& frame, cv::Ptr<cv::aruco::Dictionary> dic
 
     block_in_order=saveLines(linesP, block_in_order);
 
-    drawLines(frame,block_in_order);
+
+    // Draw detections
+
+    drawing_functions(frame, corners, ids, block_i);
+
+    drawLines(frame, block_in_order);
+
 
     // Get combinations
     std::vector<combination> combs;
     combs=getCombinations(block_in_order,combs);
     combs=makeCombinations(block_in_order,combs);
+//    Debugcombs(combs);
+//    std::cout << "Num of combinations " << num_combinations << "\n";
 
-    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
     drawMatrixLinks(m_links,block_in_order,combs);
     drawMatrixValues(m_values,block_in_order,combs);
 
-    //    Debugmatrixlinks(matrix_links);
-    //    Debugmatrixvalues(matrix_values);
+//    Debugmatrixlinks(matrix_links);
+//    Debugmatrixvalues(matrix_values);
+
+
     ready=1;
 }
 

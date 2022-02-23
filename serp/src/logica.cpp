@@ -176,7 +176,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
         if (ligacoes[8][i] == 1)
         {
             entradaSoma11 = true;
-            ROS_INFO("ENTRADA1 CONFIRMADA");
+            //ROS_INFO("ENTRADA1 CONFIRMADA");
         }
         i = i + 1;
     }
@@ -186,7 +186,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
         if (ligacoes[32][i] == 1)
         {
             entradaSoma12 = true;
-            ROS_INFO("ENTRADA2 CONFIRMADA");
+            //ROS_INFO("ENTRADA2 CONFIRMADA");
         }
         i = i + 1;
     }
@@ -1807,7 +1807,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[83][8] == 1))
             {
                 entradaSoma11 = false;
-                ROS_INFO("ENTRADA1");
+                //ROS_INFO("ENTRADA1");
             }
 
             //Caso em que vem da saida da inv1
@@ -1995,7 +1995,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                     (ligacoes[83][9] == 1))
             {
                 entradaSoma12 = false;
-                ROS_INFO("ENTRADA2");
+                //ROS_INFO("ENTRADA2");
             }
 
             //Caso em que vem da saida da inv1
@@ -2188,7 +2188,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
                                 {
                                     if (ligacoes[aux][10] == 1)
                                     {
-                                        ROS_INFO("realiza soma");
+                                        //ROS_INFO("realiza soma");
                                         matrixValores[aux][10] = matrixValores[i][8] + matrixValores[j][9];
                                         matrixValores[10][aux] = matrixValores[i][8] + matrixValores[j][9];
                                         if (matrixValores[aux][10] > 100)
@@ -7562,7 +7562,7 @@ void verificarBlocos(int ligacoes[][100], float matrixValores[][100], float velo
     {
         if (ligacoes[i][17] == 1)
         {
-            ROS_INFO("ATUALIZA VALOR MOTOR");
+            //ROS_INFO("ATUALIZA VALOR MOTOR");
             motorEsq = matrixValores[i][17];
         }
         i = i + 1;

@@ -137,6 +137,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "rpi_camera_node");
     ros::NodeHandle n_public;
 
+    cv::Mat copy;
 
     // Subscriber for Robot State
     ros::Subscriber sub_robot_state = n_public.subscribe("robot_state", 2, cb_robot_state);
@@ -193,6 +194,7 @@ int main(int argc, char **argv)
         Camera.grab();
         Camera.retrieve(frame);
 
+
         cv::Mat cropped_image = frame(cv::Rect(100, 0, 1300, 1200));
 
         // Resize image to 800x450 (to publish to the GUI)
@@ -201,7 +203,6 @@ int main(int argc, char **argv)
 
 
         //Rotate frame 90º
-
         cv::rotate(resized_frame, resized_frame, cv::ROTATE_90_CLOCKWISE);
 
         if(camera_state == DetectObstacles)
@@ -225,11 +226,11 @@ int main(int argc, char **argv)
 
                 pub_img.publish(img_msg);
             }
-            /*ROS_INFO("LEFT: %f", sensor_valores[3]);
-            ROS_INFO("RIGHT: %f", sensor_valores[0]);
-            ROS_INFO("FRONT: %f", sensor_valores[1]);
-            ROS_INFO("BACK: %f", sensor_valores[2]);
-            ROS_INFO("--------------------------");*/
+            ROS_INFO("LEFT: %d", sensor_valores[3]);
+            ROS_INFO("RIGHT: %d", sensor_valores[0]);
+            ROS_INFO("FRONT: %d", sensor_valores[1]);
+            ROS_INFO("BACK: %d", sensor_valores[2]);
+            ROS_INFO("--------------------------");
 
 
             //fill matrix_values with sensor values

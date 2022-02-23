@@ -104,6 +104,7 @@ int main(int argc, char** argv)
     while (ros::ok())
     {
         ros::Duration(0.1).sleep();
+
         //manual robot control mode
         if(robot_state == ManualControl)
         {
@@ -132,7 +133,7 @@ int main(int argc, char** argv)
         else if(robot_state == Executing)
         {
             //processing cycle
-            /*
+
             for (int j = 0; j < 100 ; j++) {
                 std::cout << "row:" << j << " ";
                 for (int i= 0; i < 100 ; i++) {
@@ -140,7 +141,7 @@ int main(int argc, char** argv)
                 }
                 std::cout << "\n";
             }
-            */
+
 
             //updates motor speeds according to code from sheet
             verificarBlocos(ligacoes, matrixValores, velocidades);
