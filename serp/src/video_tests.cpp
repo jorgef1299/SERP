@@ -1872,7 +1872,171 @@ std::vector<cv::Point2f> filterCrossingPointsInOut(std::vector<cv::Point2f> cp, 
 
 }
 
-std::vector<cv::Vec4i> detectLines(cv::Mat paper)
+
+bool pointInsideBB(int tlx, int tly, int brx, int bry, coordinates point)
+{
+    if((point.x > tlx && point.x < brx) && (point.y > tly && point.y < bry)) return true;
+    else return false;
+}
+
+
+// New A* line detection
+int newDetectLines(cv::Mat paper, cv::Mat& thresh, std::vector <block> block_i)
+{
+    cv::Mat paper_drawn = paper.clone();
+
+    // Initialize A-star
+    AStar::Generator generator;
+    generator.setWorldSize({N_TILES_X, N_TILES_Y});
+    generator.setHeuristic(AStar::Heuristic::euclidean);
+    generator.setDiagonalMovement(true);
+
+    // detect the contours on the binary image using cv2.CHAIN_APPROX_NONE
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    findContours(thresh, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
+
+    //bounding box
+    std::vector<std::vector<cv::Point>> contours_poly(contours.size());
+    std::vector<cv::Rect> boundRect(contours.size());
+    std::vector<cv::Point2f> centers(contours.size());
+    std::vector<float> radius(contours.size());
+
+    int tlx, tly, brx, bry;
+
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        approxPolyDP(contours[i], contours_poly[i], 3, true);
+        boundRect[i] = boundingRect(contours_poly[i]);
+
+        tlx = 0.95*boundRect[i].tl().x;
+        tly = 0.95*boundRect[i].tl().y;
+        brx = 1.05*boundRect[i].br().x;
+        bry = 1.05*boundRect[i].br().y;
+        cv::Rect myROI(tlx, tly, brx - tlx, bry - tly);
+        cv::Mat croppedImage = thresh(myROI);
+
+        // Draw BBs
+        cv::rectangle(paper_drawn, myROI, cv::Scalar(0, 255, 0));
+
+        AStar::CoordinateList initial_points, final_points, original_input_points, original_final_points;
+
+        for(int j=0; j<block_i.size(); j++)
+        {
+            ROS_WARN_STREAM(block_i[j].id);
+
+            int x_local, y_local;
+
+            // Visual debug
+            cv::circle(paper_drawn, cv::Point(block_i[j].output1.point.x, block_i[j].output1.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].output2.point.x, block_i[j].output2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].input1.point.x, block_i[j].input1.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].input2.point.x, block_i[j].input2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].condition1.point.x, block_i[j].condition1.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+            cv::circle(paper_drawn, cv::Point(block_i[j].condition2.point.x, block_i[j].condition2.point.y), 5, cv::Scalar(0,255,0), -1, 8, 0);
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].output1.point))
+            {
+                x_local = block_i[j].output1.point.x - tlx;
+                y_local = block_i[j].output1.point.y - tly;
+                original_input_points.push_back({ block_i[j].output1.point.x,  block_i[j].output1.point.y});
+
+                ROS_WARN_STREAM("Output 1 is inside");
+            }
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].output2.point))
+            {
+                x_local = block_i[j].output2.point.x - tlx;
+                y_local = block_i[j].output2.point.y - tly;
+                original_input_points.push_back({ block_i[j].output2.point.x,  block_i[j].output2.point.y});
+            }
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].input1.point))
+            {
+                x_local = block_i[j].input1.point.x - tlx;
+                y_local = block_i[j].input1.point.y - tly;
+                original_final_points.push_back({ block_i[j].input1.point.x,  block_i[j].input1.point.y});
+            }
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].input2.point))
+            {
+                x_local = block_i[j].input2.point.x - tlx;
+                y_local = block_i[j].input2.point.y - tly;
+                original_final_points.push_back({ block_i[j].input2.point.x,  block_i[j].input2.point.y});
+            }
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].condition1.point))
+            {
+                x_local = block_i[j].condition1.point.x - tlx;
+                y_local = block_i[j].condition1.point.y - tly;
+                original_final_points.push_back({ block_i[j].condition1.point.x,  block_i[j].condition1.point.y});
+            }
+
+            if(pointInsideBB(tlx, tly, brx, bry, block_i[j].condition2.point))
+            {
+                x_local = block_i[j].condition2.point.x - tlx;
+                y_local = block_i[j].condition2.point.y - tly;
+                original_final_points.push_back({ block_i[j].condition2.point.x,  block_i[j].condition2.point.y});
+            }
+        }
+
+        ROS_INFO("Teste1");
+        // Create occupancy grid map
+        printf("Teste: %d %d\n", original_input_points.size(), original_final_points.size());
+        cv::Mat occupancy_grid_map = create_occupancy_grid_map(croppedImage, generator, std::min(N_TILES_X, croppedImage.cols), std::min(N_TILES_Y, croppedImage.rows));
+        convert_coordinates_to_occupancy_map(original_input_points, original_final_points, initial_points, final_points, croppedImage, occupancy_grid_map);
+        for(int i=0; i < initial_points.size(); i++) {
+            printf("%d %d\n", initial_points[i].x, initial_points[i].y);
+        }
+        for(int i=0; i < final_points.size(); i++) {
+            printf("%d %d\n", final_points[i].x, final_points[i].y);
+        }
+        if(initial_points.size() == final_points.size() && final_points.size() > 0)
+        {
+            ROS_INFO("Teste2");
+            std::vector<line_connection> detected_connections;
+            // Find best connections
+            detected_connections = find_line_connections(generator, occupancy_grid_map, initial_points, final_points);
+            if(detected_connections.size() == 0) {
+                printf("No path found for all connections...\n");
+                return -1;
+            }
+            ROS_INFO("Teste3");
+            // DEBUG: Show detected lines
+            cv::Mat detected_lines = cv::Mat::zeros(occupancy_grid_map.rows, occupancy_grid_map.cols, CV_8UC3);
+            ROS_INFO("Teste4");
+            printf("%d\n", detected_connections.size());
+            for(int i=0; i < detected_connections.size(); i++) {
+                printf("Initial Point: %d,%d\t Final Point: %d,%d\n", detected_connections[i].initial_point.x, detected_connections[i].initial_point.y, detected_connections[i].final_point.x, detected_connections[i].final_point.y);
+                uint8_t r = rand() % 256;
+                uint8_t g = rand() % 256;
+                uint8_t b = rand() % 256;
+                ROS_INFO("Teste5");
+
+                for(int j=0; j < detected_connections[i].line_points.size(); j++) {
+                    detected_lines.at<cv::Vec3b>(detected_connections[i].line_points[j].y, detected_connections[i].line_points[j].x)[0] = b;
+                    detected_lines.at<cv::Vec3b>(detected_connections[i].line_points[j].y, detected_connections[i].line_points[j].x)[1] = g;
+                    detected_lines.at<cv::Vec3b>(detected_connections[i].line_points[j].y, detected_connections[i].line_points[j].x)[2] = r;
+                }
+            }
+            ROS_INFO("Teste4");
+            cv::resize(detected_lines, detected_lines, cv::Size(croppedImage.cols, croppedImage.rows));
+            cv::imshow("Detected lines", detected_lines);
+            cv::waitKey(0);
+        }
+        else {
+            printf("Erro: %d %d\n", initial_points.size(), final_points.size());
+        }
+
+    }
+
+      cv::imshow("new_lines", paper_drawn);
+      cv::waitKey(0);
+    return 0;
+}
+
+
+std::vector<cv::Vec4i> detectLines(cv::Mat paper, std::vector <block> block_i)
 {
     cv::Mat image;
     cv::cvtColor(paper, image, cv::COLOR_BGR2GRAY);
@@ -1906,7 +2070,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     rectangle(image, cv::Rect(0, 0, image.cols, image.rows), cv::Scalar(255));
     floodFill(image, cv::Point(0, 0), cv::Scalar(0));
 
-    cv::imshow("Flood Fill After Rect", image);
+//    cv::imshow("Flood Fill After Rect", image);
 
     binaryFinalImage = image.clone();
 
@@ -1914,7 +2078,7 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     cv::Mat kernel=cv::Mat(cv::Size(3,3),CV_8UC1,cv::Scalar(255));
     morphologyEx(image,image,cv::MORPH_DILATE,kernel);
 
-    cv::imshow("Dilation", image);
+//    cv::imshow("Dilation", image);
 
 
     // Detect Lines
@@ -1922,34 +2086,26 @@ std::vector<cv::Vec4i> detectLines(cv::Mat paper)
     findContours(image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 
     // Detect Crossings
-    crossingPoints.clear();
+//    crossingPoints.clear();
     //crossingPoints = detectCrossings(image);
+
+    // New A*
+    newDetectLines(paper, image, block_i);
 
     std::vector<cv::Vec4i> linesP;
 
     cv::Mat paperCopy = paper.clone();
 
-//    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
-//    std::vector<cv::Rect> boundRect( contours.size() );
-//    std::vector<cv::Point2f>centers( contours.size() );
-//    std::vector<float>radius( contours.size() );
+    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
+    std::vector<cv::Rect> boundRect( contours.size() );
+    std::vector<cv::Point2f>centers( contours.size() );
+    std::vector<float>radius( contours.size() );
 
     for(size_t k=0; k<contours.size(); k++)
     {
 
-//        approxPolyDP( contours[k], contours_poly[k], 3, true );
-//        boundRect[k] = boundingRect( contours_poly[k] );
-
-
-//        cv::drawContours( paperCopy, contours_poly, (int)k, cv::Scalar(0, 255, 0) );
-//        cv::rectangle( paperCopy, boundRect[k].tl(), boundRect[k].br(), cv::Scalar(0, 255, 0), 2 );
-//        cv::imshow("countours", paperCopy);
-//        cv::waitKey(0);
-
-//     // See each countour being detected
-       //cv::drawContours(paperCopy, contours, (int)k, cv::Scalar(0, 255, 0), 2, cv::LINE_8, cv::noArray(), 0);
-       //cv::imshow("countours", paperCopy);
-       //cv::waitKey(0);
+        approxPolyDP( contours[k], contours_poly[k], 3, true );
+        boundRect[k] = boundingRect( contours_poly[k] );
 
         auto val=minmax_element(contours[k].begin(), contours[k].end(), [](cv::Point const& a, cv::Point const& b)
         {
@@ -2234,46 +2390,45 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
     block_i = saving_coordinates(paper, corners, ids, block_i);
 
-//    std::vector<block> block_in_order = put_arucos_order(block_i);
+    std::vector<block> block_in_order = put_arucos_order(block_i);
 
 //    DebugBlocks(block_in_order);
 
-//    // Line Detection
+    // Line Detection
 
-//    std::vector<cv::Vec4i> linesP = detectLines(paper);
+    std::vector<cv::Vec4i> linesP = detectLines(paper, block_i);
 
-//    block_in_order=saveLines(linesP, block_in_order);
+    block_in_order=saveLines(linesP, block_in_order);
 
 
     // Draw detections
 
     drawing_functions(paperDrawn, corners, ids, block_i);
 
-//    drawLines(paperDrawn, block_in_order);
+    drawLines(paperDrawn, block_in_order);
+
+    // Get combinations
+    std::vector<combination> combs;
+    combs=getCombinations(block_in_order,combs);
+    combs=makeCombinations(block_in_order,combs);
+    Debugcombs(combs);
+    std::cout << "Num of combinations " << num_combinations << "\n";
 
 
-//    // Get combinations
-//    std::vector<combination> combs;
-//    combs=getCombinations(block_in_order,combs);
-//    combs=makeCombinations(block_in_order,combs);
-//    Debugcombs(combs);
-//    std::cout << "Num of combinations " << num_combinations << "\n";
+    // Create Link and Value Matrices
 
+    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
+    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
+     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
 
-//    // Create Link and Value Matrices
-
-//    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
-//    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-//     //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
-
-//    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
-//    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
+    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
+    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
 
 //    Debugmatrixlinks(matrix_links);
 //    Debugmatrixvalues(matrix_values);
 
     cv::imshow("Paper Drawn", paperDrawn);
-    cv::waitKey(0);
+    cv::waitKey(1);
 }
 
 
@@ -2344,7 +2499,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/transporte.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())

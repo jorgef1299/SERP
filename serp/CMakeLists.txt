@@ -153,7 +153,7 @@ add_definitions(${GTK_CFLAGS_OTHER})
 add_executable(rpi_camera_node src/rpi_camera.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
 add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
-add_executable(video_tests_node src/video_tests.cpp)
+add_executable(video_tests_node src/video_tests.cpp src/AStar.cpp)
 
 
 ## Rename C++ executable without prefix
@@ -164,7 +164,6 @@ add_executable(video_tests_node src/video_tests.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(rpi_camera_node
   ${catkin_LIBRARIES}
@@ -184,6 +183,8 @@ target_link_libraries(video_tests_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
+
+add_dependencies(video_tests_node ${catkin_EXPORTED_TARGETS})
 
 #############
 ## Install ##
