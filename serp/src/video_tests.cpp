@@ -975,556 +975,639 @@ void Debugmatrixvalues(std::vector<std::vector<float>> matrix)
 
 
 //position of I/Os in matrix
-//falta casos dos ids 32 33 34
-int position_matrix_input1(int id, int count){
-  if(id==0){
-    if(count==1){
-      return 8;
-    }
-    else if(count==2){
-      return 12;
-    }
-  }
 
-  else if(id==1){
-    if(count==1){
-      return 20;
+int position_matrix(int id, int count, int function){
+  if(function==0){
+    if(id==0){
+      if(count==1){
+        return 8;
+      }
+      else if(count==2){
+        return 12;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==2){
-    if(count==1){
-      return 6;
+    else if(id==1){
+      if(count==1){
+        return 20;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return 15;
-    }
-  }
 
-  else if(id==3){
-    if(count==1){
-      return 39;
+    else if(id==2){
+      if(count==1){
+        return 6;
+      }
+      else if(count==2){
+        return 15;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==4){
-    if(count==1){
-      return 56;
+    else if(id==3){
+      if(count==1){
+        return 39;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==5){
-    if(count==1){
-      return 53;
+    else if(id==4){
+      if(count==1){
+        return 56;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==6){
-    if(count==1){
-      return 59;
+    else if(id==5){
+      if(count==1){
+        return 53;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==7){
-    if(count==1){
-      return 17;
+    else if(id==6){
+      if(count==1){
+        return 59;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==8){
-    if(count==1){
-      return 24;
+    else if(id==7){
+      if(count==1){
+        return 17;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==13){
-    if(count==1){
-      return 22;
+    else if(id==8){
+      if(count==1){
+        return 24;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==14){
-    if(count==1){
-      return 62;
+    else if(id==13){
+      if(count==1){
+        return 22;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return 84;
-    }
-  }
 
-  else if(id==15){
-    if(count==1){
-      return 64;
+    else if(id==14){
+      if(count==1){
+        return 62;
+      }
+      else if(count==2){
+        return 84;
+      }
     }
-    else if(count==2){
-      return 86;
-    }
-  }
 
-  else if(id==16){
-    if(count==1){
-      return 66;
+    else if(id==15){
+      if(count==1){
+        return 64;
+      }
+      else if(count==2){
+        return 86;
+      }
     }
-    else if(count==2){
-      return 88;
-    }
-  }
 
-  else if(id==17){
-    if(count==1){
-      return 68;
+    else if(id==16){
+      if(count==1){
+        return 66;
+      }
+      else if(count==2){
+        return 88;
+      }
     }
-    else if(count==2){
-      return 90;
-    }
-  }
 
-  else if(id==18){
-    if(count==1){
-      return 70;
+    else if(id==17){
+      if(count==1){
+        return 68;
+      }
+      else if(count==2){
+        return 90;
+      }
     }
-    else if(count==2){
-      return 92;
-    }
-  }
 
-  else if(id==19){
-    if(count==1){
-      return 72;
+    else if(id==18){
+      if(count==1){
+        return 70;
+      }
+      else if(count==2){
+        return 92;
+      }
     }
-    else if(count==2){
-      return 94;
-    }
-  }
 
-  else if(id==20){
-    if(count==1){
-      return 74;
+    else if(id==19){
+      if(count==1){
+        return 72;
+      }
+      else if(count==2){
+        return 94;
+      }
     }
-    else if(count==2){
-      return 96;
-    }
-  }
 
-  else if(id==21){
-    if(count==1){
-      return 76;
+    else if(id==20){
+      if(count==1){
+        return 74;
+      }
+      else if(count==2){
+        return 96;
+      }
     }
-    else if(count==2){
-      return 98;
-    }
-  }
 
-  else if(id==22){
-    if(count==1){
-      return 78;
+    else if(id==21){
+      if(count==1){
+        return 76;
+      }
+      else if(count==2){
+        return 98;
+      }
     }
-    else if(count==2){
-      return 100;
-    }
-  }
 
-  else if(id==23){
-    if(count==1){
-      return 80;
+    else if(id==22){
+      if(count==1){
+        return 78;
+      }
+      else if(count==2){
+        return 100;
+      }
     }
-    else if(count==2){
-      return 102;
-    }
-  }
 
-  else if(id==24){
-    if(count==1){
-      return 82;
+    else if(id==23){
+      if(count==1){
+        return 80;
+      }
+      else if(count==2){
+        return 102;
+      }
     }
-    else if(count==2){
-      return 104;
-    }
-  }
 
-  else if(id==25){
-    if(count==1){
-      return  47;
+    else if(id==24){
+      if(count==1){
+        return 82;
+      }
+      else if(count==2){
+        return 104;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==26){
-    if(count==1){
-      return 50;
+    else if(id==25){
+      if(count==1){
+        return  47;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==27){
-    if(count==1){
-      return 26;
+    else if(id==26){
+      if(count==1){
+        return 50;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return 31;
-    }
-  }
 
-
-}
-
-//falta casos das ids 32 34
-int position_matrix_input2(int id,int count){
-
-  if(id==0){
-    if(count==1){
-      return 9;
+    else if(id==27){
+      if(count==1){
+        return 26;
+      }
+      else if(count==2){
+        return 31;
+      }
     }
-    else if(count==2){
-      return 11;
-    }
-  }
 
-  else if(id==1){
-    if(count==1){
-      return 38;
+    else if(id==32){
+      if(count==1){
+        return 42;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
+    else if(id==33){
+      if(count==1){
+        return 90;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-  }
-
-  else if(id==3){
-    if(count==1){
-      return 40;
-    }
-    else if(count==2){
-      return -1;
+    else if(id==34){
+      if(count==1){
+        return 62;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
   }
 
-  else if(id==4){
-    if(count==1){
-      return 57;
+  else if(function==1){
+    if(id==0){
+      if(count==1){
+        return 9;
+      }
+      else if(count==2){
+        return 11;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==5){
-    if(count==1){
-      return 54;
+    else if(id==1){
+      if(count==1){
+        return 38;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==6){
-    if(count==1){
-      return 60;
+    else if(id==3){
+      if(count==1){
+        return 40;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==25){
-    if(count==1){
-      return 48;
+    else if(id==4){
+      if(count==1){
+        return 57;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==26){
-    if(count==1){
-      return 51;
+    else if(id==5){
+      if(count==1){
+        return 54;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
-    }
-  }
 
-  else if(id==27){
-    if(count==1){
-      return 27;
+    else if(id==6){
+      if(count==1){
+        return 60;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return 32;
+
+    else if(id==25){
+      if(count==1){
+        return 48;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-  }
+
+    else if(id==26){
+      if(count==1){
+        return 51;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==27){
+      if(count==1){
+        return 27;
+      }
+      else if(count==2){
+        return 32;
+      }
+    }
+    else if(id==32){
+      if(count==1){
+        return 43;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+    else if(id==34){
+      if(count==1){
+        return 63;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
 
 
-
-}
-
-//falta casos das ids 32 33 35
-int position_matrix_output1(int id, int count){
-  if(id==0){
-    if(count==1){
-      return 10;
-    }
-    else if(count==2){
-      return 13;
-    }
-  }
-
-  else if(id==1){
-    if(count==1){
-      return 21;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==2){
-    if(count==1){
-      return 7;
-    }
-    else if(count==2){
-      return 16;
-    }
-  }
-
-  else if(id==3){
-    if(count==1){
-      return 41;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==4){
-    if(count==1){
-      return 58;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==5){
-    if(count==1){
-      return 55;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==6){
-    if(count==1){
-      return 61;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==9){
-
-      return 2;
 
   }
 
-  else if(id==10){
+  else if(function==2){
+    if(id==0){
+      if(count==1){
+        return 10;
+      }
+      else if(count==2){
+        return 13;
+      }
+    }
 
-      return 4;
+    else if(id==1){
+      if(count==1){
+        return 21;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==2){
+      if(count==1){
+        return 7;
+      }
+      else if(count==2){
+        return 16;
+      }
+    }
+
+    else if(id==3){
+      if(count==1){
+        return 41;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==4){
+      if(count==1){
+        return 58;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==5){
+      if(count==1){
+        return 55;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==6){
+      if(count==1){
+        return 61;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==9){
+
+        return 2;
+
+    }
+
+    else if(id==10){
+
+        return 4;
+
+    }
+
+    else if(id==11){
+
+        return 3;
+
+    }
+
+    else if(id==12){
+
+        return 35;
+
+    }
+
+    else if(id==13){
+      if(count==1){
+        return 23;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==14){
+      if(count==1){
+        return 63;
+      }
+      else if(count==2){
+        return 85;
+      }
+    }
+
+    else if(id==15){
+      if(count==1){
+        return 65;
+      }
+      else if(count==2){
+        return 87;
+      }
+    }
+
+    else if(id==16){
+      if(count==1){
+        return 67;
+      }
+      else if(count==2){
+        return 89;
+      }
+    }
+
+    else if(id==17){
+      if(count==1){
+        return 69;
+      }
+      else if(count==2){
+        return 91;
+      }
+    }
+
+    else if(id==18){
+      if(count==1){
+        return 71;
+      }
+      else if(count==2){
+        return 93;
+      }
+    }
+
+    else if(id==19){
+      if(count==1){
+        return 73;
+      }
+      else if(count==2){
+        return 95;
+      }
+    }
+
+    else if(id==20){
+      if(count==1){
+        return 75;
+      }
+      else if(count==2){
+        return 97;
+      }
+    }
+
+    else if(id==21){
+      if(count==1){
+        return 77;
+      }
+      else if(count==2){
+        return 99;
+      }
+    }
+
+    else if(id==22){
+      if(count==1){
+        return 79;
+      }
+      else if(count==2){
+        return 101;
+      }
+    }
+
+    else if(id==23){
+      if(count==1){
+        return 81;
+      }
+      else if(count==2){
+        return 103;
+      }
+    }
+
+    else if(id==24){
+      if(count==1){
+        return 83;
+      }
+      else if(count==2){
+        return 105;
+      }
+    }
+
+    else if(id==25){
+      if(count==1){
+        return 49;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==26){
+      if(count==1){
+        return 52;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+    else if(id==27){
+      if(count==1){
+        return 29;
+      }
+      else if(count==2){
+        return 34;
+      }
+    }
+    else if(id==32){
+      if(count==1){
+        return 45;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+    else if(id==33){
+      if(count==1){
+        return 91;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+    else if(id==35){
+      if(count==1){
+        return 64;
+      }
+      else if(count==2){
+        return -1;
+      }
+    }
+
+
 
   }
 
-  else if(id==11){
-
-      return 3;
-
-  }
-
-  else if(id==12){
-
-      return 35;
-
-  }
-
-  else if(id==13){
-    if(count==1){
-      return 23;
+  else if(function==3){
+    if(id==33){
+      if(count==1){
+        return 92;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
-    else if(count==2){
-      return -1;
+    else if(id==35){
+      if(count==1){
+        return 65;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
   }
 
-  else if(id==14){
-    if(count==1){
-      return 63;
+  else if(function==4){
+    if(id==27){
+      if(count==1){
+        return 28;
+      }
+      else if(count==2){
+        return 33;
+      }
     }
-    else if(count==2){
-      return 85;
-    }
-  }
-
-  else if(id==15){
-    if(count==1){
-      return 65;
-    }
-    else if(count==2){
-      return 87;
-    }
-  }
-
-  else if(id==16){
-    if(count==1){
-      return 67;
-    }
-    else if(count==2){
-      return 89;
-    }
-  }
-
-  else if(id==17){
-    if(count==1){
-      return 69;
-    }
-    else if(count==2){
-      return 91;
-    }
-  }
-
-  else if(id==18){
-    if(count==1){
-      return 71;
-    }
-    else if(count==2){
-      return 93;
-    }
-  }
-
-  else if(id==19){
-    if(count==1){
-      return 73;
-    }
-    else if(count==2){
-      return 95;
-    }
-  }
-
-  else if(id==20){
-    if(count==1){
-      return 75;
-    }
-    else if(count==2){
-      return 97;
-    }
-  }
-
-  else if(id==21){
-    if(count==1){
-      return 77;
-    }
-    else if(count==2){
-      return 99;
-    }
-  }
-
-  else if(id==22){
-    if(count==1){
-      return 79;
-    }
-    else if(count==2){
-      return 101;
-    }
-  }
-
-  else if(id==23){
-    if(count==1){
-      return 81;
-    }
-    else if(count==2){
-      return 103;
-    }
-  }
-
-  else if(id==24){
-    if(count==1){
-      return 83;
-    }
-    else if(count==2){
-      return 105;
-    }
-  }
-
-  else if(id==25){
-    if(count==1){
-      return 49;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==26){
-    if(count==1){
-      return 52;
-    }
-    else if(count==2){
-      return -1;
-    }
-  }
-
-  else if(id==27){
-    if(count==1){
-      return 29;
-    }
-    else if(count==2){
-      return 34;
-    }
-  }
-
-
-
-}
-
-//falta casos das ids 33 35
-int position_matrix_output2(int id, int count){
-
-}
-
-//falta casos das ids 32
-int position_matrix_condition(int id, int count){
-  if(id==27){
-    if(count==1){
-      return 28;
-    }
-    else if(count==2){
-      return 33;
+    else if(id==32){
+      if(count==1){
+        return 44;
+      }
+      else if(count==2){
+        return -1;
+      }
     }
   }
 }
@@ -1568,10 +1651,16 @@ std::vector<Line> newDetectLines(cv::Mat paper, cv::Mat& thresh, std::vector <bl
         approxPolyDP(contours[i], contours_poly[i], 3, true);
         boundRect[i] = boundingRect(contours_poly[i]);
 
-        tlx = 0.95*boundRect[i].tl().x;
-        tly = 0.95*boundRect[i].tl().y;
-        brx = 1.05*boundRect[i].br().x;
-        bry = 1.05*boundRect[i].br().y;
+        tlx = 0.94*boundRect[i].tl().x;
+        tly = 0.94*boundRect[i].tl().y;
+        brx = 1.06*boundRect[i].br().x;
+        bry = 1.06*boundRect[i].br().y;
+        if(brx > thresh.cols) brx = thresh.cols-1;
+        if(bry > thresh.rows) bry = thresh.rows-1;
+        if(brx-tlx<=1 || bry-tly<=1){
+          std::vector<Line> v;
+          return  v;
+        }
         cv::Rect myROI(tlx, tly, brx - tlx, bry - tly);
         cv::Mat croppedImage = thresh(myROI);
 
@@ -1706,7 +1795,7 @@ std::vector<Line> newDetectLines(cv::Mat paper, cv::Mat& thresh, std::vector <bl
 
         }
         cv::imshow("Deteção de linhas", paper_drawn);
-        cv::waitKey(0);
+//        cv::waitKey(0);
     return detected_lines;
 }
 
@@ -1747,19 +1836,16 @@ std::vector<Line> detectLines(cv::Mat paper, std::vector <block> block_i)
 
 //    cv::imshow("Flood Fill After Rect", image);
 
-    binaryFinalImage = image.clone();
-
     // Line dilation
     cv::Mat kernel=cv::Mat(cv::Size(3,3),CV_8UC1,cv::Scalar(255));
     morphologyEx(image,image,cv::MORPH_DILATE,kernel);
 
-//    cv::imshow("Dilation", image);
+    cv::imshow("Dilation", image);
 
 
     // Detect Lines
     std::vector<std::vector<cv::Point> > contours;
     findContours(image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
-
 
     // New A*
     return newDetectLines(paper, image, block_i);
@@ -1772,20 +1858,14 @@ void drawLines(cv::InputOutputArray paper)
 
 }
 
-std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<block> block,std::vector<combination> comb){
-  for (int j = 0; j < block.size(); j++) {
-    if(block[j].id<14 || block[j].id>24 ){
-    if(block[j].output1.linked==true){
-       m_links[block[j].output1.order][block[j].output1.link_end]=1;
-       m_links[block[j].output1.link_end][block[j].output1.order]=1;
+std::vector<std::vector<int>> drawMatrixLinks(std::vector<std::vector<int>> m_links,std::vector<Line> lines,std::vector<combination> comb){
+  for (int j = 0; j < lines.size(); j++) {
+    if(lines[j].input.id<14 || lines[j].input.id>24){
+       m_links[position_matrix(lines[j].input.id,lines[j].input.sub_id,lines[j].input.function_id)][position_matrix(lines[j].output.id,lines[j].output.sub_id,lines[j].output.function_id)]=1;
+       m_links[position_matrix(lines[j].output.id,lines[j].output.sub_id,lines[j].output.function_id)][position_matrix(lines[j].input.id,lines[j].input.sub_id,lines[j].input.function_id)]=1;
     }
-    if(block[j].output2.linked==true){
-       m_links[block[j].output2.order][block[j].output2.link_end]=1;
-       m_links[block[j].output2.link_end][block[j].output2.order]=1;
-    }
-    }
-
   }
+
   for (int j = 0; j < comb.size(); j++) {
     m_links[comb[j].matrix_pos][comb[j].dest]=1;
     m_links[comb[j].dest][comb[j].matrix_pos]=1;
@@ -1808,10 +1888,11 @@ int get_k(int id){
   else if (id == 22) return 8;
   else if (id == 23) return 9;
   else if (id == 24) return -1;
+  else if (id == 33) return -10;
 
 }
 
-std::vector<std::vector<float>> drawMatrixValues(std::vector<std::vector<float>> m_values, std::vector<block> block, std::vector<combination> comb){
+std::vector<std::vector<float>> drawMatrixValues(std::vector<std::vector<float>> m_values, std::vector<combination> comb){
 
   for (int j = 0; j < comb.size(); j++) {
     m_values[comb[j].matrix_pos][comb[j].dest]=comb[j].number;
@@ -1822,24 +1903,20 @@ std::vector<std::vector<float>> drawMatrixValues(std::vector<std::vector<float>>
 
 }
 
-std::vector<combination> getCombinations(std::vector<block> blocks, std::vector<combination> comb){
+std::vector<combination> getCombinations(std::vector<Line> lines, std::vector<combination> comb){
   int count=0;
-  for (int j = 0; j < blocks.size(); j++) {
-    if(blocks[j].id<14 || blocks[j].id>24){
-      if(blocks[j].input1.link_end>61 && blocks[j].input1.link_end<106){
+  for (int j = 0; j < lines.size(); j++) {
+
+    if(lines[j].output.id<14 || lines[j].output.id>24){
+
+      if(lines[j].input.id>13 && lines[j].input.id<25){
+
         count=count+1;
+
         comb.push_back(combination());
-        comb[count-1].matrix_pos=62+count;
-      }
-      if(blocks[j].input2.link_end>61 && blocks[j].input2.link_end<106){
-        count=count+1;
-        comb.push_back(combination());
-        comb[count-1].matrix_pos=62+count;
-      }
-      if(blocks[j].condition.link_end>61 && blocks[j].condition.link_end<106){
-        count=count+1;
-        comb.push_back(combination());
-        comb[count-1].matrix_pos=62+count;
+
+        comb[count-1].matrix_pos=66+count;
+
       }
     }
   }
@@ -1847,36 +1924,42 @@ std::vector<combination> getCombinations(std::vector<block> blocks, std::vector<
   return comb;
 }
 
-std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector<combination> comb){
+std::vector<combination> makeCombinations(std::vector<Line> lines, std::vector<combination> comb){
   int comb_pos=0;
   bool found;
-  int endpoint;
 
-
-  for (int j = 0; j < blocks.size(); j++) {
+  for (int j = 0; j < lines.size(); j++) {
     int combo_number=0;
     std::vector<int> numbers;
     int save_index;
     int divisor=0;
 
-    if(blocks[j].id<14 || blocks[j].id>24){
+    if(lines[j].output.id<14 || lines[j].output.id>24){
 
-          //INPUT1
-          if(blocks[j].input1.link_end>61 && blocks[j].input1.link_end<106){
+          if(lines[j].input.id>13 && lines[j].input.id<25){
 
-            found=blocks[j].input1.linked;
-            endpoint=blocks[j].input1.link_end;
+            found=1;
+            save_index=j;
 
             do{
-                      for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].output1.order){
-                        numbers.push_back(get_k(blocks[k].id));
-                        save_index=k;
 
-                        }
-                      }
-                      endpoint=blocks[save_index].input1.link_end;
-                      found=blocks[save_index].input1.linked;
+               numbers.push_back(get_k(lines[save_index].input.id));
+
+               for (int i = 0; i < lines.size(); i++) {
+
+                  if((lines[save_index].input.id==lines[i].output.id) && (lines[save_index].input.sub_id==lines[i].output.sub_id)){
+
+                     found=1;
+                     save_index=i;
+                     break;
+
+                   }
+                  else if((lines[save_index].input.id!=lines[i].output.id) || (lines[save_index].input.sub_id!=lines[i].output.sub_id)){
+
+                    found=0;
+
+                  }
+               }
             }
             while(found==1);
 
@@ -1886,6 +1969,10 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
                 divisor=k;
                 numbers.erase(numbers.begin()+k);
               }
+              if(numbers[k]==-10){
+                numbers.erase(numbers.begin()+k);
+              }
+
             }
 
             int N=numbers.size();
@@ -1896,97 +1983,13 @@ std::vector<combination> makeCombinations(std::vector<block> blocks, std::vector
             //std::cout << "POW:" << pow(10,divisor) << "\n";
             comb[comb_pos].number=combo_number/pow(10,divisor);
             //std::cout << "NUM:" << comb[comb_pos].number << "\n";
-            comb[comb_pos].dest=blocks[j].input1.order;
+            comb[comb_pos].dest=position_matrix(lines[j].output.id,lines[j].output.sub_id,lines[j].output.function_id);
             comb_pos=comb_pos+1;
             combo_number=0;
             divisor=0;
             numbers.clear();
           }
-
-
-          //INPUT2
-          if(blocks[j].input2.link_end>61 && blocks[j].input2.link_end<106){
-
-            found=blocks[j].input2.linked;
-            endpoint=blocks[j].input2.link_end;
-
-            do{
-                      for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].output1.order){
-
-                          numbers.push_back(get_k(blocks[k].id));
-                          save_index=k;
-
-                        }
-                      }
-                      endpoint=blocks[save_index].input1.link_end;
-                      found=blocks[save_index].input1.linked;
-            }
-            while(found==1);
-
-            for (int k = 0; k < numbers.size(); k++) {
-              if(numbers[k]==-1){
-                divisor=k;
-                numbers.erase(numbers.begin()+k);
-              }
-            }
-
-            int N=numbers.size();
-            for (int k = 0; k < numbers.size(); k++) {
-              combo_number += numbers[k]*pow(10, k);
-            }
-
-            comb[comb_pos].number=combo_number/(pow(10,divisor));
-            comb[comb_pos].dest=blocks[j].input2.order;
-            comb_pos=comb_pos+1;
-            combo_number=0;
-            divisor=0;
-            numbers.clear();
-
-          }
-
-          //condition
-          if(blocks[j].condition.link_end>61 && blocks[j].condition.link_end<106){
-
-            found=blocks[j].condition.linked;
-            endpoint=blocks[j].condition.link_end;
-
-            do{
-                      for (int k = 0; k < blocks.size(); k++) {
-                        if(endpoint==blocks[k].output1.order){
-
-                          numbers.push_back(get_k(blocks[k].id));
-                          save_index=k;
-
-                        }
-                      }
-                      endpoint=blocks[save_index].input1.link_end;
-                      found=blocks[save_index].input1.linked;
-            }
-            while(found==1);
-
-            for (int k = 0; k < numbers.size(); k++) {
-              if(numbers[k]==-1){
-                divisor=k;
-                numbers.erase(numbers.begin()+k);
-              }
-            }
-
-            int N=numbers.size();
-            for (int k = 0; k < numbers.size(); k++) {
-              combo_number += numbers[k]*pow(10, k);
-            }
-
-            comb[comb_pos].number=combo_number/(pow(10,divisor));
-            comb[comb_pos].dest=blocks[j].condition.order;
-            comb_pos=comb_pos+1;
-            combo_number=0;
-            divisor=0;
-            numbers.clear();
-
-          }
-    }
-
+      }
 
   }
   return comb;
@@ -2034,26 +2037,32 @@ void detectAndInterpret_Lines(cv::Mat new_frame, cv::Ptr<cv::aruco::Dictionary> 
 
 //    drawLines(paperDrawn);
 
-//    // Get combinations
-//    std::vector<combination> combs;
-//    combs=getCombinations(block_in_order,combs);
-//    combs=makeCombinations(block_in_order,combs);
+    // Get combinations
+    std::vector<combination> combs;
+
+    combs=getCombinations(Lines,combs);
+
+    combs=makeCombinations(Lines,combs);
+
 //    Debugcombs(combs);
+
 //    std::cout << "Num of combinations " << num_combinations << "\n";
 
-//    // Create Link and Value Matrices
+    // Create Link and Value Matrices
 
-//    std::vector<std::vector<int>>  matrix_links(63+num_combinations, std::vector<int> (63+num_combinations, 0));
-//    std::vector<std::vector<float>>  matrix_values(63+num_combinations, std::vector<float> (63+num_combinations, 0));
-//    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+    std::vector<std::vector<int>>  matrix_links(100, std::vector<int> (100, 0));
 
-//    matrix_links = drawMatrixLinks(matrix_links,block_in_order,combs);
-//    matrix_values = drawMatrixValues(matrix_values,block_in_order,combs);
+    std::vector<std::vector<float>>  matrix_values(100, std::vector<float> (100, 0));
+
+    //values to fetch from sensors (int just to write function --> may need to change data type of matrix_values accordingly)
+
+    matrix_links = drawMatrixLinks(matrix_links,Lines,combs);
+    matrix_values = drawMatrixValues(matrix_values,combs);
 
 //    Debugmatrixlinks(matrix_links);
 //    Debugmatrixvalues(matrix_values);
 
-    cv::imshow("Paper Drawn", paperDrawn);
+//    cv::imshow("Paper Drawn", paperDrawn);
     cv::waitKey(0);
 }
 
@@ -2125,7 +2134,7 @@ int main(int argc, char** argv)
 
     // Create a VideoCapture object and open the input file
     // If the input is the web camera, pass 0 instead of the video file name
-    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/cruzamento.h264");
+    cv::VideoCapture cap("../catkin_ws/src/SERP/serp/include/tests/ultima_folha.h264");
 
     // Check if camera opened successfully
     if(!cap.isOpened())
