@@ -60,27 +60,7 @@ int main(int argc, char** argv)
     robot_state = Stopped;
     float velocidades[2]={0};
     float velocidadesblocos[2]={0};
-    //exemplo de teste
-    //    ligacoes[4][8] = 1;
-    //    ligacoes[8][4] = 1;
-    //    ligacoes[9][2] = 1;
-    //    ligacoes[2][9] = 1; //inicializa valor sensor esq
 
-    //    matrixValores[4][8] = 2;
-    //    matrixValores[8][4] = 2;
-    //    matrixValores[9][2] = 2;
-    //    matrixValores[2][9] = 2; //inicializa valor sensor esq
-
-    //    ligacoes[59][3] = 1;
-    //    ligacoes[3][59] = 1;
-    //    ligacoes[60][10] = 1;
-    //    ligacoes[10][60] = 1;
-    //    matrixValores[59][3] = 4;
-    //    matrixValores[3][59] = 4;
-
-    //    ligacoes[61][24] = 1;
-    //    ligacoes[24][61] = 1;
-    //fim de exemplo de teste
 
     ros::init(argc, argv, "arduino_bridge_node");
     ros::NodeHandle n_public;
@@ -147,7 +127,6 @@ int main(int argc, char** argv)
             verificarBlocos(ligacoes, matrixValores, velocidades);
             robot.motor_left_velocity=velocidades[2];
             robot.motor_right_velocity=velocidades[1];
-            //ROS_INFO("commands: right: %f  left: %f", velocidades[2], velocidades[1]);
             pvel_l=vel_cmd.vel_motor_left;
             pvel_r=vel_cmd.vel_motor_right;
             vel_cmd.vel_motor_left=velocidades[2];

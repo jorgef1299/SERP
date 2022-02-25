@@ -60,7 +60,6 @@ string find_sensorIMG_path(char sensor , int valor_sensor){
         break;
 
     }
-    //ROS_INFO_STREAM("file_path: " << path);
     return path;
 }
 
@@ -274,18 +273,6 @@ int main(int argc, char **argv)
                     data.matrix_values.push_back(matrix_values[i][j]);
                 }
             }
-
-            /*
-            //debug matrix
-            for (int j = 0; j < 100 ; j++) {
-                std::cout << "row:" << j << " ";
-                for (int i= 0; i < 100 ; i++) {
-                    std::cout << matrix_values[j][i]<< " ";
-                }
-                std::cout << "\n";
-            }
-            */
-
             send_matrix.publish(data);
         }
         else if(camera_state == ReadProgrammingSheet)

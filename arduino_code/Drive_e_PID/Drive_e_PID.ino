@@ -1,3 +1,4 @@
+#include <RunningAverage.h>
 #include <ros.h>
 #include <ArduPID.h>
 #include <serp/RobotInfo.h>
@@ -8,6 +9,9 @@
 
 //MOTOR RIGHT->A->1
 //MOTOR LEFT->B->2
+
+RunningAverage myRA1(50);
+RunningAverage myRA2(50);
 
 #define encoder_pulse   13
 #define gear_ratio      120
@@ -21,9 +25,9 @@
 #define PWMA 6 //right
 #define PWMB 5 //left
 #define STBY 9
-#define ADCB 14
+#define ADCB A0
 #define encodPinA1      3     //right
-#define encodPinB1      13    //right
+#define encodPinB1      13  //right
 #define encodPinA2      2   //left              
 #define encodPinB2      12 //left
 
@@ -34,24 +38,11 @@ ArduPID left_motor;
 // Global variables
 ros::NodeHandle  nh;
 
-double setpoint_r = 0;
-double setpoint_l = 0;
+double setpoint_r;
+double setpoint_l;
 
 
-// Calback que é chamada sempre que chegam novos dados de velocidade para os motores
-// Atualiza o valor da velocidade guardado nas variáveis globais
-void cb_velocity(const serp::Velocity& msg) {
-  nh.loginfo("Recebi novos dados de velocidade..."); // DEBUG -> APAGAR
-  setpoint_l = msg.vel_motor_left;
-  setpoint_r = msg.vel_motor_right;
-}
 
-// Tipo de mensagem a usar para publicar o estado atual do robô (bateria + velocidade + delta Pose) 
-serp::RobotInfo msg_hardware_state;
-
-// ROS Publisher/Subscriber
-ros::Publisher publisher("hardware_info", &msg_hardware_state);
-ros::Subscriber<serp::Velocity> subscriber("motors_vel", &cb_velocity);
 
 
 double rpm_act1;
@@ -59,7 +50,7 @@ double output_r;
 double rpm_act2;
 double output_l;
 
-double p = 25;
+double p = 20 ;
 double i = 0;
 double d = 0;
 
@@ -71,6 +62,25 @@ volatile long count1 = 0;
 volatile long count2 = 0;
 long countAnt1 = 0;
 long countAnt2 = 0;
+
+char vel1[4];
+char vel2[4];
+// Calback que é chamada sempre que chegam novos dados de velocidade para os motores
+// Atualiza o valor da velocidade guardado nas variáveis globais
+void cb_velocity(const serp::Velocity& msg) 
+{
+ 
+  setpoint_l =msg.vel_motor_left/2;
+  setpoint_r =msg.vel_motor_right/2;
+
+}
+
+// Tipo de mensagem a usar para publicar o estado atual do robô (bateria + velocidade + delta Pose) 
+serp::RobotInfo msg_hardware_state;
+
+// ROS Publisher/Subscriber
+ros::Publisher publisher("hardware_info", &msg_hardware_state);
+ros::Subscriber<serp::Velocity> subscriber("motors_vel", &cb_velocity);
 
 
 void setup() {
@@ -104,64 +114,45 @@ void setup() {
   right_motor.begin(&rpm_act1, &output_r, &setpoint_r, p, i, d);
   left_motor.begin(&rpm_act2, &output_l, &setpoint_l, p, i, d);
 
-
-
 }
 
-void loop() {
+void loop() 
+{
   int val;
   float battery_perc_ori;
   float battery_perc;
   val=analogRead(ADCB);
-  battery_perc_ori=5.2;//val/1023.0*5.0;
-  battery_perc=map(battery_perc_ori, 4.5 ,5.1 , 0, 100);
-  //Serial.println(battery_perc);
+  battery_perc_ori=val/1023.0*5.0;
+  battery_perc=mapping(battery_perc_ori, 4.5 ,5.1 , 0, 100);
   double lbatt_state;
 
- //analogWrite(PWMA,150); //Speed control of Motor A
- //analogWrite(PWMB,150); //Speed control of Motor B
-  //control loop
-  setpoint_r=60;
-  setpoint_l=0;
-
   unsigned long time = millis();
-  if(time-lastMilli>= LOOPTIME)   {      
+  if(time-lastMilli>= LOOPTIME)   
+  {      
     //get speeds
     getMotorData(time-lastMilli);
  
-     v1Filt = 0.854*v1Filt + 0.0728*rpm_act1 + 0.0728*v1Prev;
-     v1Prev = rpm_act1;
     //compute PID
     right_motor.compute();
     left_motor.compute();
     
     //set motor speed                                          
     motorspeed(output_r,1);
-    motorspeed(output_l,2);
-
+    motorspeed(output_l*1.4,2);
+    myRA1.addValue(rpm_act1);
+    myRA2.addValue(rpm_act2);
     // Publish info about actual robot state
     lbatt_state=msg_hardware_state.battery_level;
     msg_hardware_state.battery_level = battery_perc;
-    msg_hardware_state.vel_linear = 3;
-    msg_hardware_state.vel_angular = 0.1;
-    msg_hardware_state.delta_pos_x = 2;
-    msg_hardware_state.delta_pos_y = 1;
-    msg_hardware_state.delta_orientation_z = 0.7;
+    msg_hardware_state.vel_linear = myRA2.getAverage(); //left motor
+    msg_hardware_state.vel_angular = myRA1.getAverage(); //right motor
 
     if(lbatt_state!=msg_hardware_state.battery_level)
     publisher.publish(&msg_hardware_state);
                                          
     lastMilli = time;    
   }
-//Serial.print(setpoint_r);
-//Serial.print(" ");
-//Serial.print(v1Filt);
-//Serial.print(" ");
-//Serial.println(output_r);
-//Serial.println("ola");
 
-// Serial.print("------");
-// Serial.println(output_l);
 
  
 nh.spinOnce();
@@ -169,11 +160,14 @@ nh.spinOnce();
 
 }
 
-void getMotorData(unsigned long time)  {
+void getMotorData(unsigned long time)  
+{
+  
  rpm_act1 = double((count1-countAnt1)*60*1000)/double(time*encoder_pulse*gear_ratio); //right
  rpm_act2 = double((count2-countAnt2)*60*1000)/double(time*encoder_pulse*gear_ratio); //left
  countAnt1 = count1;
  countAnt2 = count2;
+ 
 }
 
 void encoder1() {
@@ -190,10 +184,8 @@ void motorspeed(double output, int id) {
    {
       if (output>=0) //forward
       {
-        //Serial.println("motor right");
         digitalWrite(AIN1,HIGH); 
         digitalWrite(AIN2,LOW);
-        //Serial.println(output_r);
         analogWrite(PWMA,output_r);      
       }
       if (output<0) //backward
@@ -221,4 +213,8 @@ void motorspeed(double output, int id) {
         analogWrite(PWMB,abs(output_l));
       }
    }
+}
+
+float mapping(float x, float in_min, float in_max, float out_min, float out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
