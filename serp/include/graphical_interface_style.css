@@ -20,6 +20,10 @@
     color: white;
 }
 
+.button_green:active {
+    background-color: rgb(0, 230, 0);
+}
+
 .button_green_active {
     background-color: rgb(0, 255, 0);
     background-image: none;
@@ -30,6 +34,10 @@
     background-color: rgb(210, 0, 0);
     background-image: none;
     color: white;
+}
+
+.button_red:active {
+    background-color: rgb(250, 0, 0);
 }
 
 .button_red_active {

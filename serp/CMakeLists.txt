@@ -13,9 +13,12 @@ set(OpenCV_DIR /usr/share/OpenCV)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED gtk+-3.0)
 
+find_package(raspicam REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
+  rospy
   roscpp
   OpenCV
   message_generation
@@ -24,6 +27,8 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   sensor_msgs
 )
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -63,6 +68,8 @@ add_message_files(
   FILES
   RobotInfo.msg
   Velocity.msg
+  Sensors.msg
+  Matrix.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -117,7 +124,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES serp
-  CATKIN_DEPENDS geometry_msgs roscpp message_runtime
+  CATKIN_DEPENDS geometry_msgs roscpp message_runtime 
 #  DEPENDS system_lib
 )
 
@@ -145,14 +152,16 @@ add_definitions(${GTK_CFLAGS_OTHER})
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(rpi_camera_node src/rpi_camera.cpp)
+add_executable(rpi_camera_node src/rpi_camera.cpp src/video_tests.cpp)
 add_executable(graphical_interface src/graphical_interface.cpp)
-add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
+add_executable(arduino_bridge_node src/arduino_bridge_node.cpp src/logica.cpp)
+
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,15 +171,13 @@ add_executable(arduino_bridge_node src/arduino_bridge_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-
-add_dependencies(rpi_camera_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(graphical_interface ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(arduino_bridge_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(rpi_camera_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${raspicam_CV_LIBS}
 )
 
 target_link_libraries(graphical_interface
@@ -181,6 +188,10 @@ target_link_libraries(graphical_interface
 target_link_libraries(arduino_bridge_node
   ${catkin_LIBRARIES}
 )
+
+add_dependencies(rpi_camera_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(arduino_bridge_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(graphical_interface ${catkin_EXPORTED_TARGETS})
 
 #############
 ## Install ##
